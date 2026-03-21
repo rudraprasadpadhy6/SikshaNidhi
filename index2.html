@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniCapital.AI | Dashboard</title>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <style>
+        :root {
+            --bg-sidebar: #054c5a;
+            --bg-main: #ffffff;
+            --accent-pink: #4dcbc6;
+            --text-white: #ffffff;
+            --text-muted: #a39494;
+            --input-border: #ececec;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e0f7fa;
+        }
+
+        .app-container {
+            width: 1300px;
+            height: 850px;
+            background: var(--bg-main);
+            display: flex;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 380px;
+            background-color: var(--bg-sidebar);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            color: white;
+            font-size: 38px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 50px;
+        }
+
+        .logo span {
+            color: var(--accent-pink);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .step.active {
+            color: white;
+            font-weight: 600;
+        }
+
+        .circle {
+            width: 42px;
+            height: 42px;
+            border: 2px solid #4a3e3e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .circle {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+            box-shadow: 0 0 12px rgba(77, 203, 198, 0.6), inset 0 0 6px rgba(77, 203, 198, 0.2);
+        }
+
+        .step.active .step-icon {
+            color: var(--accent-pink);
+            filter: drop-shadow(0 0 4px rgba(77, 203, 198, 0.5));
+        }
+
+        /* Main Content */
+        .content-area {
+            flex: 1;
+            padding: 60px 100px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        h2 {
+            font-size: 46px;
+            color: #054c5a;
+            margin: 0 0 12px 0;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+
+        /* Inputs & Grid */
+        .input-label {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 22px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 22px;
+            outline: none;
+            background: #fff;
+            transition: border 0.3s;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--accent-pink);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .option-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+            font-size: 20px;
+            text-transform: uppercase;
+            background: white;
+            user-select: none;
+        }
+
+        .option-card input[type="radio"] {
+            display: none;
+        }
+
+        .option-card.selected {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+            background-color: #e0f7fa;
+        }
+
+        /* Map Styling */
+        #india-map {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        #india-map path {
+            stroke: #054c5a !important;
+            stroke-width: 0.1px !important;
+            cursor: pointer;
+        }
+
+        #india-map path:hover {
+            opacity: 0.8;
+        }
+
+        /* Error Message */
+        .error-msg {
+            color: #d9534f;
+            font-size: 18px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 22px;
+            transition: 0.2s;
+        }
+
+        .btn-back {
+            background-color: #e0f7fa;
+            color: var(--accent-pink);
+        }
+
+        .btn-back:hover {
+            background-color: #b2ebf2;
+        }
+
+        .btn-next {
+            background-color: var(--accent-pink);
+            color: white;
+            margin-left: auto;
+        }
+
+        .btn-next:hover {
+            opacity: 0.9;
+        }
+
+        /* Final Screen */
+        #success-screen {
+            text-align: center;
+            display: none;
+            margin-top: 80px;
+        }
+
+        .btn-find {
+            background-color: var(--accent-pink);
+            color: white;
+            padding: 25px 60px;
+            font-size: 24px;
+            border-radius: 14px;
+            margin-top: 40px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(77, 203, 198, 0.3);
+        }
+
+        .btn-find:hover {
+            opacity: 0.9;
+        }
+
+        /* --- NEW VOICE ASSISTANT STYLES --- */
+        .voice-section {
+            margin-top: auto;
+            border-top: 1px solid #4a3e3e;
+            padding-top: 25px;
+        }
+
+        .voice-assistant-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .voice-assistant-container .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Live Transcript Text */
+        .voice-debug {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--accent-pink);
+            font-style: italic;
+            min-height: 20px;
+            display: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #4a3e3e;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent-pink);
+            box-shadow: 0 0 12px rgba(77, 203, 198, 0.4);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Mic pulse animation when listening */
+        .mic-icon.listening {
+            color: var(--accent-pink);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(77, 203, 198, 0.7));
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 6px rgba(77, 203, 198, 0.8));
+            }
+
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(77, 203, 198, 0));
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PixaBot Floating Bubble -->
+    <div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
+        <div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
+            <img src="https://myimgs.org/storage/images/19225/20260320_203834.png" alt="PixaBot" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='dashboard.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </div>
+            <h1 class="logo">UniCapital<span>.AI</span></h1>
+            <div id="sidebarSteps">
+                <div class="step active">
+                    <span class="circle">1</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Age Details</span>
+                </div>
+                <div class="step">
+                    <span class="circle">2</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Location</span>
+                </div>
+                <div class="step">
+                    <span class="circle">3</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <circle cx="9" cy="12" r="5"></circle>
+                        <circle cx="15" cy="12" r="5"></circle>
+                    </svg>
+                    <span>Marital Status</span>
+                </div>
+                <div class="step">
+                    <span class="circle">4</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Category</span>
+                </div>
+                <div class="step">
+                    <span class="circle">5</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                    <span>Disability</span>
+                </div>
+                <div class="step">
+                    <span class="circle">6</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <path d="M22 10L12 5 2 10l10 5 10-5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                    <span>Academics</span>
+                </div>
+                <div class="step">
+                    <span class="circle">7</span>
+                    <svg class="step-icon" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <span>Employment</span>
+                </div>
+            </div>
+
+            <div class="voice-section">
+                <div class="voice-assistant-container">
+                    <div class="icon-text">
+                        <svg id="micIcon" class="step-icon mic-icon" viewBox="0 0 24 24" style="margin: 0;">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="22"></line>
+                        </svg>
+                        <span>Voice Assistant</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="voiceToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="voice-debug" id="voiceDebug">Heard: nothing yet...</div>
+            </div>
+
+        </aside>
+
+        <main class="content-area">
+            <div id="stepsWrapper">
+                <section class="form-step active" id="step-0">
+                    <h2>Your Age</h2>
+                    <p class="subtitle">Used to match specific age-restricted grants.</p>
+                    <label class="input-label">Age (Years)</label>
+                    <input type="number" placeholder="e.g. 20" id="ageField" autofocus>
+                    <div class="error-msg">Please enter your age to continue.</div>
+                </section>
+
+                <section class="form-step" id="step-1">
+                    <h2>Location</h2>
+                    <p class="subtitle" style="margin-bottom: 5px;">Click the map or select from the list below.</p>
+
+                    <div id="india-map">
+                        <div style="padding-top:180px; font-size: 20px; color:#a39494;">Loading Interactive Map...</div>
+                    </div>
+
+                    <select id="stateDropdown">
+                        <option value="">-- Select your State / UT --</option>
+                    </select>
+
+                    <div class="error-msg">Please select your domicile state to continue.</div>
+                </section>
+
+                <section class="form-step" id="step-2">
+                    <h2>Marital Status</h2>
+                    <p class="subtitle">Please select your current status.</p>
+                    <div class="options-grid">
+                        <label class="option-card"><input type="radio" name="ms" value="Single"> Single</label>
+                        <label class="option-card"><input type="radio" name="ms" value="Married"> Married</label>
+                        <label class="option-card"><input type="radio" name="ms" value="Widow"> Widow</label>
+                        <label class="option-card"><input type="radio" name="ms" value="Divorced"> Divorced</label>
+                    </div>
+                    <div class="error-msg">Please select an option to continue.</div>
+                </section>
+
+                <section class="form-step" id="step-3">
+                    <h2>Caste Category</h2>
+                    <p class="subtitle">Unlocking government-mandated schemes.</p>
+                    <div class="options-grid">
+                        <label class="option-card"><input type="radio" name="cat" value="SC"> SC</label>
+                        <label class="option-card"><input type="radio" name="cat" value="ST"> ST</label>
+                        <label class="option-card"><input type="radio" name="cat" value="OBC"> OBC</label>
+                        <label class="option-card"><input type="radio" name="cat" value="General"> General</label>
+                        <label class="option-card" style="grid-column: span 2;"><input type="radio" name="cat"
+                                value="Minority"> Minority</label>
+                    </div>
+                    <div class="error-msg">Please select a category to continue.</div>
+                </section>
+
+                <section class="form-step" id="step-4">
+                    <h2>Disability</h2>
+                    <p class="subtitle">Are you a person with a disability?</p>
+                    <div class="options-grid">
+                        <label class="option-card"><input type="radio" name="dis" value="Yes"> Yes</label>
+                        <label class="option-card"><input type="radio" name="dis" value="No"> No</label>
+                    </div>
+                    <div class="error-msg">Please select an option to continue.</div>
+                </section>
+
+                <section class="form-step" id="step-5">
+                    <h2>Education Level</h2>
+                    <p class="subtitle">Highest level of education completed.</p>
+                    <div class="options-grid">
+                        <label class="option-card"><input type="radio" name="edu" value="No Schooling"> No
+                            Schooling</label>
+                        <label class="option-card"><input type="radio" name="edu" value="10th Pass"> 10th Pass</label>
+                        <label class="option-card"><input type="radio" name="edu" value="12th Pass"> 12th Pass</label>
+                        <label class="option-card"><input type="radio" name="edu" value="Graduate"> Graduate</label>
+                        <label class="option-card" style="grid-column: span 2;"><input type="radio" name="edu"
+                                value="Postgraduate"> Postgraduate</label>
+                    </div>
+                    <div class="error-msg">Please select your education level.</div>
+                </section>
+
+                <section class="form-step" id="step-6">
+                    <h2>Employment Status</h2>
+                    <p class="subtitle">What is your current work status?</p>
+                    <div class="options-grid">
+                        <label class="option-card"><input type="radio" name="emp" value="Unemployed"> Unemployed</label>
+                        <label class="option-card"><input type="radio" name="emp" value="Student"> Student</label>
+                        <label class="option-card"><input type="radio" name="emp" value="Self-Employed">
+                            Self-Employed</label>
+                        <label class="option-card"><input type="radio" name="emp" value="Working"> Working</label>
+                    </div>
+                    <div class="error-msg">Please select your employment status.</div>
+                </section>
+            </div>
+
+            <div id="success-screen">
+                <div style="font-size: 80px;">🎉</div>
+                <h2>Profile Complete!</h2>
+                <p class="subtitle" style="margin-bottom: 20px;">We've customized your dashboard based on your answers.
+                </p>
+                <button class="btn btn-find" onclick="findOpportunities()">Find Financial
+                    Opportunity</button>
+            </div>
+
+            <div class="nav-buttons" id="navGroup">
+                <button class="btn btn-back" id="backBtn" style="visibility: hidden;">Back</button>
+                <button class="btn btn-next" id="nextBtn">Continue</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const steps = document.querySelectorAll('.form-step');
+        const sidebarSteps = document.querySelectorAll('.step');
+        const nextBtn = document.getElementById('nextBtn');
+        const backBtn = document.getElementById('backBtn');
+        const wrapper = document.getElementById('stepsWrapper');
+        const navGroup = document.getElementById('navGroup');
+        const success = document.getElementById('success-screen');
+        const stateDropdown = document.getElementById('stateDropdown');
+
+        let current = 0;
+
+        // Ensure the age field is focused when the page loads
+        document.getElementById('ageField').focus();
+
+        // --- MAP & REGION DATA ---
+        const indianStates = [
+            { id: 'IN-AP', name: 'Andhra Pradesh' }, { id: 'IN-AR', name: 'Arunachal Pradesh' },
+            { id: 'IN-AS', name: 'Assam' }, { id: 'IN-BR', name: 'Bihar' },
+            { id: 'IN-CT', name: 'Chhattisgarh' }, { id: 'IN-GA', name: 'Goa' },
+            { id: 'IN-GJ', name: 'Gujarat' }, { id: 'IN-HR', name: 'Haryana' },
+            { id: 'IN-HP', name: 'Himachal Pradesh' }, { id: 'IN-JH', name: 'Jharkhand' },
+            { id: 'IN-KA', name: 'Karnataka' }, { id: 'IN-KL', name: 'Kerala' },
+            { id: 'IN-MP', name: 'Madhya Pradesh' }, { id: 'IN-MH', name: 'Maharashtra' },
+            { id: 'IN-MN', name: 'Manipur' }, { id: 'IN-ML', name: 'Meghalaya' },
+            { id: 'IN-MZ', name: 'Mizoram' }, { id: 'IN-NL', name: 'Nagaland' },
+            { id: 'IN-OR', name: 'Odisha' }, { id: 'IN-PB', name: 'Punjab' },
+            { id: 'IN-RJ', name: 'Rajasthan' }, { id: 'IN-SK', name: 'Sikkim' },
+            { id: 'IN-TN', name: 'Tamil Nadu' }, { id: 'IN-TG', name: 'Telangana' },
+            { id: 'IN-TR', name: 'Tripura' }, { id: 'IN-UP', name: 'Uttar Pradesh' },
+            { id: 'IN-UT', name: 'Uttarakhand' }, { id: 'IN-WB', name: 'West Bengal' },
+            { id: 'IN-AN', name: 'Andaman and Nicobar Islands' }, { id: 'IN-CH', name: 'Chandigarh' },
+            { id: 'IN-DN', name: 'Dadra and Nagar Haveli and Daman and Diu' },
+            { id: 'IN-DL', name: 'Delhi' }, { id: 'IN-JK', name: 'Jammu and Kashmir' },
+            { id: 'IN-LA', name: 'Ladakh' }, { id: 'IN-LD', name: 'Lakshadweep' },
+            { id: 'IN-PY', name: 'Puducherry' }
+        ];
+
+        indianStates.forEach(state => {
+            let option = document.createElement('option');
+            option.value = state.id;
+            option.text = state.name;
+            stateDropdown.appendChild(option);
+        });
+
+        // --- GOOGLE CHARTS LOGIC ---
+        let geoChart = null;
+        let geoData = null;
+        let geoOptions = null;
+
+        google.charts.load('current', { 'packages': ['geochart'] });
+        google.charts.setOnLoadCallback(() => {
+            geoData = new google.visualization.DataTable();
+            geoData.addColumn('string', 'State');
+            geoData.addColumn('number', 'Selected');
+            geoData.addColumn({ type: 'string', role: 'tooltip' });
+
+            indianStates.forEach(state => {
+                geoData.addRow([state.id, 0, state.name]);
+            });
+
+            geoOptions = {
+                region: 'IN', domain: 'IN', displayMode: 'regions', resolution: 'provinces',
+                colorAxis: { colors: ['#ffffff', '#4dcbc6'] }, backgroundColor: 'transparent',
+                datalessRegionColor: '#ffffff', defaultColor: '#4dcbc6', legend: 'none',
+                tooltip: { textStyle: { color: '#054c5a' }, showColorCode: false }
+            };
+
+            geoChart = new google.visualization.GeoChart(document.getElementById('india-map'));
+
+            google.visualization.events.addListener(geoChart, 'select', function () {
+                var selection = geoChart.getSelection();
+                if (selection.length > 0) {
+                    var isoCode = geoData.getValue(selection[0].row, 0);
+                    stateDropdown.value = isoCode;
+                    highlightStateOnMap(selection[0].row);
+                    document.querySelector('#step-1 .error-msg').style.display = 'none';
+                }
+            });
+        });
+
+        stateDropdown.addEventListener('change', function () {
+            document.querySelector('#step-1 .error-msg').style.display = 'none';
+            if (this.value === "") {
+                for (let i = 0; i < geoData.getNumberOfRows(); i++) geoData.setValue(i, 1, 0);
+                geoChart.draw(geoData, geoOptions);
+                return;
+            }
+            for (let i = 0; i < geoData.getNumberOfRows(); i++) {
+                if (geoData.getValue(i, 0) === this.value) {
+                    highlightStateOnMap(i);
+                    break;
+                }
+            }
+        });
+
+        function highlightStateOnMap(rowIndex) {
+            for (let i = 0; i < geoData.getNumberOfRows(); i++) geoData.setValue(i, 1, 0);
+            geoData.setValue(rowIndex, 1, 1);
+            geoChart.draw(geoData, geoOptions);
+        }
+
+        // --- GENERAL LOGIC ---
+        const optionCards = document.querySelectorAll('.option-card');
+        optionCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const radioName = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${radioName}"]`).forEach(input => {
+                    input.closest('.option-card').classList.remove('selected');
+                });
+                this.querySelector('input').checked = true;
+                this.classList.add('selected');
+
+                const errorMsg = steps[current].querySelector('.error-msg');
+                if (errorMsg) errorMsg.style.display = 'none';
+            });
+        });
+
+        document.getElementById('ageField').addEventListener('input', () => {
+            steps[current].querySelector('.error-msg').style.display = 'none';
+        });
+
+        function validateCurrentStep() {
+            const currentSection = steps[current];
+            const numInput = currentSection.querySelector('input[type="number"]');
+            const selInput = currentSection.querySelector('select');
+            const radios = currentSection.querySelectorAll('input[type="radio"]');
+            const errorMsg = currentSection.querySelector('.error-msg');
+
+            let isValid = false;
+            if (numInput && numInput.value.trim() !== '') isValid = true;
+            else if (selInput && selInput.value !== '') isValid = true;
+            else if (radios.length > 0) isValid = Array.from(radios).some(r => r.checked);
+
+            if (!isValid && errorMsg) {
+                errorMsg.style.display = 'block';
+                speakText("Please provide an answer before continuing.");
+            }
+            return isValid;
+        }
+
+        function updateUI() {
+            steps.forEach((s, i) => s.classList.toggle('active', i === current));
+            sidebarSteps.forEach((s, i) => s.classList.toggle('active', i === current));
+
+            backBtn.style.visibility = (current === 0) ? 'hidden' : 'visible';
+            nextBtn.innerText = (current === steps.length - 1) ? 'Finish' : 'Continue';
+
+            // Auto-focus the age field if we navigate back to the first step
+            if (current === 0) {
+                setTimeout(() => document.getElementById('ageField').focus(), 50);
+            }
+
+            if (current === 1 && geoChart && geoData) {
+                setTimeout(() => geoChart.draw(geoData, geoOptions), 50);
+            }
+
+            // Speak the new question when UI updates
+            speakCurrentQuestion();
+        }
+
+        function handleNext() {
+            if (!validateCurrentStep()) return;
+            if (current < steps.length - 1) {
+                current++;
+                updateUI();
+            } else {
+                wrapper.style.display = 'none';
+                navGroup.style.display = 'none';
+                success.style.display = 'block';
+                speakText("Profile Complete! We've customized your dashboard based on your answers.");
+            }
+        }
+
+        function handleBack() {
+            if (current > 0) {
+                steps[current].querySelector('.error-msg').style.display = 'none';
+                current--;
+                updateUI();
+            }
+        }
+
+        nextBtn.addEventListener('click', handleNext);
+        backBtn.addEventListener('click', handleBack);
+
+        // --- ENHANCED VOICE ASSISTANT & TTS LOGIC ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const synth = window.speechSynthesis;
+        const voiceToggle = document.getElementById('voiceToggle');
+        const micIcon = document.getElementById('micIcon');
+        const voiceDebug = document.getElementById('voiceDebug');
+
+        let recognition = null;
+        let isVoiceActive = false;
+        let isSpeaking = false;
+
+        function speakText(text) {
+            if (!isVoiceActive || !synth) return;
+
+            synth.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-IN';
+
+            utterance.onstart = () => {
+                isSpeaking = true; // Tell the microphone to ignore anything it hears
+                micIcon.classList.remove('listening');
+                voiceDebug.innerText = "Speaking...";
+            };
+
+            utterance.onend = () => {
+                isSpeaking = false; // Microphone is allowed to listen again
+                if (isVoiceActive) {
+                    micIcon.classList.add('listening');
+                    voiceDebug.innerText = "Listening...";
+                }
+            };
+
+            synth.speak(utterance);
+        }
+
+        function speakCurrentQuestion() {
+            if (!isVoiceActive) return;
+            const currentSection = steps[current];
+            const title = currentSection.querySelector('h2').innerText;
+            const subtitle = currentSection.querySelector('.subtitle').innerText;
+            speakText(`${title}. ${subtitle}`);
+        }
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'en-IN';
+
+            recognition.onstart = () => {
+                if (isVoiceActive) {
+                    micIcon.classList.add('listening');
+                    voiceDebug.style.display = 'block';
+                    voiceDebug.innerText = "Listening...";
+                }
+            };
+
+            recognition.onresult = (event) => {
+                // SOFTWARE MUTE: If the browser is speaking, ignore the transcript entirely
+                if (isSpeaking) return;
+
+                const lastResultIndex = event.results.length - 1;
+                const transcript = event.results[lastResultIndex][0].transcript.trim().toLowerCase();
+
+                voiceDebug.innerText = `Heard: "${transcript}"`;
+                processVoiceCommand(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                if (event.error === 'not-allowed') {
+                    voiceToggle.checked = false;
+                    isVoiceActive = false;
+                    micIcon.classList.remove('listening');
+                    voiceDebug.style.display = 'none';
+                    alert("Please allow microphone access to use the Voice Assistant.");
+                } else if (event.error === 'no-speech' && !isSpeaking) {
+                    voiceDebug.innerText = "Waiting for you to speak...";
+                }
+            };
+
+            recognition.onend = () => {
+                // Only try to restart the microphone if the toggle is actually ON
+                if (isVoiceActive) {
+                    setTimeout(() => {
+                        try { recognition.start(); } catch (e) { }
+                    }, 200);
+                } else {
+                    micIcon.classList.remove('listening');
+                    voiceDebug.style.display = 'none';
+                }
+            };
+        } else {
+            voiceToggle.parentElement.style.display = 'none';
+            console.warn("Speech Recognition API is not supported in this browser.");
+        }
+
+        voiceToggle.addEventListener('change', (e) => {
+            isVoiceActive = e.target.checked;
+
+            if (isVoiceActive) {
+                if (recognition) {
+                    try { recognition.start(); } catch (e) { }
+                }
+                speakCurrentQuestion();
+            } else {
+                if (synth) synth.cancel();
+                if (recognition) {
+                    try { recognition.stop(); } catch (e) { }
+                }
+                isSpeaking = false;
+                micIcon.classList.remove('listening');
+                voiceDebug.style.display = 'none';
+            }
+        });
+
+        function processVoiceCommand(command) {
+            if (command.includes("next") || command.includes("continue")) {
+                handleNext();
+                return;
+            }
+            if (command.includes("back") || command.includes("previous")) {
+                handleBack();
+                return;
+            }
+
+            const currentSection = steps[current];
+
+            if (current === 0) {
+                const match = command.match(/\d+/);
+                if (match) {
+                    document.getElementById('ageField').value = match[0];
+                    currentSection.querySelector('.error-msg').style.display = 'none';
+                    voiceDebug.innerText += " (Age filled!)";
+
+                    setTimeout(handleNext, 1000);
+                }
+            }
+            else if (current === 1) {
+                const matchedState = indianStates.find(state => command.includes(state.name.toLowerCase()));
+                if (matchedState) {
+                    stateDropdown.value = matchedState.id;
+                    stateDropdown.dispatchEvent(new Event('change'));
+                    voiceDebug.innerText += " (Location selected!)";
+
+                    setTimeout(handleNext, 1000);
+                }
+            }
+            else {
+                const options = currentSection.querySelectorAll('.option-card');
+                options.forEach(option => {
+                    const optionText = option.textContent.trim().toLowerCase();
+                    if (command.includes(optionText) || optionText.includes(command.replace(/\s+/g, ''))) {
+                        option.click();
+                        voiceDebug.innerText += " (Option selected!)";
+
+                        setTimeout(handleNext, 1000);
+                    }
+                });
+            }
+        }
+
+        async function findOpportunities() {
+            const payload = {
+                age: document.getElementById('ageField').value,
+                state: document.getElementById('stateDropdown').value,
+                maritalStatus: document.querySelector('input[name="ms"]:checked')?.value || '',
+                category: document.querySelector('input[name="cat"]:checked')?.value || '',
+                disability: document.querySelector('input[name="dis"]:checked')?.value || 'No',
+                education: document.querySelector('input[name="edu"]:checked')?.value || '',
+                employment: document.querySelector('input[name="emp"]:checked')?.value || ''
+            };
+
+            try {
+                document.querySelector('.btn-find').innerText = 'Searching...';
+                const response = await fetch('http://localhost:8000/api/find-opportunities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if (data.success && data.count > 0) {
+                    let resultHtml = `<h2>Eligible Opportunities (${data.count})</h2><div style="text-align:left; margin-top:20px;">`;
+                    data.opportunities.forEach(opp => {
+                        resultHtml += `
+                            <div style="border: 1px solid #ececec; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: white; text-align: left;">
+                                <h3 style="margin: 0 0 10px 0; color: #054c5a;">${opp.name}</h3>
+                                <p style="margin: 0 0 15px 0; color: #555;">${opp.description}</p>
+                                <a href="${opp.official_website}" target="_blank" style="background: #4dcbc6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; display: inline-block;">Apply Here</a>
+                            </div>
+                        `;
+                    });
+                    resultHtml += `</div>`;
+                    document.getElementById('success-screen').innerHTML = resultHtml;
+                } else {
+                    document.getElementById('success-screen').innerHTML = `<h2>No Matches Found</h2><p>We couldn't find any specific schemes right now. Check back later!</p>`;
+                }
+            } catch (error) {
+                alert("Error connecting to backend: " + error.message);
+                document.querySelector('.btn-find').innerText = 'Find Financial Opportunity';
+            }
+        }
+    </script>
+    <script>
+        // --- PixaBot Draggable Logic ---
+        (function() {
+            const bot = document.getElementById('pixabot-container');
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+            let dragged = false;
+
+            bot.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragged = false;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = bot.offsetLeft;
+                initialY = bot.offsetTop;
+                bot.style.transition = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                        dragged = true;
+                    }
+                    bot.style.left = (initialX + dx) + 'px';
+                    bot.style.top = (initialY + dy) + 'px';
+                    bot.style.bottom = 'auto'; // Remove fixed bottom
+
+                    const iframe = document.getElementById('pixabot-iframe');
+                    if (iframe && iframe.style.display === 'block') {
+                        iframe.style.display = 'none';
+                        iframe.style.opacity = '0';
+                    }
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            bot.addEventListener('click', (e) => {
+                if (!dragged) {
+                    togglePixaBot();
+                }
+            });
+
+            function togglePixaBot() {
+                let iframe = document.getElementById('pixabot-iframe');
+                const botRect = bot.getBoundingClientRect();
+
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'pixabot-iframe';
+                    iframe.src = 'PixaBot.html';
+                    iframe.style.position = 'fixed';
+                    iframe.style.width = '400px';
+                    iframe.style.height = '600px';
+                    iframe.style.border = 'none';
+                    iframe.style.zIndex = '10000';
+                    iframe.style.borderRadius = '20px';
+                    iframe.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                    iframe.style.transition = 'all 0.3s ease';
+                    iframe.style.opacity = '0';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+                
+                if (iframe.style.display === 'none') {
+                    iframe.style.left = botRect.left + 'px';
+                    iframe.style.top = (botRect.top - 610) + 'px';
+
+                    iframe.style.display = 'block';
+                    setTimeout(() => iframe.style.opacity = '1', 10);
+                } else {
+                    iframe.style.opacity = '0';
+                    setTimeout(() => iframe.style.display = 'none', 300);
+                }
+            }
+
+            document.addEventListener('mousedown', (e) => {
+                const iframe = document.getElementById('pixabot-iframe');
+                if (iframe && iframe.style.display === 'block') {
+                    if (!iframe.contains(e.target) && !bot.contains(e.target)) {
+                        iframe.style.opacity = '0';
+                        setTimeout(() => iframe.style.display = 'none', 300);
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+
+
+</html>

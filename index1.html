@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniScholar.AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <style>
+        /* --- VOICE TOGGLE SWITCH --- */
+        .voice-control {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .voice-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--sidebar-text);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #4A3B3C;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary);
+            box-shadow: 0 0 12px rgba(76, 201, 192, 0.4);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        :root {
+            /* Dark Teal & Cyan Theme */
+            --primary: #4cc9c0;
+            --primary-hover: #3bbab1;
+            --accent: #a5e8e2;
+
+            /* Cool Mesh Gradient */
+            --bg-grad: radial-gradient(at 0% 0%, hsla(185, 100%, 96%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(190, 100%, 94%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(180, 100%, 95%, 1) 0, transparent 50%);
+            --bg-color: #E6F5F6;
+
+            /* Dark Teal Sidebar */
+            --sidebar-bg: #114c54;
+            --sidebar-text: #82b9bf;
+            --step-active: #ffffff;
+
+            --text-main: #223335;
+            --text-light: #5a7375;
+            --surface: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: var(--bg-grad);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        #app-window {
+            width: 92%;
+            max-width: 1200px;
+            height: 85vh;
+            min-height: 650px;
+            background: var(--surface);
+            border-radius: 28px;
+            box-shadow: 0 40px 100px -20px rgba(76, 201, 192, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.03);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 320px;
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 45px 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+            color: var(--sidebar-text);
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: 0.3s ease;
+        }
+
+        .step.active {
+            color: var(--step-active);
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #5C3D46;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--sidebar-text);
+            transition: 0.3s ease;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-num {
+            border-color: var(--primary);
+            background: rgba(76, 201, 192, 0.2);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(76, 201, 192, 0.4);
+        }
+
+        .step-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+            transition: 0.3s;
+            margin-left: -5px;
+        }
+
+        .step.active .step-icon {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        /* --- MAIN CONTENT & FORMS --- */
+        .main-content {
+            flex: 1;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .view {
+            display: none;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            color: var(--sidebar-bg);
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-light);
+            font-size: 1.15rem;
+            margin-bottom: 45px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 28px;
+            max-width: 480px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #735D62;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 18px 22px;
+            border-radius: 16px;
+            border: 2px solid #cce3e6;
+            background: #ffffff;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 5px rgba(76, 201, 192, 0.15);
+        }
+
+        .error-border {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .error-border-span {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            color: #ef4444 !important;
+        }
+
+        /* --- GLOWING RADIO CARDS --- */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            max-width: 480px;
+        }
+
+        .grid-radio-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 480px;
+            margin-bottom: 15px;
+        }
+
+        .radio-card {
+            flex: 1;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-card input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-card span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px solid #cce3e6;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #ffffff;
+            color: #8F767B;
+        }
+
+        .radio-card:hover span {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(76, 201, 192, 0.35);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .radio-card input:checked+span {
+            border-color: var(--primary);
+            background: #e0f2f4;
+            color: var(--primary);
+            box-shadow: 0 4px 15px -3px rgba(76, 201, 192, 0.25);
+            transform: translateY(0px);
+        }
+
+        .radio-card input:focus-visible+span {
+            box-shadow: 0 0 0 4px rgba(76, 201, 192, 0.25), 0 0 15px rgba(76, 201, 192, 0.35);
+            border-color: var(--primary);
+        }
+
+        /* --- DYNAMIC INTERACTIVE MAP STYLES --- */
+        .map-layout {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .map-container {
+            flex: 1;
+            min-width: 350px;
+            height: 420px;
+            background: #ffffff;
+            border-radius: 20px;
+            border: 2px solid #cce3e6;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+        }
+
+        #india-map svg path {
+            stroke: var(--primary) !important;
+            stroke-width: 1px !important;
+            transition: fill 0.3s ease;
+        }
+
+        .state-display-box {
+            padding: 24px;
+            border: 2px dashed #D9C5C9;
+            border-radius: 16px;
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #8F767B;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+        }
+
+        .state-display-box.selected {
+            border: 2px solid var(--primary);
+            background: #e0f2f4;
+            color: var(--primary);
+            box-shadow: 0 4px 15px -3px rgba(76, 201, 192, 0.2);
+        }
+
+        .state-display-box svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .controls {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 40px;
+            border-top: 1px solid #cce3e6;
+        }
+
+        button {
+            padding: 18px 45px;
+            border-radius: 14px;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(76, 201, 192, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(76, 201, 192, 0.5);
+        }
+
+        .btn-secondary {
+            background: #e0f2f4;
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #d0ecef;
+        }
+
+        /* Loader & Results */
+        #loader-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .spinner {
+            width: 55px;
+            height: 55px;
+            border: 5px solid #cce3e6;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+            margin-bottom: 25px;
+        }
+
+        #results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #cce3e6;
+            border-radius: 20px;
+            padding: 26px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(76, 201, 192, 0.15);
+            border-color: transparent;
+        }
+
+        .card h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.25rem;
+            color: var(--sidebar-bg);
+        }
+
+        .card .amt {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Modal */
+        #modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(46, 30, 35, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            padding: 50px;
+            border-radius: 28px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #D9C5C9;
+            border: none;
+            background: none;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .badge-live {
+            background: #E6F4EA;
+            color: #2E7D32;
+        }
+
+        .badge-closed {
+            background: #d0ecef;
+            color: #C62828;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PixaBot Floating Bubble -->
+    <div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
+        <div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
+            <img src="https://myimgs.org/storage/images/19225/20260320_203834.png" alt="PixaBot" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+    <div id="app-window">
+
+        <div class="sidebar">
+            <div style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='dashboard.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </div>
+            <div class="logo">UniScholar<span>.AI</span></div>
+
+            <div class="step active" id="nav0">
+                <div class="step-num">1</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Gender
+            </div>
+            <div class="step" id="nav1">
+                <div class="step-num">2</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Age Details
+            </div>
+            <div class="step" id="nav2">
+                <div class="step-num">3</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Caste
+            </div>
+            <div class="step" id="nav3">
+                <div class="step-num">4</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Disability
+            </div>
+            <div class="step" id="nav4">
+                <div class="step-num">5</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Region
+            </div>
+            <div class="step" id="nav5">
+                <div class="step-num">6</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+                Academics
+            </div>
+            <div class="step" id="nav6">
+                <div class="step-num">7</div>
+                <svg class="step-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8v8m0-8V6m0 12v-2m0 0V6M4 12h16M4 16h16M4 8h16" />
+                </svg>
+                Finances
+            </div>
+
+            <div class="voice-control">
+                <div class="voice-label">
+                    <span style="font-size: 1.3rem;">🎤</span> Voice Assistant
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="voice-toggle" onchange="handleVoiceToggle(this)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="main-content">
+
+            <div class="view active" id="view0">
+                <h2>Your Gender</h2>
+                <p class="subtitle">Please select your gender identity.</p>
+
+                <div class="radio-group" style="margin-bottom: 20px;">
+                    <label class="radio-card">
+                        <input type="radio" name="gender_status" value="Female" onchange="handleGenderChange()">
+                        <span>Female</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="gender_status" value="Male" onchange="handleGenderChange()">
+                        <span>Male</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="gender_status" value="Other" onchange="handleGenderChange()">
+                        <span>Other</span>
+                    </label>
+                </div>
+
+                <div class="input-group" id="other-gender-container"
+                    style="display: none; max-width: 480px; animation: slideUp 0.3s ease forwards;">
+                    <input type="text" id="i_gender_other" placeholder="Please specify your gender...">
+                </div>
+            </div>
+
+            <div class="view" id="view1">
+                <h2>Your Age</h2>
+                <p class="subtitle">Used to match specific age-restricted grants.</p>
+                <div class="input-group">
+                    <label>Age (Years)</label>
+                    <input type="number" id="i_age" placeholder="e.g. 20" min="10" max="60" required>
+                </div>
+            </div>
+
+            <div class="view" id="view2">
+                <h2>Caste Category</h2>
+                <p class="subtitle">Unlocking government-mandated schemes.</p>
+
+                <div class="grid-radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="SC" onchange="handleCasteChange()">
+                        <span>SC</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="ST" onchange="handleCasteChange()">
+                        <span>ST</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="OBC" onchange="handleCasteChange()">
+                        <span>OBC</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="General" onchange="handleCasteChange()">
+                        <span>General</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="Minority" onchange="handleCasteChange()">
+                        <span>Minority</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="caste_status" value="Other" onchange="handleCasteChange()">
+                        <span>Others</span>
+                    </label>
+                </div>
+
+                <div class="input-group" id="other-caste-container"
+                    style="display: none; max-width: 480px; animation: slideUp 0.3s ease forwards;">
+                    <input type="text" id="i_caste_other" placeholder="Please specify your category...">
+                </div>
+            </div>
+
+            <div class="view" id="view3">
+                <h2>Physical Disability</h2>
+                <p class="subtitle">Are you a Person with Benchmark Disability (PwD)?</p>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="pwd_status" value="yes">
+                        <span>Yes, I am</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="pwd_status" value="no" checked>
+                        <span>No, I am not</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="view" id="view4">
+                <h2>Domicile Region</h2>
+                <p class="subtitle">Click your state on the map to confirm residency.</p>
+
+                <div class="map-layout">
+                    <div class="map-container" id="india-map">
+                        <div id="map-loader" class="spinner" style="position: absolute;"></div>
+                    </div>
+
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="margin-bottom: 15px;">Selected Territory</label>
+                        <div id="selected-state-display" class="state-display-box">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span id="state-name-text">Hover to view & Click to select</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view" id="view5">
+                <h2>Academic Standing</h2>
+                <p class="subtitle">Merit grants require your current status.</p>
+                <div class="input-group">
+                    <label>Highest Qualification</label>
+                    <select id="i_qual" required onchange="toggleOtherQual()">
+                        <option value="" disabled selected>Select Qualification</option>
+                        <option value="12th">12th Standard</option>
+                        <option value="btech">B.Tech / B.E.</option>
+                        <option value="bsc">B.Sc</option>
+                        <option value="diploma">Diploma</option>
+                        <option value="other">Others (Specify)</option>
+                    </select>
+                </div>
+                <div class="input-group" id="other-qual-container" style="display: none;">
+                    <input type="text" id="i_qual_other" placeholder="Type your qualification here...">
+                </div>
+                <div class="input-group">
+                    <label>Percentage / Score (%)</label>
+                    <input type="number" id="i_marks" placeholder="e.g. 85" required>
+                </div>
+            </div>
+
+            <div class="view" id="view6">
+                <h2>Financial Need</h2>
+                <p class="subtitle">Total annual family income from all sources.</p>
+                <div class="input-group">
+                    <label>Annual Income (₹)</label>
+                    <input type="number" id="i_inc" placeholder="e.g. 400000" required>
+                </div>
+            </div>
+
+            <div id="loader-view">
+                <div class="spinner"></div>
+                <h2 style="font-size: 1.8rem; color: var(--sidebar-bg);">Analyzing Profile...</h2>
+                <p class="subtitle">Searching national and state databases.</p>
+            </div>
+
+            <div class="view" id="view7">
+                <h2>Your Matches</h2>
+                <p class="subtitle" id="result-text"></p>
+                <div id="results-grid"></div>
+            </div>
+
+            <div class="controls" id="control-bar" style="justify-content: space-between;">
+                <button class="btn-secondary" id="btn-prev" onclick="move(-1)" style="visibility: hidden;">Back</button>
+                <button class="btn-primary" id="btn-next" onclick="move(1)">Continue</button>
+            </div>
+        </div>
+
+        <div id="modal">
+            <div class="modal-content">
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+                <div id="m_status_badge" class="badge"></div>
+                <h2 id="m_title" style="font-size: 2rem; margin-top: 5px; color: var(--sidebar-bg);"></h2>
+                <p id="m_desc" style="color: #735D62; line-height: 1.7; margin-bottom: 30px; font-size: 1.05rem;"></p>
+
+                <div
+                    style="display: flex; gap: 50px; margin-bottom: 45px; background: #ffffff; border: 1px solid #cce3e6; padding: 25px; border-radius: 16px;">
+                    <div>
+                        <div
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--text-light); letter-spacing: 1.5px; margin-bottom: 5px;">
+                            GRANT AMOUNT</div>
+                        <div id="m_amt" style="font-size: 1.8rem; color: var(--primary); font-weight: 700;"></div>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size: 0.8rem; font-weight: 700; color: var(--text-light); letter-spacing: 1.5px; margin-bottom: 5px;">
+                            DEADLINE</div>
+                        <div id="m_end" style="font-size: 1.8rem; font-weight: 700; color: var(--sidebar-bg);"></div>
+                    </div>
+                </div>
+                <button id="apply-btn" class="btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem;">Apply
+                    on Official Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let step = 0;
+        const maxSteps = 6; // Updated total steps
+        let payload = {};
+        let globalSelectedState = "";
+
+        // --- VOICE STATE MANAGEMENT FLAGS ---
+        let isVoiceSessionActive = false;
+        let isAssistantSpeaking = false;
+
+        window.onload = function () {
+            google.charts.load('current', { 'packages': ['geochart'] });
+            google.charts.setOnLoadCallback(initMap);
+        };
+
+        // --- 1. VOICE CONFIGURATION (LISTENING & SPEAKING) ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'en-IN';
+
+            // FIXED SYNTAX ERROR HERE
+            recognition.onresult = (event) => {
+                if (isAssistantSpeaking) return;
+                const lastResultIndex = event.results.length - 1;
+                const transcript = event.results[lastResultIndex][0].transcript.toLowerCase().trim();
+                console.log("UniScholar Heard:", transcript);
+
+                if (transcript.includes('next') || transcript.includes('continue') || transcript.includes('forward')) {
+                    move(1);
+                }
+                else if (transcript.includes('back') || transcript.includes('previous') || transcript.includes('go back')) {
+                    move(-1);
+                }
+                else {
+                    fillCurrentFormStep(transcript, step);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.warn("Voice Engine Status:", event.error);
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    document.getElementById('voice-toggle').checked = false;
+                    isVoiceSessionActive = false;
+                    alert("Microphone access denied. Please allow it in your browser settings.");
+                }
+            };
+
+            recognition.onend = () => {
+                if (isVoiceSessionActive && !isAssistantSpeaking) {
+                    setTimeout(() => {
+                        try { recognition.start(); } catch (e) { }
+                    }, 250);
+                }
+            };
+        }
+
+        // --- 2. THE TRAFFIC LIGHT (SPEAKING LOGIC) ---
+        function speakQuestion() {
+            window.speechSynthesis.cancel();
+            isAssistantSpeaking = true;
+
+
+
+            const currentView = document.getElementById(`view${step}`);
+            if (!currentView) return;
+
+            const title = currentView.querySelector('h2').innerText;
+            const subtitle = currentView.querySelector('p.subtitle').innerText;
+            const utterance = new SpeechSynthesisUtterance(`${title}. ${subtitle}`);
+
+            utterance.lang = 'en-IN';
+            utterance.rate = 0.9;
+
+            utterance.onend = () => {
+                isAssistantSpeaking = false;
+
+            };
+
+            utterance.onerror = () => {
+                isAssistantSpeaking = false;
+
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // --- 3. THE TOGGLE SWITCH ---
+        function handleVoiceToggle(checkbox) {
+            if (!recognition) {
+                alert("Voice commands are not supported in your browser. Try Chrome!");
+                checkbox.checked = false;
+                return;
+            }
+
+            isVoiceSessionActive = checkbox.checked;
+
+            if (isVoiceSessionActive) {
+                console.log("Voice Assistant Enabled");
+                try { recognition.start(); } catch (e) { }
+                speakQuestion();
+            } else {
+                console.log("Voice Assistant Disabled");
+                isAssistantSpeaking = false;
+                window.speechSynthesis.cancel();
+                try { recognition.abort(); } catch (e) { }
+            }
+        }
+
+        // --- 4. FORM NAVIGATION & FILLING ---
+        function fillCurrentFormStep(transcript, currentStep) {
+            // Step 0: Gender (NEW)
+            if (currentStep === 0) {
+                const radios = document.querySelectorAll('input[name="gender_status"]');
+                let matched = false;
+                if (transcript.includes('female') || transcript.includes('woman') || transcript.includes('girl')) { radios[0].checked = true; matched = true; }
+                else if (transcript.includes('male') || transcript.includes('man') || transcript.includes('boy')) { radios[1].checked = true; matched = true; }
+                else if (transcript.includes('other')) { radios[2].checked = true; matched = true; }
+
+                if (matched) {
+                    handleGenderChange();
+                    radios.forEach(r => { if (r.checked) r.dispatchEvent(new Event('change')); });
+                }
+            }
+
+            // Step 1: Age
+            else if (currentStep === 1) {
+                const numbers = transcript.match(/\d+/);
+                const wordToNum = { "eighteen": 18, "nineteen": 19, "twenty": 20, "twenty one": 21, "twenty two": 22 };
+                if (numbers) document.getElementById('i_age').value = numbers[0];
+                else for (let word in wordToNum) if (transcript.includes(word)) document.getElementById('i_age').value = wordToNum[word];
+            }
+
+            // Step 2: Caste
+            else if (currentStep === 2) {
+                const radios = document.querySelectorAll('input[name="caste_status"]');
+                let matched = false;
+                if (transcript.includes('s c') || transcript.includes('sc')) { radios[0].checked = true; matched = true; }
+                else if (transcript.includes('s t') || transcript.includes('st')) { radios[1].checked = true; matched = true; }
+                else if (transcript.includes('o b c') || transcript.includes('obc')) { radios[2].checked = true; matched = true; }
+                else if (transcript.includes('general')) { radios[3].checked = true; matched = true; }
+                else if (transcript.includes('minority')) { radios[4].checked = true; matched = true; }
+                else if (transcript.includes('other')) { radios[5].checked = true; matched = true; }
+
+                if (matched) {
+                    handleCasteChange();
+                    radios.forEach(r => { if (r.checked) r.dispatchEvent(new Event('change')); });
+                }
+            }
+
+            // Step 3: Disability
+            else if (currentStep === 3) {
+                const radios = document.querySelectorAll('input[name="pwd_status"]');
+                if (transcript.includes('yes')) { radios[0].checked = true; radios[0].dispatchEvent(new Event('change')); }
+                else if (transcript.includes('no') || transcript.includes('not')) { radios[1].checked = true; radios[1].dispatchEvent(new Event('change')); }
+            }
+
+            // Step 4: Map
+            else if (currentStep === 4) {
+                const foundState = allStates.find(s => transcript.includes(s.name.toLowerCase()));
+                if (foundState) {
+                    globalSelectedState = foundState.name;
+                    const displayBox = document.getElementById('selected-state-display');
+                    document.getElementById('state-name-text').innerText = globalSelectedState;
+                    displayBox.classList.add('selected');
+                    displayBox.classList.remove('error-border-span');
+                    drawMap();
+                }
+            }
+
+            // Step 5: Academics
+            else if (currentStep === 5) {
+                const qualSelect = document.getElementById('i_qual');
+                if (transcript.includes('12') || transcript.includes('twelfth')) qualSelect.value = '12th';
+                else if (transcript.includes('btech') || transcript.includes('b tech')) qualSelect.value = 'btech';
+                else if (transcript.includes('bsc') || transcript.includes('b sc')) qualSelect.value = 'bsc';
+                else if (transcript.includes('diploma')) qualSelect.value = 'diploma';
+                toggleOtherQual();
+
+                const numbers = transcript.match(/\d+/g);
+                if (numbers) {
+                    const possibleMarks = numbers.map(Number).filter(n => n <= 100 && n > 30);
+                    if (possibleMarks.length > 0) document.getElementById('i_marks').value = Math.max(...possibleMarks);
+                }
+            }
+
+            // Step 6: Finances
+            else if (currentStep === 6) {
+                let incomeStr = transcript.replace(/,/g, '');
+                const numbers = incomeStr.match(/\d+/);
+                if (numbers) {
+                    let finalAmount = parseInt(numbers[0]);
+                    if (transcript.includes('lakh') || transcript.includes('lac')) {
+                        if (finalAmount < 100) finalAmount *= 100000;
+                    } else if (transcript.includes('thousand')) {
+                        if (finalAmount < 1000) finalAmount *= 1000;
+                    }
+                    document.getElementById('i_inc').value = finalAmount;
+                }
+            }
+        }
+
+        function validateCurrentStep() {
+            const currentView = document.getElementById(`view${step}`);
+            let isValid = true;
+
+            if (step === 0) {
+                const checkedGender = document.querySelector('input[name="gender_status"]:checked');
+                if (!checkedGender) {
+                    document.querySelectorAll('#view0 .radio-card span').forEach(el => el.classList.add('error-border-span'));
+                    isValid = false;
+                } else if (checkedGender.value === 'Other') {
+                    const otherInput = document.getElementById('i_gender_other');
+                    if (!otherInput.value.trim()) {
+                        otherInput.classList.add('error-border');
+                        isValid = false;
+                    }
+                }
+                return isValid;
+            }
+
+            if (step === 2) {
+                const checkedCaste = document.querySelector('input[name="caste_status"]:checked');
+                if (!checkedCaste) {
+                    document.querySelectorAll('#view2 .radio-card span').forEach(el => el.classList.add('error-border-span'));
+                    isValid = false;
+                } else if (checkedCaste.value === 'Other') {
+                    const otherInput = document.getElementById('i_caste_other');
+                    if (!otherInput.value.trim()) {
+                        otherInput.classList.add('error-border');
+                        isValid = false;
+                    }
+                }
+                return isValid;
+            }
+
+            if (step === 4) {
+                if (!globalSelectedState) {
+                    document.getElementById('selected-state-display').classList.add('error-border-span');
+                    return false;
+                }
+                return true;
+            }
+
+            const inputs = currentView.querySelectorAll('input[type="number"], input[type="date"], input[type="text"], select');
+            inputs.forEach(input => {
+                if (input.id === 'i_qual_other' && document.getElementById('i_qual').value !== 'other') return;
+                if (input.id === 'i_gender_other' && document.querySelector('input[name="gender_status"]:checked')?.value !== 'Other') return;
+
+                input.classList.remove('error-border');
+                if (!input.value) {
+                    input.classList.add('error-border');
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
+
+        function move(dir) {
+            if (dir === 1 && !validateCurrentStep()) return;
+
+            if (dir === 1) {
+                if (step === 0) {
+                    const genderVal = document.querySelector('input[name="gender_status"]:checked').value;
+                    payload.gender = genderVal === 'Other' ? document.getElementById('i_gender_other').value : genderVal;
+                }
+                if (step === 1) payload.age = document.getElementById('i_age').value;
+                if (step === 2) {
+                    const casteVal = document.querySelector('input[name="caste_status"]:checked').value;
+                    payload.caste = casteVal === 'Other' ? document.getElementById('i_caste_other').value : casteVal;
+                }
+                if (step === 3) payload.pwd = document.querySelector('input[name="pwd_status"]:checked').value;
+                if (step === 4) payload.state = globalSelectedState;
+                if (step === 5) {
+                    const qualVal = document.getElementById('i_qual').value;
+                    payload.qual = qualVal === 'other' ? document.getElementById('i_qual_other').value : qualVal;
+                    payload.marks = document.getElementById('i_marks').value;
+                }
+                if (step === 6) payload.income = document.getElementById('i_inc').value;
+            }
+
+            document.getElementById(`view${step}`).classList.remove('active');
+            if (document.getElementById(`nav${step}`)) {
+                document.getElementById(`nav${step}`).classList.remove('active');
+            }
+
+            step += dir;
+
+            if (step > maxSteps) {
+                if (isVoiceSessionActive) {
+                    window.speechSynthesis.cancel();
+                    try { recognition.abort(); } catch (e) { }
+                }
+                submitSearch();
+                return;
+            }
+
+            document.getElementById(`view${step}`).classList.add('active');
+            if (document.getElementById(`nav${step}`)) {
+                document.getElementById(`nav${step}`).classList.add('active');
+            }
+
+            if (isVoiceSessionActive) {
+                speakQuestion();
+            }
+
+            document.getElementById('btn-prev').style.visibility = step === 0 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').innerText = step === maxSteps ? 'Find Scholarships' : 'Continue';
+
+            if (step === 4 && mapChart) {
+                setTimeout(() => drawMap(), 50);
+            }
+        }
+
+        // --- 5. GOOGLE GEOCHART MAP LOGIC ---
+        let mapChart;
+        let mapData;
+        let mapOptions;
+
+        const allStates = [
+            { id: 'IN-AN', name: 'Andaman and Nicobar Islands' }, { id: 'IN-AP', name: 'Andhra Pradesh' },
+            { id: 'IN-AR', name: 'Arunachal Pradesh' }, { id: 'IN-AS', name: 'Assam' },
+            { id: 'IN-BR', name: 'Bihar' }, { id: 'IN-CH', name: 'Chandigarh' },
+            { id: 'IN-CT', name: 'Chhattisgarh' }, { id: 'IN-DN', name: 'Dadra and Nagar Haveli and Daman and Diu' },
+            { id: 'IN-DL', name: 'Delhi' }, { id: 'IN-GA', name: 'Goa' },
+            { id: 'IN-GJ', name: 'Gujarat' }, { id: 'IN-HR', name: 'Haryana' },
+            { id: 'IN-HP', name: 'Himachal Pradesh' }, { id: 'IN-JK', name: 'Jammu and Kashmir' },
+            { id: 'IN-JH', name: 'Jharkhand' }, { id: 'IN-KA', name: 'Karnataka' },
+            { id: 'IN-KL', name: 'Kerala' }, { id: 'IN-LA', name: 'Ladakh' },
+            { id: 'IN-LD', name: 'Lakshadweep' }, { id: 'IN-MP', name: 'Madhya Pradesh' },
+            { id: 'IN-MH', name: 'Maharashtra' }, { id: 'IN-MN', name: 'Manipur' },
+            { id: 'IN-ML', name: 'Meghalaya' }, { id: 'IN-MZ', name: 'Mizoram' },
+            { id: 'IN-NL', name: 'Nagaland' }, { id: 'IN-OR', name: 'Odisha' },
+            { id: 'IN-PY', name: 'Puducherry' }, { id: 'IN-PB', name: 'Punjab' },
+            { id: 'IN-RJ', name: 'Rajasthan' }, { id: 'IN-SK', name: 'Sikkim' },
+            { id: 'IN-TN', name: 'Tamil Nadu' }, { id: 'IN-TG', name: 'Telangana' },
+            { id: 'IN-TR', name: 'Tripura' }, { id: 'IN-UP', name: 'Uttar Pradesh' },
+            { id: 'IN-UT', name: 'Uttarakhand' }, { id: 'IN-WB', name: 'West Bengal' }
+        ];
+
+        function initMap() {
+            document.getElementById('map-loader').style.display = 'none';
+            mapChart = new google.visualization.GeoChart(document.getElementById('india-map'));
+
+            mapOptions = {
+                region: 'IN', displayMode: 'regions', resolution: 'provinces',
+                colorAxis: { colors: ['#FFF5F7', '#F28C9D'] }, backgroundColor: 'transparent',
+                datalessRegionColor: '#FFFFFF', defaultColor: '#FFF5F7', legend: 'none',
+                tooltip: { textStyle: { fontName: 'Inter', fontSize: 14 } }
+            };
+
+            drawMap();
+
+            google.visualization.events.addListener(mapChart, 'select', function () {
+                const selection = mapChart.getSelection();
+                if (selection.length > 0) {
+                    globalSelectedState = mapData.getFormattedValue(selection[0].row, 0);
+                    const displayBox = document.getElementById('selected-state-display');
+                    document.getElementById('state-name-text').innerText = globalSelectedState;
+                    displayBox.classList.add('selected');
+                    displayBox.classList.remove('error-border-span');
+                    drawMap();
+                }
+            });
+        }
+
+        function drawMap() {
+            if (!mapChart) return;
+            mapData = new google.visualization.DataTable();
+            mapData.addColumn('string', 'State');
+            mapData.addColumn('number', 'Selected');
+
+            allStates.forEach(s => {
+                mapData.addRow([{ v: s.id, f: s.name }, s.name === globalSelectedState ? 1 : 0]);
+            });
+            mapChart.draw(mapData, mapOptions);
+        }
+
+        function toggleOtherQual() {
+            const qualSelect = document.getElementById('i_qual');
+            const otherContainer = document.getElementById('other-qual-container');
+            otherContainer.style.display = qualSelect.value === 'other' ? 'block' : 'none';
+        }
+
+        function handleCasteChange() {
+            const checkedVal = document.querySelector('input[name="caste_status"]:checked').value;
+            const otherContainer = document.getElementById('other-caste-container');
+            document.querySelectorAll('#view2 .radio-card span').forEach(el => el.classList.remove('error-border-span'));
+            document.getElementById('i_caste_other').classList.remove('error-border');
+            otherContainer.style.display = checkedVal === 'Other' ? 'block' : 'none';
+        }
+
+        // NEW: Handle dynamic gender input
+        function handleGenderChange() {
+            const checkedVal = document.querySelector('input[name="gender_status"]:checked').value;
+            const otherContainer = document.getElementById('other-gender-container');
+            document.querySelectorAll('#view0 .radio-card span').forEach(el => el.classList.remove('error-border-span'));
+            document.getElementById('i_gender_other').classList.remove('error-border');
+            otherContainer.style.display = checkedVal === 'Other' ? 'block' : 'none';
+        }
+
+        // --- 6. FORM SUBMISSION ---
+        async function submitSearch() {
+            document.getElementById('control-bar').style.display = 'none';
+            document.getElementById('loader-view').style.display = 'flex';
+
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const responseData = await res.json();
+                renderMatches(responseData.data);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('result-text').innerText = "Server connection failed. Ensure the backend is running.";
+            }
+
+            document.getElementById('loader-view').style.display = 'none';
+            document.getElementById('view7').classList.add('active');
+        }
+
+        function renderMatches(data) {
+            const grid = document.getElementById('results-grid');
+            grid.innerHTML = '';
+            if (!data || data.length === 0) {
+                document.getElementById('result-text').innerText = `We couldn't find matching grants at this moment.`;
+                return;
+            }
+            document.getElementById('result-text').innerText = `We found ${data.length} grants that fit your profile.`;
+            data.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h3>${s.name}</h3><div class="amt">₹${s.amt.toLocaleString()}</div>`;
+                card.onclick = () => showModal(s);
+                grid.appendChild(card);
+            });
+        }
+
+        function showModal(data) {
+            document.getElementById('m_title').innerText = data.name;
+            document.getElementById('m_desc').innerText = data.ds;
+            document.getElementById('m_amt').innerText = `₹${data.amt.toLocaleString()}`;
+            document.getElementById('m_end').innerText = data.end;
+
+            const badge = document.getElementById('m_status_badge');
+            const applyBtn = document.getElementById('apply-btn');
+            const today = new Date();
+            const deadline = new Date(data.end_date);
+
+            if (deadline >= today) {
+                badge.innerText = "● LIVE NOW"; badge.className = "badge badge-live";
+                applyBtn.style.background = "var(--primary)"; applyBtn.innerText = "Apply on Official Portal";
+                applyBtn.onclick = () => window.open(data.url, '_blank');
+            } else {
+                badge.innerText = "● CLOSED"; badge.className = "badge badge-closed";
+                applyBtn.style.background = "#D9C5C9"; applyBtn.innerText = "Applications Closed";
+                applyBtn.onclick = null;
+            }
+
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; modal.querySelector('.modal-content').style.transform = 'translateY(0)'; }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.opacity = '0';
+            modal.querySelector('.modal-content').style.transform = 'translateY(20px)';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+
+        // --- KEYBOARD ARROW NAVIGATION ---
+        document.addEventListener('keydown', function (e) {
+            const inTextInput = ['INPUT', 'SELECT'].includes(document.activeElement.tagName) && document.activeElement.type !== 'radio';
+
+            if (!inTextInput && ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+                const activeView = document.querySelector('.view.active');
+                if (activeView) {
+                    const radios = Array.from(activeView.querySelectorAll('input[type="radio"]'));
+                    if (radios.length > 0) {
+                        e.preventDefault();
+                        let currentIndex = radios.findIndex(r => r.checked);
+                        if (currentIndex === -1) currentIndex = 0;
+
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                            let nextIndex = currentIndex + 1 >= radios.length ? 0 : currentIndex + 1;
+                            radios[nextIndex].checked = true; radios[nextIndex].focus(); radios[nextIndex].dispatchEvent(new Event('change'));
+                        } else {
+                            let prevIndex = currentIndex <= 0 ? radios.length - 1 : currentIndex - 1;
+                            radios[prevIndex].checked = true; radios[prevIndex].focus(); radios[prevIndex].dispatchEvent(new Event('change'));
+                        }
+                    }
+                }
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (inTextInput) document.activeElement.blur();
+                move(1);
+            } else if (e.key === 'Backspace' && !inTextInput) {
+                e.preventDefault();
+                move(-1);
+            }
+        });
+    </script>
+    <script>
+        // --- PixaBot Draggable Logic ---
+        (function() {
+            const bot = document.getElementById('pixabot-container');
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+            let dragged = false;
+
+            bot.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragged = false;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = bot.offsetLeft;
+                initialY = bot.offsetTop;
+                bot.style.transition = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                        dragged = true;
+                    }
+                    bot.style.left = (initialX + dx) + 'px';
+                    bot.style.top = (initialY + dy) + 'px';
+                    bot.style.bottom = 'auto'; // Remove fixed bottom
+
+                    const iframe = document.getElementById('pixabot-iframe');
+                    if (iframe && iframe.style.display === 'block') {
+                        iframe.style.display = 'none';
+                        iframe.style.opacity = '0';
+                    }
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            bot.addEventListener('click', (e) => {
+                if (!dragged) {
+                    togglePixaBot();
+                }
+            });
+
+            function togglePixaBot() {
+                let iframe = document.getElementById('pixabot-iframe');
+                const botRect = bot.getBoundingClientRect();
+
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'pixabot-iframe';
+                    iframe.src = 'PixaBot.html';
+                    iframe.style.position = 'fixed';
+                    iframe.style.width = '400px';
+                    iframe.style.height = '600px';
+                    iframe.style.border = 'none';
+                    iframe.style.zIndex = '10000';
+                    iframe.style.borderRadius = '20px';
+                    iframe.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                    iframe.style.transition = 'all 0.3s ease';
+                    iframe.style.opacity = '0';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+                
+                if (iframe.style.display === 'none') {
+                    iframe.style.left = botRect.left + 'px';
+                    iframe.style.top = (botRect.top - 610) + 'px';
+
+                    iframe.style.display = 'block';
+                    setTimeout(() => iframe.style.opacity = '1', 10);
+                } else {
+                    iframe.style.opacity = '0';
+                    setTimeout(() => iframe.style.display = 'none', 300);
+                }
+            }
+
+            document.addEventListener('mousedown', (e) => {
+                const iframe = document.getElementById('pixabot-iframe');
+                if (iframe && iframe.style.display === 'block') {
+                    if (!iframe.contains(e.target) && !bot.contains(e.target)) {
+                        iframe.style.opacity = '0';
+                        setTimeout(() => iframe.style.display = 'none', 300);
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+
+
+</html>

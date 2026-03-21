@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixa | Emotional Intelligence</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: transparent;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            width: 400px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 15px 35px rgba(3, 75, 78, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            border: 1px solid rgba(3, 75, 78, 0.1);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #0f8680, #034b4e);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        /* --- NEW: Animated Glowing Ring --- */
+        .header-icon {
+            width: 42px;
+            height: 42px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            animation: ring-pulse 3s infinite alternate;
+            /* Makes the circle glow */
+        }
+
+        /* --- NEW: Breathing & Head-Tilt Animation --- */
+        .header-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center;
+            animation: bot-breathe 4s ease-in-out infinite;
+            /* Applies the movement */
+        }
+
+        /* The Keyframes that control exactly how she moves */
+        @keyframes bot-breathe {
+            0% {
+                transform: scale(1.6) translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.65) translateY(-2px) rotate(4deg);
+            }
+
+            /* Zooms slightly, floats up, tilts right */
+            100% {
+                transform: scale(1.6) translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes ring-pulse {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background-color: #f8fafc;
+            background-image: url('https://myimgs.org/storage/images/19245/white-pattern-background-0y4vz4yc8hegrzqc.png');
+            background-repeat: repeat;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+        }
+
+        .message-wrapper.bot {
+            align-self: flex-start;
+        }
+
+        .message-wrapper.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            padding: 0 4px;
+            font-weight: 600;
+        }
+
+        .emotion-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .message {
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s ease;
+        }
+
+        .message p {
+            margin-bottom: 8px;
+        }
+
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message ul,
+        .message ol {
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        .user-msg {
+            background: linear-gradient(135deg, #0f8680, #034b4e);
+            color: white;
+            border-radius: 18px 4px 18px 18px;
+        }
+
+        .bot-msg {
+            background-color: white;
+            color: #334155;
+            border-radius: 4px 18px 18px 18px;
+            border: 2px solid #e2e8f0;
+        }
+
+        @keyframes gentle-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.95);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes soft-pulse {
+            from {
+                box-shadow: 0 0 0 rgba(217, 70, 239, 0);
+            }
+
+            to {
+                box-shadow: 0 0 10px rgba(217, 70, 239, 0.15);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-4px);
+            }
+
+            75% {
+                transform: translateX(4px);
+            }
+        }
+
+        #listening-status-bar {
+            display: none;
+            background: #e0f2f1;
+            color: #034b4e;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-top: 1px solid #b2dfdb;
+            border-bottom: 1px solid #b2dfdb;
+            animation: soft-pulse 1.5s infinite alternate;
+        }
+
+        #live-transcript {
+            font-weight: 400;
+            color: #0f8680;
+            font-style: italic;
+            margin-left: 5px;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px 20px;
+            background: white;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: #f1f5f9;
+            color: #0f8680;
+        }
+
+        .icon-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .icon-btn.mic-active {
+            color: #ef4444;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 30px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #034b4e;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(3, 75, 78, 0.1);
+        }
+
+        button.send-btn {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0f8680, #034b4e);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(3, 75, 78, 0.3);
+        }
+
+        button.send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(3, 75, 78, 0.4);
+        }
+
+        button.send-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-left: -2px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 4px 18px 18px 18px;
+            border: 2px solid #e2e8f0;
+            color: #034b4e;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+            margin-bottom: 10px;
+        }
+
+        .dots span {
+            animation: blink 1.4s infinite both;
+            height: 6px;
+            width: 6px;
+            background: #034b4e;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            20% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-icon" id="main-avatar">
+                <img src="https://myimgs.org/storage/images/19225/20260320_203834.png" alt="Pixa Logo">
+            </div>
+            <strong>Pixa</strong>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+            <div class="message-wrapper bot">
+                <div class="message-sender">
+                    <strong>Pixa</strong> <span class="emotion-badge"
+                        style="color:#034b4e; background:#e0f2f1; margin-left: 6px;">Ready</span>
+                </div>
+                <div class="message bot-msg" style="border-color: #034b4e;">
+                    Hi I'm <strong>Pixa</strong>! 👋<br><br>How can I help you related to Scholarships and Financial
+                    Opportunities?
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typing">
+            <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div id="listening-status-bar">
+            🎙️ Listening... <span id="live-transcript"></span>
+        </div>
+
+        <div class="input-area">
+            <div id="mic-btn" class="icon-btn" onclick="toggleMicrophone()" title="Click to speak">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </div>
+
+            <input type="text" id="user-input" placeholder="Ask about scholarships or just chat..."
+                onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg></button>
+        </div>
+    </div>
+
+    <script>
+        const sessionId = Math.random().toString(36).substring(2, 15);
+        const chatBox = document.getElementById("chat-box");
+        const typingIndicator = document.getElementById("typing");
+        const inputField = document.getElementById("user-input");
+
+        const micBtn = document.getElementById("mic-btn");
+        const listeningStatusBar = document.getElementById("listening-status-bar");
+        const liveTranscript = document.getElementById("live-transcript");
+
+        const emotionColors = { happy: "#034b4e", excited: "#f59e0b", empathetic: "#d946ef", neutral: "#64748b", thinking: "#034b4e", sad: "#3b82f6", stern: "#ef4444", playful: "#ec4899", confused: "#8b5cf6" };
+        const emotionAnimations = { happy: "gentle-bounce 0.5s ease", excited: "pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", empathetic: "soft-pulse 2s infinite alternate", stern: "shake 0.4s ease", sad: "none", playful: "gentle-bounce 0.4s ease", confused: "none", neutral: "none", thinking: "none" };
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isListening = false;
+        let silenceTimer = null;
+
+        function resetSilenceTimer() {
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(() => {
+                if (isListening) {
+                    stopListening();
+                    if (inputField.value.trim() !== "") {
+                        sendMessage();
+                    }
+                }
+            }, 5000);
+        }
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-IN';
+
+            recognition.onstart = function () {
+                isListening = true;
+                micBtn.classList.add("mic-active");
+                listeningStatusBar.style.display = "block";
+                liveTranscript.textContent = "...";
+                resetSilenceTimer();
+            };
+
+            recognition.onresult = function (event) {
+                resetSilenceTimer();
+
+                let interim_transcript = '';
+                let final_transcript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        final_transcript += event.results[i][0].transcript;
+                    } else {
+                        interim_transcript += event.results[i][0].transcript;
+                    }
+                }
+
+                liveTranscript.textContent = '"' + (interim_transcript || final_transcript) + '"';
+
+                if (final_transcript) {
+                    if (inputField.value.trim() !== "") {
+                        inputField.value = inputField.value + " " + final_transcript.trim();
+                    } else {
+                        inputField.value = final_transcript.trim();
+                    }
+                }
+            };
+
+            recognition.onerror = function (event) {
+                console.error("Microphone Error:", event.error);
+                liveTranscript.textContent = "(Microphone error: " + event.error + ")";
+                stopListening();
+            };
+
+            recognition.onend = function () {
+                stopListening();
+            };
+        } else {
+            micBtn.style.display = "none";
+            console.warn("Speech Recognition API is not supported in this browser. Please use Chrome/Edge.");
+        }
+
+        function toggleMicrophone() {
+            if (!recognition) return alert("Your browser doesn't support voice recognition. Try Google Chrome!");
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            clearTimeout(silenceTimer);
+            micBtn.classList.remove("mic-active");
+            setTimeout(() => { listeningStatusBar.style.display = "none"; }, 1500);
+        }
+
+        async function sendMessage() {
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            if (isListening && recognition) {
+                recognition.stop();
+                clearTimeout(silenceTimer);
+            }
+
+            const userHtml = `<div class="message-wrapper user"><div class="message user-msg">${message}</div></div>`;
+            chatBox.insertAdjacentHTML('beforeend', userHtml);
+
+            const payload = { session_id: sessionId, user_message: message };
+            inputField.value = "";
+
+            typingIndicator.style.display = "flex";
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/chat", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                typingIndicator.style.display = "none";
+
+                if (response.ok) {
+                    const currentEmotion = (data.emotion || "neutral").toLowerCase();
+                    const badgeColor = emotionColors[currentEmotion] || emotionColors.neutral;
+                    const badgeBg = `${badgeColor}20`;
+                    const anim = emotionAnimations[currentEmotion] || "none";
+                    const formattedHtml = marked.parse(data.reply || "I am processing the data...");
+
+                    const botHtml = `
+                    <div class="message-wrapper bot">
+                        <div class="message-sender">
+                            <strong>Pixa</strong> <span class="emotion-badge" style="color:${badgeColor}; background:${badgeBg}; margin-left: 6px;">${currentEmotion}</span>
+                        </div>
+                        <div class="message bot-msg" style="border-color: ${badgeColor}; animation: ${anim};">
+                            ${formattedHtml}
+                        </div>
+                    </div>
+                `;
+                    chatBox.insertAdjacentHTML('beforeend', botHtml);
+                } else {
+                    const errorText = typeof data.detail === 'object' ? JSON.stringify(data.detail) : data.detail;
+                    chatBox.insertAdjacentHTML('beforeend', `<div class="message-wrapper bot"><div class="message bot-msg" style="border-color: red;">Error: ${errorText}</div></div>`);
+                }
+            } catch (error) {
+                typingIndicator.style.display = "none";
+                chatBox.insertAdjacentHTML('beforeend', `<div class="message-wrapper bot"><div class="message bot-msg" style="border-color: red;">Network error. Make sure Python backend is running!</div></div>`);
+            }
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event) { if (event.key === "Enter") { sendMessage(); } }
+    </script>
+
+</body>
+
+</html>
