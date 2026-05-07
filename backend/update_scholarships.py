@@ -37,7 +37,7 @@ def update_db():
     print("Connecting to database...")
     while True:
         try:
-            conn = sqlite3.connect('scholarships.db')
+            conn = sqlite3.connect('data/scholarships.db')
             c = conn.cursor()
             
             new_s = get_random_scholarship()

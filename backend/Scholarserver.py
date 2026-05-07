@@ -3,11 +3,11 @@ from flask_cors import CORS
 import sqlite3
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, '..', '..', 'data', 'scholarships.db')
-FRONTEND_PATH = os.path.join(BASE_DIR, '..', '..', 'frontend', 'unischolar', 'index.html')
+DB_PATH = os.path.join(BASE_DIR, 'data', 'scholarships.db')
+FRONTEND_PATH = os.path.join(BASE_DIR, '..', 'frontend', 'index1.html')
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend connectivity
@@ -85,7 +85,8 @@ def get_scholarships(payload):
             'end_date': r['close_date'],
             'url': r['url'],
             'type': r['scholarship_type'],
-            'status': status_label
+            'status': status_label,
+            'docs': r['documents_required']
         })
     
     return results
@@ -97,6 +98,79 @@ def index():
             return f.read()
     except Exception as e:
         return f"Error loading frontend/unischolar/index.html: {e}", 500
+
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        
+        today = datetime.now()
+        today_str = today.strftime('%Y-%m-%d')
+        five_days_later = (today + timedelta(days=5)).strftime('%Y-%m-%d')
+        
+        # Query scholarships ending within 5 days
+        c.execute('''
+            SELECT name, close_date, url, documents_required 
+            FROM scholarships 
+            WHERE close_date >= ? AND close_date <= ?
+        ''', (today_str, five_days_later))
+        
+        rows = c.fetchall()
+        conn.close()
+        
+        notifications = []
+        for r in rows:
+            close_date = datetime.strptime(r['close_date'], '%Y-%m-%d')
+            days_left = (close_date - today).days + 1
+            notifications.append({
+                'name': r['name'],
+                'days_left': days_left,
+                'url': r['url'],
+                'docs': r['documents_required']
+            })
+            
+        return jsonify({"status": "success", "notifications": notifications})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/live_scholarships', methods=['GET'])
+def get_live_scholarships():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        
+        today = datetime.now().strftime('%Y-%m-%d')
+        
+        # Query scholarships that are still open
+        c.execute('''
+            SELECT name, close_date, url, amount, scholarship_type, documents_required 
+            FROM scholarships 
+            WHERE close_date >= ?
+            ORDER BY close_date ASC
+            LIMIT 10
+        ''', (today,))
+        
+        rows = c.fetchall()
+        conn.close()
+        
+        live_scholarships = []
+        for r in rows:
+            live_scholarships.append({
+                'name': r['name'],
+                'close_date': r['close_date'],
+                'url': r['url'],
+                'amt': r['amount'],
+                'type': r['scholarship_type'],
+                'status': 'Ongoing',
+                'docs': r['documents_required']
+            })
+            
+        return jsonify({"status": "success", "data": live_scholarships})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/search', methods=['POST'])
 def search_scholarships():

@@ -1,14 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniCapital.AI | Dashboard</title>
-
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UniCapital.AI | Dashboard</title>
+<script src="https://www.gstatic.com/charts/loader.js" type="text/javascript"></script>
+<style>
         :root {
             --bg-sidebar: #054c5a;
             --bg-main: #ffffff;
@@ -406,216 +404,193 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- PixaBot Floating Bubble -->
-    <div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
-        <div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
-            <img src="https://myimgs.org/storage/images/19225/20260320_203834.png" alt="PixaBot" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-    </div>
-
-
-    <div class="app-container">
-        <aside class="sidebar">
-            <div style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='dashboard.html'">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-            </div>
-            <h1 class="logo">UniCapital<span>.AI</span></h1>
-            <div id="sidebarSteps">
-                <div class="step active">
-                    <span class="circle">1</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Age Details</span>
-                </div>
-                <div class="step">
-                    <span class="circle">2</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    <span>Location</span>
-                </div>
-                <div class="step">
-                    <span class="circle">3</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <circle cx="9" cy="12" r="5"></circle>
-                        <circle cx="15" cy="12" r="5"></circle>
-                    </svg>
-                    <span>Marital Status</span>
-                </div>
-                <div class="step">
-                    <span class="circle">4</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <span>Category</span>
-                </div>
-                <div class="step">
-                    <span class="circle">5</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <path
-                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                        </path>
-                    </svg>
-                    <span>Disability</span>
-                </div>
-                <div class="step">
-                    <span class="circle">6</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <path d="M22 10L12 5 2 10l10 5 10-5z"></path>
-                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                    </svg>
-                    <span>Academics</span>
-                </div>
-                <div class="step">
-                    <span class="circle">7</span>
-                    <svg class="step-icon" viewBox="0 0 24 24">
-                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                    </svg>
-                    <span>Employment</span>
-                </div>
-            </div>
-
-            <div class="voice-section">
-                <div class="voice-assistant-container">
-                    <div class="icon-text">
-                        <svg id="micIcon" class="step-icon mic-icon" viewBox="0 0 24 24" style="margin: 0;">
-                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                            <line x1="12" y1="19" x2="12" y2="22"></line>
-                        </svg>
-                        <span>Voice Assistant</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="voiceToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="voice-debug" id="voiceDebug">Heard: nothing yet...</div>
-            </div>
-
-        </aside>
-
-        <main class="content-area">
-            <div id="stepsWrapper">
-                <section class="form-step active" id="step-0">
-                    <h2>Your Age</h2>
-                    <p class="subtitle">Used to match specific age-restricted grants.</p>
-                    <label class="input-label">Age (Years)</label>
-                    <input type="number" placeholder="e.g. 20" id="ageField" autofocus>
-                    <div class="error-msg">Please enter your age to continue.</div>
-                </section>
-
-                <section class="form-step" id="step-1">
-                    <h2>Location</h2>
-                    <p class="subtitle" style="margin-bottom: 5px;">Click the map or select from the list below.</p>
-
-                    <div id="india-map">
-                        <div style="padding-top:180px; font-size: 20px; color:#a39494;">Loading Interactive Map...</div>
-                    </div>
-
-                    <select id="stateDropdown">
-                        <option value="">-- Select your State / UT --</option>
-                    </select>
-
-                    <div class="error-msg">Please select your domicile state to continue.</div>
-                </section>
-
-                <section class="form-step" id="step-2">
-                    <h2>Marital Status</h2>
-                    <p class="subtitle">Please select your current status.</p>
-                    <div class="options-grid">
-                        <label class="option-card"><input type="radio" name="ms" value="Single"> Single</label>
-                        <label class="option-card"><input type="radio" name="ms" value="Married"> Married</label>
-                        <label class="option-card"><input type="radio" name="ms" value="Widow"> Widow</label>
-                        <label class="option-card"><input type="radio" name="ms" value="Divorced"> Divorced</label>
-                    </div>
-                    <div class="error-msg">Please select an option to continue.</div>
-                </section>
-
-                <section class="form-step" id="step-3">
-                    <h2>Caste Category</h2>
-                    <p class="subtitle">Unlocking government-mandated schemes.</p>
-                    <div class="options-grid">
-                        <label class="option-card"><input type="radio" name="cat" value="SC"> SC</label>
-                        <label class="option-card"><input type="radio" name="cat" value="ST"> ST</label>
-                        <label class="option-card"><input type="radio" name="cat" value="OBC"> OBC</label>
-                        <label class="option-card"><input type="radio" name="cat" value="General"> General</label>
-                        <label class="option-card" style="grid-column: span 2;"><input type="radio" name="cat"
-                                value="Minority"> Minority</label>
-                    </div>
-                    <div class="error-msg">Please select a category to continue.</div>
-                </section>
-
-                <section class="form-step" id="step-4">
-                    <h2>Disability</h2>
-                    <p class="subtitle">Are you a person with a disability?</p>
-                    <div class="options-grid">
-                        <label class="option-card"><input type="radio" name="dis" value="Yes"> Yes</label>
-                        <label class="option-card"><input type="radio" name="dis" value="No"> No</label>
-                    </div>
-                    <div class="error-msg">Please select an option to continue.</div>
-                </section>
-
-                <section class="form-step" id="step-5">
-                    <h2>Education Level</h2>
-                    <p class="subtitle">Highest level of education completed.</p>
-                    <div class="options-grid">
-                        <label class="option-card"><input type="radio" name="edu" value="No Schooling"> No
+<!-- PixaBot Floating Bubble -->
+<div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
+<div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
+<img alt="PixaBot" src="bot_logo.jpeg" style="width: 100%; height: 100%; object-fit: cover;"/>
+</div>
+</div>
+<div class="app-container">
+<aside class="sidebar">
+<div onclick="window.location.href='dashboard.html'" style="margin-bottom: 20px; cursor: pointer;">
+<svg fill="none" height="24" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24">
+<path d="M19 12H5M12 19l-7-7 7-7"></path>
+</svg>
+</div>
+<h1 class="logo"><span data-i18n="s_9f00db28">UniCapital</span><span>.AI</span></h1>
+<div id="sidebarSteps">
+<div class="step active">
+<span class="circle">1</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<span data-i18n="s_354581b0">Age Details</span>
+</div>
+<div class="step">
+<span class="circle">2</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+<circle cx="12" cy="10" r="3"></circle>
+</svg>
+<span data-i18n="s_ce5bf551">Location</span>
+</div>
+<div class="step">
+<span class="circle">3</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<circle cx="9" cy="12" r="5"></circle>
+<circle cx="15" cy="12" r="5"></circle>
+</svg>
+<span data-i18n="s_5d0656eb">Marital Status</span>
+</div>
+<div class="step">
+<span class="circle">4</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+<span data-i18n="s_3adbdb3a">Category</span>
+</div>
+<div class="step">
+<span class="circle">5</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+</path>
+</svg>
+<span data-i18n="s_a15e5103">Disability</span>
+</div>
+<div class="step">
+<span class="circle">6</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<path d="M22 10L12 5 2 10l10 5 10-5z"></path>
+<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+</svg>
+<span data-i18n="s_2e2948e9">Academics</span>
+</div>
+<div class="step">
+<span class="circle">7</span>
+<svg class="step-icon" viewbox="0 0 24 24">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect>
+<path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+</svg>
+<span data-i18n="nav_emp">Employment</span>
+</div>
+</div>
+<div class="voice-section">
+<div class="voice-assistant-container">
+<div class="icon-text">
+<svg class="step-icon mic-icon" id="micIcon" style="margin: 0;" viewbox="0 0 24 24">
+<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+<line x1="12" x2="12" y1="19" y2="22"></line>
+</svg>
+<span data-i18n="s_293bc8a3">Voice Assistant</span>
+</div>
+<label class="switch">
+<input id="voiceToggle" type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<div class="voice-debug" data-i18n="s_1648efe4" id="voiceDebug">Heard: nothing yet...</div>
+</div>
+</aside>
+<main class="content-area">
+<div id="stepsWrapper">
+<section class="form-step active" id="step-0">
+<h2 data-i18n="s_9f42f91b">Your Age</h2>
+<p class="subtitle" data-i18n="s_6a1dae9e">Used to match specific age-restricted grants.</p>
+<label class="input-label" data-i18n="s_cf49d5d6">Age (Years)</label>
+<input autofocus="" id="ageField" placeholder="e.g. 20" type="number"/>
+<div class="error-msg" data-i18n="s_190d3cd6">Please enter your age to continue.</div>
+</section>
+<section class="form-step" id="step-1">
+<h2 data-i18n="s_ce5bf551">Location</h2>
+<p class="subtitle" data-i18n="s_ac9447ae" style="margin-bottom: 5px;">Click the map or select from the list below.</p>
+<div id="india-map">
+<div data-i18n="s_59d9b9b6" style="padding-top:180px; font-size: 20px; color:#a39494;">Loading Interactive Map...</div>
+</div>
+<select id="stateDropdown">
+<option value=""><span data-i18n="s_d9dc1116">-- Select your State / UT --</span></option>
+</select>
+<div class="error-msg" data-i18n="s_85f8460a">Please select your domicile state to continue.</div>
+</section>
+<section class="form-step" id="step-2">
+<h2 data-i18n="s_5d0656eb">Marital Status</h2>
+<p class="subtitle" data-i18n="s_eb6b5924">Please select your current status.</p>
+<div class="options-grid">
+<label class="option-card"><input name="ms" type="radio" value="Single"/><span data-i18n="s_66ba1621">Single</span></label>
+<label class="option-card"><input name="ms" type="radio" value="Married"/><span data-i18n="s_3ad9e20e">Married</span></label>
+<label class="option-card"><input name="ms" type="radio" value="Widow"/><span data-i18n="s_d7abc0d4">Widow</span></label>
+<label class="option-card"><input name="ms" type="radio" value="Divorced"/><span data-i18n="s_f2e4016d">Divorced</span></label>
+</div>
+<div class="error-msg" data-i18n="s_65b75ccd">Please select an option to continue.</div>
+</section>
+<section class="form-step" id="step-3">
+<h2 data-i18n="s_7e646174">Caste Category</h2>
+<p class="subtitle" data-i18n="s_e8122257">Unlocking government-mandated schemes.</p>
+<div class="options-grid">
+<label class="option-card"><input name="cat" type="radio" value="SC"/> SC</label>
+<label class="option-card"><input name="cat" type="radio" value="ST"/> ST</label>
+<label class="option-card"><input name="cat" type="radio" value="OBC"/> OBC</label>
+<label class="option-card"><input name="cat" type="radio" value="General"/><span data-i18n="s_0db37792">General</span></label>
+<label class="option-card" style="grid-column: span 2;"><input name="cat" type="radio" value="Minority"/><span data-i18n="s_a3a5b848">Minority</span></label>
+</div>
+<div class="error-msg" data-i18n="s_f44bb9ba">Please select a category to continue.</div>
+</section>
+<section class="form-step" id="step-4">
+<h2 data-i18n="s_a15e5103">Disability</h2>
+<p class="subtitle" data-i18n="s_6bbeccaa">Are you a person with a disability?</p>
+<div class="options-grid">
+<label class="option-card"><input name="dis" type="radio" value="Yes"/><span data-i18n="s_93cba074">Yes</span></label>
+<label class="option-card"><input name="dis" type="radio" value="No"/><span data-i18n="s_bafd7322">No</span></label>
+</div>
+<div class="error-msg" data-i18n="s_65b75ccd">Please select an option to continue.</div>
+</section>
+<section class="form-step" id="step-5">
+<h2 data-i18n="s_2ee17f92">Education Level</h2>
+<p class="subtitle" data-i18n="s_98f00801">Highest level of education completed.</p>
+<div class="options-grid">
+<label class="option-card"><input name="edu" type="radio" value="No Schooling"/> No
                             Schooling</label>
-                        <label class="option-card"><input type="radio" name="edu" value="10th Pass"> 10th Pass</label>
-                        <label class="option-card"><input type="radio" name="edu" value="12th Pass"> 12th Pass</label>
-                        <label class="option-card"><input type="radio" name="edu" value="Graduate"> Graduate</label>
-                        <label class="option-card" style="grid-column: span 2;"><input type="radio" name="edu"
-                                value="Postgraduate"> Postgraduate</label>
-                    </div>
-                    <div class="error-msg">Please select your education level.</div>
-                </section>
-
-                <section class="form-step" id="step-6">
-                    <h2>Employment Status</h2>
-                    <p class="subtitle">What is your current work status?</p>
-                    <div class="options-grid">
-                        <label class="option-card"><input type="radio" name="emp" value="Unemployed"> Unemployed</label>
-                        <label class="option-card"><input type="radio" name="emp" value="Student"> Student</label>
-                        <label class="option-card"><input type="radio" name="emp" value="Self-Employed">
-                            Self-Employed</label>
-                        <label class="option-card"><input type="radio" name="emp" value="Working"> Working</label>
-                    </div>
-                    <div class="error-msg">Please select your employment status.</div>
-                </section>
-            </div>
-
-            <div id="success-screen">
-                <div style="font-size: 80px;">🎉</div>
-                <h2>Profile Complete!</h2>
-                <p class="subtitle" style="margin-bottom: 20px;">We've customized your dashboard based on your answers.
+<label class="option-card"><input name="edu" type="radio" value="10th Pass"/><span data-i18n="s_ebed6dd5">10th Pass</span></label>
+<label class="option-card"><input name="edu" type="radio" value="12th Pass"/><span data-i18n="s_4ec24148">12th Pass</span></label>
+<label class="option-card"><input name="edu" type="radio" value="Graduate"/><span data-i18n="s_fb911e3a">Graduate</span></label>
+<label class="option-card" style="grid-column: span 2;"><input name="edu" type="radio" value="Postgraduate"/><span data-i18n="s_5d0321a5">Postgraduate</span></label>
+</div>
+<div class="error-msg" data-i18n="s_35f2997c">Please select your education level.</div>
+</section>
+<section class="form-step" id="step-6">
+<h2 data-i18n="s_40a356a4">Employment Status</h2>
+<p class="subtitle" data-i18n="s_371e12cb">What is your current work status?</p>
+<div class="options-grid">
+<label class="option-card"><input name="emp" type="radio" value="Unemployed"/><span data-i18n="s_4d611277">Unemployed</span></label>
+<label class="option-card"><input name="emp" type="radio" value="Student"/><span data-i18n="s_f5c0a1c9">Student</span></label>
+<label class="option-card"><input name="emp" type="radio" value="Self-Employed"/><span data-i18n="s_69848064">Self-Employed</span></label>
+<label class="option-card"><input name="emp" type="radio" value="Working"/><span data-i18n="s_829eadc8">Working</span></label>
+</div>
+<div class="error-msg" data-i18n="s_9852bd8a">Please select your employment status.</div>
+</section>
+</div>
+<div id="success-screen">
+<div style="color:#4dcbc6; margin-bottom:4px;"><svg fill="none" height="72" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="72"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+<h2 data-i18n="s_b367d250">Profile Complete!</h2>
+<p class="subtitle" data-i18n="s_3782038f" style="margin-bottom: 20px;">We've customized your dashboard based on your answers.
                 </p>
-                <button class="btn btn-find" onclick="findOpportunities()">Find Financial
+<button class="btn btn-find" onclick="findOpportunities()">Find Financial
                     Opportunity</button>
-            </div>
-
-            <div class="nav-buttons" id="navGroup">
-                <button class="btn btn-back" id="backBtn" style="visibility: hidden;">Back</button>
-                <button class="btn btn-next" id="nextBtn">Continue</button>
-            </div>
-        </main>
-    </div>
-
-    <script>
+</div>
+<div class="nav-buttons" id="navGroup">
+<button class="btn btn-back" data-i18n="s_0557fa92" id="backBtn" style="visibility: hidden;">Back</button>
+<button class="btn btn-next" data-i18n="s_a0bfb8e5" id="nextBtn">Continue</button>
+</div>
+</main>
+</div>
+<script>
         const steps = document.querySelectorAll('.form-step');
         const sidebarSteps = document.querySelectorAll('.step');
         const nextBtn = document.getElementById('nextBtn');
@@ -803,6 +778,17 @@
         // --- ENHANCED VOICE ASSISTANT & TTS LOGIC ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const synth = window.speechSynthesis;
+        let availableVoices = [];
+
+        function populateVoices() {
+            availableVoices = window.speechSynthesis.getVoices();
+            console.log("UniCapital System Voices Loaded:", availableVoices.length);
+        }
+        if (typeof window.speechSynthesis !== 'undefined' && window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = populateVoices;
+        }
+        populateVoices(); // Try immediately
+
         const voiceToggle = document.getElementById('voiceToggle');
         const micIcon = document.getElementById('micIcon');
         const voiceDebug = document.getElementById('voiceDebug');
@@ -817,7 +803,25 @@
             synth.cancel();
 
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-IN';
+            const currentLang = localStorage.getItem("sn_lang") || "en";
+            const langMap = { "en": "en-IN", "hi": "hi-IN", "od": "or-IN" };
+            const targetLang = langMap[currentLang] || "en-IN";
+            utterance.lang = targetLang;
+
+            // For Odia/Oriya or other languages, try to find a specific voice match
+            const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
+            let selectedVoice = voices.find(v => v.lang === targetLang);
+
+            if (!selectedVoice && currentLang === "od") {
+                selectedVoice = voices.find(v => v.lang.startsWith("or") || v.name.toLowerCase().includes("odia") || v.name.toLowerCase().includes("oriya"));
+            }
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                console.log("UniCapital Selected Voice:", selectedVoice.name);
+            } else {
+                console.warn("UniCapital Warning: No specific voice found for", targetLang);
+            }
 
             utterance.onstart = () => {
                 isSpeaking = true; // Tell the microphone to ignore anything it hears
@@ -848,7 +852,9 @@
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = false;
-            recognition.lang = 'en-IN';
+            const currentLang = localStorage.getItem("sn_lang") || "en";
+            const langMap = { "en": "en-IN", "hi": "hi-IN", "od": "or-IN" };
+            recognition.lang = langMap[currentLang] || "en-IN";
 
             recognition.onstart = () => {
                 if (isVoiceActive) {
@@ -901,7 +907,10 @@
             isVoiceActive = e.target.checked;
 
             if (isVoiceActive) {
+                const currentLang = localStorage.getItem("sn_lang") || "en";
+                const langMap = { "en": "en-IN", "hi": "hi-IN", "od": "or-IN" };
                 if (recognition) {
+                    recognition.lang = langMap[currentLang] || "en-IN";
                     try { recognition.start(); } catch (e) { }
                 }
                 speakCurrentQuestion();
@@ -989,6 +998,12 @@
                             <div style="border: 1px solid #ececec; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: white; text-align: left;">
                                 <h3 style="margin: 0 0 10px 0; color: #054c5a;">${opp.name}</h3>
                                 <p style="margin: 0 0 15px 0; color: #555;">${opp.description}</p>
+                                <div style="margin-bottom: 15px;">
+                                    <span style="color: #054c5a; text-decoration: underline; cursor: pointer; font-weight: 600;" 
+                                          onclick="showDocsModal('${opp.docs.replace(/'/g, "\\'").replace(/[\r\n]+/g, "\\n")}')">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Documents Required
+                                    </span>
+                                </div>
                                 <a href="${opp.official_website}" target="_blank" style="background: #4dcbc6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; display: inline-block;">Apply Here</a>
                             </div>
                         `;
@@ -1003,8 +1018,38 @@
                 document.querySelector('.btn-find').innerText = 'Find Financial Opportunity';
             }
         }
+
+        function showDocsModal(docs) {
+            const modal = document.getElementById('docsModal');
+            const content = document.getElementById('docsModalContent');
+            content.innerHTML = docs.replace(/\n/g, '<br>').replace(/-/g, '•'); 
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.querySelector('.modal-content').style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function closeDocsModal() {
+            const modal = document.getElementById('docsModal');
+            modal.style.opacity = '0';
+            modal.querySelector('.modal-content').style.transform = 'translateY(20px)';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
     </script>
-    <script>
+<!-- Documents Modal Structure -->
+<div id="docsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 100000; background: rgba(5, 76, 90, 0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;">
+<div class="modal-content" style="background: white; width: 100%; max-width: 500px; padding: 40px; border-radius: 28px; position: relative; transform: translateY(20px); transition: transform 0.3s; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);">
+<button onclick="closeDocsModal()" onmouseout="this.style.color='#a39494'" onmouseover="this.style.color='var(--accent-pink)'" style="position: absolute; top: 25px; right: 30px; font-size: 2.2rem; cursor: pointer; color: #a39494; border: none; background: none; transition: 0.2s;">×</button>
+<h3 style="color: var(--bg-sidebar); font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span data-i18n="s_f8b66e3c">Required Documents</span></h3>
+<div id="docsModalContent" style="color: #555; line-height: 1.7; font-size: 1.05rem; max-height: 350px; overflow-y: auto; margin-bottom: 30px;">
+<!-- Content injected via JS -->
+</div>
+<button class="btn" data-i18n="s_9303c433" onclick="closeDocsModal()" style="background: var(--accent-pink); color: white; width: 100%; padding: 18px; font-size: 18px;">Understood</button>
+</div>
+</div>
+<script>
         // --- PixaBot Draggable Logic ---
         (function() {
             const bot = document.getElementById('pixabot-container');
@@ -1061,8 +1106,8 @@
                     iframe.id = 'pixabot-iframe';
                     iframe.src = 'PixaBot.html';
                     iframe.style.position = 'fixed';
-                    iframe.style.width = '400px';
-                    iframe.style.height = '600px';
+                    iframe.style.width = '550px';
+                    iframe.style.height = '750px';
                     iframe.style.border = 'none';
                     iframe.style.zIndex = '10000';
                     iframe.style.borderRadius = '20px';
@@ -1075,7 +1120,7 @@
                 
                 if (iframe.style.display === 'none') {
                     iframe.style.left = botRect.left + 'px';
-                    iframe.style.top = (botRect.top - 610) + 'px';
+                    iframe.style.top = (botRect.top - 760) + 'px';
 
                     iframe.style.display = 'block';
                     setTimeout(() => iframe.style.opacity = '1', 10);
@@ -1096,7 +1141,126 @@
             });
         })();
     </script>
-</body>
-
-
+<!-- ═══ FEEDBACK FLOATING BUTTON + MODAL ═══ -->
+<style>
+        #fb-trigger {
+            position: fixed; bottom: 30px; right: 30px;
+            background: linear-gradient(135deg, #4dcbc6, #054c5a);
+            color: white; border: none; border-radius: 50px;
+            padding: 13px 20px; font-size: 0.88rem; font-weight: 700;
+            cursor: pointer; z-index: 8888;
+            box-shadow: 0 6px 20px rgba(77,203,198,0.45);
+            display: flex; align-items: center; gap: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fb-bounce 3s ease-in-out infinite;
+        }
+        #fb-trigger:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(77,203,198,0.6); animation: none; }
+        @keyframes fb-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        #fb-overlay {
+            position: fixed; inset: 0;
+            background: rgba(5,76,90,0.55); backdrop-filter: blur(6px);
+            z-index: 9990; display: none; align-items: center; justify-content: center;
+        }
+        #fb-overlay.open { display: flex; }
+        #fb-modal {
+            background: white; border-radius: 24px;
+            padding: 36px 40px; width: 460px; max-width: 95vw;
+            box-shadow: 0 30px 80px rgba(5,76,90,0.3);
+            position: relative;
+            animation: fb-in 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes fb-in { from{opacity:0;transform:translateY(28px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+        #fb-close { position:absolute;top:18px;right:22px;background:none;border:none;font-size:1.6rem;cursor:pointer;color:#9ca3af;transition:color 0.2s; }
+        #fb-close:hover { color:#054c5a; }
+        #fb-modal h3 { font-size:1.4rem;font-weight:800;color:#054c5a;margin-bottom:4px; }
+        #fb-modal .fb-sub { font-size:0.85rem;color:#6b7280;margin-bottom:22px; }
+        .fb-label { font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#374151;margin-bottom:10px; }
+        .fb-moods { display:flex;gap:8px;margin-bottom:20px; }
+        .fb-stars { display:flex; gap:10px; margin-bottom:20px; }
+        .fb-star { font-size:2rem; cursor:pointer; color:#d1d5db; transition:color 0.15s, transform 0.15s; user-select:none; }
+        .fb-star:hover,.fb-star.hovered,.fb-star.selected { color:#f59e0b; transform:scale(1.2); }
+        #fb-cat { width:100%;padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-family:'Segoe UI',sans-serif;font-size:0.9rem;color:#374151;outline:none;margin-bottom:18px;background:#f9fafb;transition:border-color 0.2s; }
+        #fb-cat:focus { border-color:#4dcbc6;background:white; }
+        #fb-msg { width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-family:'Segoe UI',sans-serif;font-size:0.9rem;color:#374151;outline:none;resize:vertical;min-height:100px;margin-bottom:6px;background:#f9fafb;transition:border-color 0.2s; }
+        #fb-msg:focus { border-color:#4dcbc6;background:white; }
+        #fb-cnt { font-size:0.75rem;color:#9ca3af;text-align:right;margin-bottom:18px; }
+        #fb-sub-btn { width:100%;padding:15px;background:linear-gradient(135deg,#4dcbc6,#054c5a);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Segoe UI',sans-serif;box-shadow:0 4px 15px rgba(77,203,198,0.35);transition:transform 0.2s,box-shadow 0.2s; }
+        #fb-sub-btn:hover { transform:translateY(-2px);box-shadow:0 8px 25px rgba(77,203,198,0.5); }
+        #fb-sub-btn:disabled { opacity:0.65;cursor:not-allowed;transform:none; }
+        #fb-ok { text-align:center;display:none;padding:20px 0; }
+        #fb-ok .ck { font-size:3.5rem;margin-bottom:12px; }
+        #fb-ok h4 { font-size:1.2rem;font-weight:800;color:#054c5a;margin-bottom:6px; }
+        #fb-ok p { color:#6b7280;font-size:0.9rem; }
+    </style>
+<button id="fb-trigger" onclick="openFB()" style="display:flex;align-items:center;gap:8px;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span data-i18n="s_bea4c2c8">Feedback</span></button>
+<div id="fb-overlay" onclick="if(event.target===this)closeFB()">
+<div id="fb-modal">
+<button id="fb-close" onclick="closeFB()">×</button>
+<div id="fb-form">
+<h3 style="display:flex;align-items:center;gap:10px;"><svg fill="none" height="22" stroke="#054c5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span data-i18n="s_0822d927">Share Your Feedback</span></h3>
+<p class="fb-sub" data-i18n="s_11654a70">Your thoughts help us improve SikshaNidhi for everyone.</p>
+<div class="fb-label" data-i18n="s_8bc61bb7">Rate Your Experience</div>
+<div class="fb-stars" id="fb-stars-row">
+<span class="fb-star" data-val="1" onclick="selMood(1)" onmouseenter="hvStar(1)" onmouseleave="uhvStar()">★</span>
+<span class="fb-star" data-val="2" onclick="selMood(2)" onmouseenter="hvStar(2)" onmouseleave="uhvStar()">★</span>
+<span class="fb-star" data-val="3" onclick="selMood(3)" onmouseenter="hvStar(3)" onmouseleave="uhvStar()">★</span>
+<span class="fb-star" data-val="4" onclick="selMood(4)" onmouseenter="hvStar(4)" onmouseleave="uhvStar()">★</span>
+<span class="fb-star" data-val="5" onclick="selMood(5)" onmouseenter="hvStar(5)" onmouseleave="uhvStar()">★</span>
+</div>
+<div class="fb-label" data-i18n="s_3adbdb3a">Category</div>
+<select id="fb-cat">
+<option value="General Feedback"><span data-i18n="s_d8f0fde7">General Feedback</span></option>
+<option value="Bug Report"><span data-i18n="s_554d91e2">Bug Report</span></option>
+<option value="Feature Suggestion"><span data-i18n="s_f45530b7">Feature Suggestion</span></option>
+<option value="Compliment"><span data-i18n="s_b5e85579">Compliment</span></option>
+</select>
+<div class="fb-label" data-i18n="s_c5be23b0">Your Message</div>
+<textarea id="fb-msg" maxlength="500" oninput="document.getElementById('fb-cnt').textContent=this.value.length+'/500'" placeholder="Tell us what you think... (max 500 chars)"></textarea>
+<div id="fb-cnt">0/500</div>
+<button id="fb-sub-btn" onclick="sendFB()" style="display:flex;align-items:center;justify-content:center;gap:8px;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="16"><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span data-i18n="s_6f97affc">Send Feedback</span></button>
+</div>
+<div id="fb-ok">
+<div class="ck" style="color:#4dcbc6"><svg fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="56"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+<h4><span data-i18n="s_498cd895">Thank you!</span></h4>
+<p><span data-i18n="s_d7036136">Your feedback has been received.</span><br/><span data-i18n="s_4a70f492">We really appreciate it.</span></p>
+</div>
+</div>
+</div>
+<script>
+        let _fbR = 0;
+        function openFB() {
+            document.getElementById('fb-overlay').classList.add('open');
+            document.getElementById('fb-form').style.display='block';
+            document.getElementById('fb-ok').style.display='none';
+            _fbR=0;
+            document.querySelectorAll('.fb-star').forEach(s=>s.classList.remove('selected','hovered'));
+            document.getElementById('fb-msg').value='';
+            document.getElementById('fb-cnt').textContent='0/500';
+        }
+        function closeFB() { document.getElementById('fb-overlay').classList.remove('open'); }
+        function hvStar(v){document.querySelectorAll('.fb-star').forEach(s=>s.classList.toggle('hovered',parseInt(s.dataset.val)<=v));}
+        function uhvStar(){document.querySelectorAll('.fb-star').forEach(s=>s.classList.remove('hovered'));}
+        function selMood(r){_fbR=r;document.querySelectorAll('.fb-star').forEach(s=>s.classList.toggle('selected',parseInt(s.dataset.val)<=r));}
+        async function sendFB() {
+            const msg = document.getElementById('fb-msg').value.trim();
+            if (!_fbR) { alert('Please select how you feel first! 😊'); return; }
+            if (!msg)  { alert('Please write a short message.'); return; }
+            const btn = document.getElementById('fb-sub-btn');
+            btn.disabled=true; btn.textContent='Sending...';
+            try {
+                const res = await fetch('http://localhost:8002/api/feedback/submit', {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({ rating:_fbR, category:document.getElementById('fb-cat').value, message:msg, user_name:'User', page:'UniCapital.AI' })
+                });
+                const d = await res.json();
+                if (d.status==='success') {
+                    document.getElementById('fb-form').style.display='none';
+                    document.getElementById('fb-ok').style.display='block';
+                    setTimeout(closeFB, 2800);
+                } else { alert('Error: '+d.message); btn.disabled=false; btn.textContent='Send Feedback'; }
+            } catch(e) { alert('Cannot connect to feedback server. Is backend running?'); btn.disabled=false; btn.textContent='Send Feedback'; }
+        }
+    </script>
+<script src="translations.js"></script><script src="i18n.js"></script></body>
 </html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SikshaNidhi — Feedback Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0b1623;
+            --surface: #111e2e;
+            --card: #162130;
+            --border: rgba(72, 197, 185, 0.15);
+            --primary: #48C5B9;
+            --primary-dark: #094A53;
+            --text: #e2eaf5;
+            --muted: #7a90a8;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warn: #f59e0b;
+            --unread-glow: rgba(72, 197, 185, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ─── LOGIN GATE ─── */
+        #login-gate {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 50px 45px;
+            width: 420px;
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.5), 0 0 0 1px rgba(72,197,185,0.1);
+        }
+
+        .login-box .logo-ring {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #48C5B9, #094A53);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 0 30px rgba(72,197,185,0.4);
+        }
+
+        .login-box h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+        .login-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; }
+
+        .login-box input {
+            width: 100%; padding: 16px 20px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text);
+            font-size: 1rem; font-family: 'Inter', sans-serif;
+            outline: none; margin-bottom: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            letter-spacing: 2px;
+        }
+        .login-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(72,197,185,0.15);
+        }
+
+        .login-box button {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #48C5B9, #094A53);
+            color: white; border: none; border-radius: 12px;
+            font-size: 1rem; font-weight: 700;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(72,197,185,0.3);
+        }
+        .login-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(72,197,185,0.4); }
+        .login-box .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 12px; display: none; }
+
+        /* ─── MAIN PANEL ─── */
+        #main-panel { display: none; }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-brand { display: flex; align-items: center; gap: 14px; }
+        .header-brand .dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .header-brand h2 { font-size: 1.2rem; font-weight: 800; }
+        .header-brand span { color: var(--primary); }
+        .header-brand p { font-size: 0.8rem; color: var(--muted); }
+
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 10px; border: none;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-outline {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--muted);
+        }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #0b1623; font-weight: 700; }
+        .btn-primary:hover { background: #5ed9d2; }
+
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 20px; padding: 30px 40px 0;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px 28px;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .stat-card .value { font-size: 2.4rem; font-weight: 800; color: var(--primary); }
+        .stat-card .sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+        /* ─── FILTER BAR ─── */
+        .filter-bar {
+            padding: 24px 40px 16px;
+            display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border);
+            background: transparent; color: var(--muted); cursor: pointer;
+            font-size: 0.82rem; font-weight: 600; font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary); color: #0b1623; border-color: var(--primary);
+        }
+
+        .search-box {
+            margin-left: auto; position: relative;
+        }
+        .search-box input {
+            padding: 9px 16px 9px 38px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; color: var(--text); font-family: 'Inter', sans-serif;
+            font-size: 0.85rem; outline: none; width: 220px;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box svg {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; color: var(--muted);
+        }
+
+        /* ─── FEEDBACK GRID ─── */
+        #feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px; padding: 0 40px 40px;
+        }
+
+        .feedback-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px; padding: 22px 24px;
+            transition: all 0.3s ease;
+            animation: cardIn 0.4s ease forwards;
+            position: relative; overflow: hidden;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-card.unread {
+            background: linear-gradient(135deg, #162130, #0e1c2a);
+            border-color: rgba(72,197,185,0.3);
+            box-shadow: 0 0 0 1px rgba(72,197,185,0.1), 0 4px 20px rgba(72,197,185,0.05);
+        }
+
+        .feedback-card.unread::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--primary);
+        }
+
+        .feedback-card.read { opacity: 0.6; }
+
+        .card-top {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; margin-bottom: 14px;
+        }
+
+        .card-user { display: flex; align-items: center; gap: 10px; }
+        .user-avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: linear-gradient(135deg, #48C5B9, #094A53);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: 700; color: white; flex-shrink: 0;
+        }
+        .user-name { font-size: 0.95rem; font-weight: 600; }
+        .user-time { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .stars { display: flex; gap: 2px; }
+        .star { font-size: 1rem; }
+        .star.filled { color: #f59e0b; }
+        .star.empty { color: #374151; }
+
+        .category-badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.5px; margin-bottom: 12px;
+        }
+        .badge-bug { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .badge-suggestion { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .badge-compliment { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .badge-general { background: rgba(72,197,185,0.15); color: var(--primary); }
+
+        .card-message {
+            font-size: 0.9rem; line-height: 1.6; color: #b8ccdf;
+            margin-bottom: 14px;
+        }
+
+        .card-meta {
+            font-size: 0.75rem; color: var(--muted);
+            display: flex; align-items: center; gap: 6px; margin-bottom: 16px;
+        }
+        .card-meta svg { width: 13px; height: 13px; }
+
+        .card-actions { display: flex; gap: 8px; }
+        .action-btn {
+            flex: 1; padding: 9px 12px;
+            border-radius: 8px; border: 1px solid var(--border);
+            background: transparent; color: var(--muted);
+            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .action-btn:hover { background: var(--surface); color: var(--text); }
+        .action-btn.mark-read { color: var(--primary); border-color: rgba(72,197,185,0.3); }
+        .action-btn.mark-read:hover { background: rgba(72,197,185,0.1); }
+        .action-btn.delete-btn { color: var(--danger); border-color: rgba(239,68,68,0.3); }
+        .action-btn.delete-btn:hover { background: rgba(239,68,68,0.1); }
+
+        /* ─── EMPTY STATE ─── */
+        #empty-state {
+            grid-column: 1 / -1; text-align: center;
+            padding: 60px 20px; display: none;
+        }
+        #empty-state .icon { font-size: 4rem; margin-bottom: 16px; }
+        #empty-state h3 { font-size: 1.2rem; color: var(--muted); }
+
+        /* ─── LOADING ─── */
+        #loader {
+            grid-column: 1 / -1; text-align: center; padding: 60px;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── TOAST ─── */
+        #toast {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--primary); padding: 14px 22px; border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: none; z-index: 9999;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── LOGIN GATE ─── -->
+<div id="login-gate">
+    <div class="login-box">
+        <div class="logo-ring">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+        </div>
+        <h1>Admin Access</h1>
+        <p>Enter your secret key to view feedback</p>
+        <input type="password" id="admin-key-input" placeholder="Enter admin key..." onkeypress="if(event.key==='Enter')verifyKey()">
+        <button onclick="verifyKey()" style="display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> Unlock Panel</button>
+        <div class="error-msg" id="login-error" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Wrong key. Try again.</div>
+    </div>
+</div>
+
+<!-- ─── MAIN PANEL ─── -->
+<div id="main-panel">
+    <header>
+        <div class="header-brand">
+            <div class="dot"></div>
+            <div>
+                <h2>SikshaNidhi <span>Feedback</span> Admin</h2>
+                <p>Private dashboard — visible only to you</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="exportCSV()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export CSV
+            </button>
+            <button class="btn btn-primary" onclick="loadFeedback()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                Refresh
+            </button>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Total Feedback</div>
+            <div class="value" id="stat-total">—</div>
+            <div class="sub">All time submissions</div>
+        </div>
+        <div class="stat-card">
+            <div class="label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Avg Rating</div>
+            <div class="value" id="stat-avg">—</div>
+            <div class="sub">Out of 5 stars</div>
+        </div>
+        <div class="stat-card">
+            <div class="label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Unread</div>
+            <div class="value" id="stat-unread">—</div>
+            <div class="sub">New since last visit</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('unread', this)" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Unread</button>
+        <button class="filter-btn" onclick="setFilter('Bug Report', this)" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Bug</button>
+        <button class="filter-btn" onclick="setFilter('Feature Suggestion', this)" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Suggestion</button>
+        <button class="filter-btn" onclick="setFilter('Compliment', this)" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Compliment</button>
+        <button class="filter-btn" onclick="setFilter('General Feedback', this)" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> General</button>
+        <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search-input" placeholder="Search messages..." oninput="renderCards()">
+        </div>
+    </div>
+
+    <!-- Feedback Grid -->
+    <div id="feedback-grid">
+        <div id="loader">
+            <div class="spinner"></div>
+            <p style="color: var(--muted); font-size:0.9rem;">Loading feedback...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Done!</div>
+
+<script>
+    const API = 'http://localhost:8002';
+    let adminKey = '';
+    let allFeedback = [];
+    let activeFilter = 'all';
+
+    // ─── VERIFY KEY ───
+    async function verifyKey() {
+        const key = document.getElementById('admin-key-input').value.trim();
+        if (!key) return;
+
+        try {
+            const res = await fetch(`${API}/api/feedback/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key })
+            });
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                adminKey = key;
+                document.getElementById('login-gate').style.display = 'none';
+                document.getElementById('main-panel').style.display = 'block';
+                loadStats();
+                loadFeedback();
+            } else {
+                const err = document.getElementById('login-error');
+                err.style.display = 'block';
+                setTimeout(() => err.style.display = 'none', 3000);
+            }
+        } catch (e) {
+            alert('Cannot connect to backend. Make sure feedbackserver.py is running on port 8002.');
+        }
+    }
+
+    // ─── LOAD STATS ───
+    async function loadStats() {
+        try {
+            const res = await fetch(`${API}/api/feedback/stats`, {
+                headers: { 'X-Admin-Key': adminKey }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                document.getElementById('stat-total').textContent = data.total;
+                document.getElementById('stat-avg').textContent = data.avg_rating + ' ★';
+                document.getElementById('stat-unread').textContent = data.unread;
+            }
+        } catch (e) { console.error('Stats error', e); }
+    }
+
+    // ─── LOAD ALL FEEDBACK ───
+    async function loadFeedback() {
+        document.getElementById('feedback-grid').innerHTML = `
+            <div id="loader">
+                <div class="spinner"></div>
+                <p style="color: var(--muted); font-size:0.9rem;">Loading feedback...</p>
+            </div>`;
+        try {
+            const res = await fetch(`${API}/api/feedback/all`, {
+                headers: { 'X-Admin-Key': adminKey }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                allFeedback = data.data;
+                renderCards();
+            }
+        } catch (e) {
+            document.getElementById('feedback-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger);">Failed to load feedback. Check backend.</div>`;
+        }
+    }
+
+    // ─── SET FILTER ───
+    function setFilter(filter, btn) {
+        activeFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCards();
+    }
+
+    // ─── RENDER CARDS ───
+    function renderCards() {
+        const search = document.getElementById('search-input').value.toLowerCase();
+        let filtered = allFeedback.filter(f => {
+            const matchesFilter =
+                activeFilter === 'all' ? true :
+                activeFilter === 'unread' ? f.is_read === 0 :
+                f.category === activeFilter;
+            const matchesSearch = !search ||
+                f.message.toLowerCase().includes(search) ||
+                f.user_name.toLowerCase().includes(search) ||
+                f.category.toLowerCase().includes(search);
+            return matchesFilter && matchesSearch;
+        });
+
+        const grid = document.getElementById('feedback-grid');
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div id="empty-state" style="display:block; grid-column:1/-1; text-align:center; padding:60px;">
+                <div style="margin-bottom:16px; color:var(--primary);"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <h3 style="color:var(--muted);">No feedback found</h3>
+            </div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(f => buildCard(f)).join('');
+    }
+
+    // ─── BUILD CARD HTML ───
+    function buildCard(f) {
+        const stars = [1,2,3,4,5].map(i =>
+            `<span class="star ${i <= f.rating ? 'filled' : 'empty'}">${i <= f.rating ? '★' : '☆'}</span>`
+        ).join('');
+
+        const badgeClass = {
+            'Bug Report': 'badge-bug',
+            'Feature Suggestion': 'badge-suggestion',
+            'Compliment': 'badge-compliment',
+            'General Feedback': 'badge-general'
+        }[f.category] || 'badge-general';
+
+        const initials = (f.user_name || 'A').charAt(0).toUpperCase();
+        const dateStr = f.submitted_at ? new Date(f.submitted_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+        const readClass = f.is_read ? 'read' : 'unread';
+
+        return `
+        <div class="feedback-card ${readClass}" id="card-${f.id}">
+            <div class="card-top">
+                <div class="card-user">
+                    <div class="user-avatar">${initials}</div>
+                    <div>
+                        <div class="user-name">${escapeHtml(f.user_name)}</div>
+                        <div class="user-time">${dateStr}</div>
+                    </div>
+                </div>
+                <div class="stars">${stars}</div>
+            </div>
+            <div>
+                <span class="category-badge ${badgeClass}">${f.category}</span>
+            </div>
+            <div class="card-message">${escapeHtml(f.message)}</div>
+            <div class="card-meta">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Submitted from: <strong style="color:var(--text)">${escapeHtml(f.page)}</strong>
+            </div>
+            <div class="card-actions">
+                ${!f.is_read ? `<button class="action-btn mark-read" onclick="markRead(${f.id})" style="display:flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Mark Read</button>` : `<button class="action-btn" disabled style="cursor:default; opacity:0.4; display:flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Read</button>`}
+                <button class="action-btn delete-btn" onclick="deleteFeedback(${f.id})" style="display:flex;align-items:center;justify-content:center;gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Delete
+                </button>
+            </div>
+        </div>`;
+    }
+
+    // ─── MARK AS READ ───
+    async function markRead(id) {
+        try {
+            await fetch(`${API}/api/feedback/mark-read/${id}`, {
+                method: 'PATCH', headers: { 'X-Admin-Key': adminKey }
+            });
+            const idx = allFeedback.findIndex(f => f.id === id);
+            if (idx !== -1) allFeedback[idx].is_read = 1;
+            renderCards();
+            loadStats();
+            showToast('Marked as read');
+        } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // ─── DELETE FEEDBACK ───
+    async function deleteFeedback(id) {
+        if (!confirm('Are you sure you want to delete this feedback?')) return;
+        try {
+            await fetch(`${API}/api/feedback/delete/${id}`, {
+                method: 'DELETE', headers: { 'X-Admin-Key': adminKey }
+            });
+            allFeedback = allFeedback.filter(f => f.id !== id);
+            renderCards();
+            loadStats();
+            showToast('Feedback deleted');
+        } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // ─── EXPORT CSV ───
+    async function exportCSV() {
+        const link = document.createElement('a');
+        link.href = `${API}/api/feedback/export`;
+        const headers = { 'X-Admin-Key': adminKey };
+        try {
+            const res = await fetch(link.href, { headers });
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'SikshaNidhi_Feedback.csv'; a.click();
+            showToast('CSV downloaded!');
+        } catch (e) { alert('Export failed.'); }
+    }
+
+    // ─── HELPERS ───
+    function escapeHtml(text) {
+        return String(text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${msg}`;
+        t.style.display = 'flex';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+</script>
+</body>
+</html>

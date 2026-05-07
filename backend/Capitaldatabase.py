@@ -2,7 +2,7 @@ import sqlite3
 import json
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'schemes.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'schemes.db')
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -26,7 +26,8 @@ def init_db():
         disability_required BOOLEAN,
         education_levels TEXT,
         employment_statuses TEXT,
-        priority INTEGER
+        priority INTEGER,
+        documents_required TEXT
     )
     ''')
     
@@ -38,7 +39,8 @@ def init_db():
             "Based on your 'Minority' category and 'Student' status, this scheme ensures monetary support for your studies.",
             "https://scholarships.gov.in/",
             json.dumps(["ALL"]), 15, 35, json.dumps([]), json.dumps(["Minority"]), False,
-            json.dumps(["10th Pass", "12th Pass", "Graduate", "Postgraduate"]), json.dumps(["Student"]), 10
+            json.dumps(["10th Pass", "12th Pass", "Graduate", "Postgraduate"]), json.dumps(["Student"]), 10,
+            "1. Aadhar Card\n2. Income Certificate\n3. Caste/Minority Certificate\n4. Previous Year Marksheet\n5. Bank Passbook"
         ),
         (
             "Indira Gandhi National Widow Pension Scheme",
@@ -47,7 +49,8 @@ def init_db():
             "Based on your 'Widowed' marital status, this scheme ensures a steady flow of foundational monetary support guaranteed by the central government.",
             "https://nsap.nic.in/",
             json.dumps(["ALL"]), 40, 100, json.dumps(["Widow"]), json.dumps([]), False,
-            json.dumps([]), json.dumps([]), 8
+            json.dumps([]), json.dumps([]), 8,
+            "1. Aadhar Card\n2. Death Certificate of Husband\n3. BPL Card\n4. Age Proof\n5. Bank Passbook"
         ),
         (
             "Deendayal Disabled Rehabilitation Scheme",
@@ -56,7 +59,8 @@ def init_db():
             "Based on your 'Disability' status, this program guarantees specialized support and rehabilitation services.",
             "https://disabilityaffairs.gov.in/",
             json.dumps(["ALL"]), 0, 100, json.dumps([]), json.dumps([]), True,
-            json.dumps([]), json.dumps([]), 9
+            json.dumps([]), json.dumps([]), 9,
+            "1. Disability Certificate (UDID)\n2. Aadhar Card\n3. Income Certificate\n4. Passport Size Photo"
         ),
         (
             "Stand Up India Scheme",
@@ -65,7 +69,8 @@ def init_db():
             "Based on your background and employment status, this initiative can fund your entrepreneurial goals.",
             "https://www.standupmitra.in/",
             json.dumps(["ALL"]), 18, 100, json.dumps([]), json.dumps(["SC", "ST"]), False,
-            json.dumps([]), json.dumps(["Self-Employed", "Working", "Unemployed"]), 7
+            json.dumps([]), json.dumps(["Self-Employed", "Working", "Unemployed"]), 7,
+            "1. Identity Proof (Aadhar/PAN)\n2. Caste Certificate (if SC/ST)\n3. Project Report\n4. Bank Statements"
         ),
         (
             "PM-SVANidhi",
@@ -74,7 +79,8 @@ def init_db():
             "Given your Self-Employed status, this provides immediate micro-credit access to support your livelihood.",
             "https://pmsvanidhi.mohua.gov.in/",
             json.dumps(["ALL"]), 18, 100, json.dumps([]), json.dumps([]), False,
-            json.dumps([]), json.dumps(["Self-Employed"]), 6
+            json.dumps([]), json.dumps(["Self-Employed"]), 6,
+            "1. Vending Certificate / ID Card issued by ULB\n2. Aadhar Card linked to Mobile\n3. Bank Account details"
         ),
         (
             "National Fellowship for OBC Students",
@@ -83,7 +89,8 @@ def init_db():
             "Based on your 'OBC' category and 'Postgraduate' level, this fellowship offers guaranteed stipends for research.",
             "https://socialjustice.gov.in/",
             json.dumps(["ALL"]), 20, 40, json.dumps([]), json.dumps(["OBC"]), False,
-            json.dumps(["Postgraduate"]), json.dumps(["Student"]), 9
+            json.dumps(["Postgraduate"]), json.dumps(["Student"]), 9,
+            "1. Caste Certificate (OBC Non-Creamy Layer)\n2. Post-Graduation Marksheet\n3. Admission Proof for M.Phil/Ph.D\n4. Aadhar Card"
         ),
         (
             "Pradhan Mantri Kaushal Vikas Yojana (PMKVY)",
@@ -92,15 +99,16 @@ def init_db():
             "This program directly matches your need for training and certification to boost employment prospects.",
             "https://www.pmkvyofficial.org/",
             json.dumps(["ALL"]), 15, 45, json.dumps([]), json.dumps([]), False,
-            json.dumps(["No Schooling", "10th Pass", "12th Pass"]), json.dumps(["Unemployed", "Student"]), 8
+            json.dumps(["No Schooling", "10th Pass", "12th Pass"]), json.dumps(["Unemployed", "Student"]), 8,
+            "1. Aadhar Card\n2. Passport Size Color Photograph\n3. Educational certificates (if any)"
         )
     ]
     
     cursor.executemany('''
         INSERT INTO financial_schemes (
             name, description, long_description, why_chosen, official_website, target_states, min_age, max_age, 
-            marital_status, categories, disability_required, education_levels, employment_statuses, priority
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            marital_status, categories, disability_required, education_levels, employment_statuses, priority, documents_required
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', schemes)
     
     conn.commit()

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register & Login Page | SikshaNidhi</title>
+    <title data-i18n="login_page_title">Register & Login Page | SikshaNidhi</title>
     <style>
         /* Base Reset */
         * {
@@ -289,13 +289,25 @@
             z-index: 20;
         }
 
-        .app-logo-img {
+        .app-logo-wrapper {
             width: 70px;
-            /* Adjust based on preference */
             height: 70px;
             border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 15px rgba(5, 75, 80, 0.3);
+            background: white;
+            z-index: 21;
+        }
+
+        .app-logo-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            transform: scale(1.4);
+            /* Zoom in to crop black border */
         }
 
         .app-name {
@@ -371,78 +383,268 @@
 
     <div class="graduates-background"></div>
 
+    <!-- Intro Splash Screen -->
+    <style>
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 100000;
+            background: linear-gradient(135deg, #031f22 0%, #054b50 40%, #0a7a82 70%, #053c42 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: opacity 0.9s ease;
+        }
+        /* Animated radial glow blobs */
+        #intro-overlay::before {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(83,201,194,0.18) 0%, transparent 70%);
+            top: -100px; left: -100px;
+            animation: blobMove1 8s ease-in-out infinite alternate;
+        }
+        #intro-overlay::after {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(76,201,192,0.14) 0%, transparent 70%);
+            bottom: -80px; right: -80px;
+            animation: blobMove2 9s ease-in-out infinite alternate;
+        }
+        @keyframes blobMove1 {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(80px, 60px) scale(1.2); }
+        }
+        @keyframes blobMove2 {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(-60px,-50px) scale(1.15); }
+        }
+        .splash-logo-ring {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 2.5px solid rgba(83,201,194,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 0 rgba(83,201,194,0.4);
+            animation: ringPulse 2s ease-in-out infinite, splashLogoIn 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+            opacity: 0;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes ringPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(83,201,194,0.4); }
+            70%  { box-shadow: 0 0 0 20px rgba(83,201,194,0); }
+            100% { box-shadow: 0 0 0 0 rgba(83,201,194,0); }
+        }
+        @keyframes splashLogoIn {
+            from { opacity: 0; transform: scale(0.6) translateY(30px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .splash-logo-img {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            transform: scale(1.4);
+        }
+        .splash-app-name {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(83,201,194,0.8), 0 4px 20px rgba(0,0,0,0.4);
+            animation: splashNameIn 1s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+            opacity: 0;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes splashNameIn {
+            from { opacity: 0; transform: translateY(20px); letter-spacing: 8px; }
+            to   { opacity: 1; transform: translateY(0); letter-spacing: 3px; }
+        }
+        .splash-tagline {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            color: rgba(165,232,226,0.8);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            animation: splashTagIn 1s 0.6s ease forwards;
+            opacity: 0;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes splashTagIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 0.85; transform: translateY(0); }
+        }
+        .splash-bar-wrap {
+            margin-top: 50px;
+            width: 220px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            overflow: hidden;
+            animation: splashTagIn 1s 0.8s ease forwards;
+            opacity: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .splash-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #53c9c2, #a5e8e2);
+            border-radius: 99px;
+            animation: fillBar 2.4s 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        @keyframes fillBar {
+            from { width: 0%; }
+            to   { width: 100%; }
+        }
+        /* Floating particles inside splash */
+        .splash-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(165,232,226,0.6);
+            animation: splashFloat linear infinite;
+        }
+        @keyframes splashFloat {
+            0%   { transform: translateY(0) scale(0); opacity: 0; }
+            20%  { opacity: 1; }
+            80%  { opacity: 0.6; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+    </style>
+    <div id="intro-overlay">
+        <div class="splash-logo-ring">
+            <img src="app_logo.jpeg" alt="SikshaNidhi Logo" class="splash-logo-img">
+        </div>
+        <div class="splash-app-name" data-i18n="app_name">SikshaNidhi</div>
+        <div class="splash-tagline">Empowering Education &middot; Unlocking Futures</div>
+        <div class="splash-bar-wrap">
+            <div class="splash-bar-fill"></div>
+        </div>
+    </div>
+
     <div class="app-header">
-        <img src="https://myimgs.org/storage/images/19052/Adobe Express - file.png" alt="SikshaNidhi Logo"
-            class="app-logo-img">
-        <div class="app-name">SikshaNidhi</div>
+        <div class="app-logo-wrapper">
+            <img src="app_logo.jpeg" alt="SikshaNidhi Logo" class="app-logo-img">
+        </div>
+        <div class="app-name" data-i18n="app_name">SikshaNidhi</div>
     </div>
 
     <div class="form-container" id="registerSection">
-        <h1>WELCOME!</h1>
+        <h1 data-i18n="welcome_register">WELCOME!</h1>
 
-        <div id="registerError" class="error-message">
+        <div id="registerError" class="error-message" data-i18n="register_error_password">
             Passwords do not match
         </div>
 
         <form id="registerForm">
             <div class="input-group">
-                <input type="text" id="regName" placeholder="Name" required>
+                <input type="text" id="regName" placeholder="Name" required data-i18n-placeholder="ph_name">
             </div>
 
             <div class="input-group">
-                <input type="email" id="regEmail" placeholder="Email" required>
+                <input type="email" id="regEmail" placeholder="Email" required data-i18n-placeholder="ph_email">
             </div>
 
             <div class="input-group">
-                <input type="password" id="regPassword" placeholder="Password" required>
+                <input type="password" id="regPassword" placeholder="Password" required
+                    data-i18n-placeholder="ph_password">
                 <span class="eye-icon" id="toggleRegPassword">👁️</span>
             </div>
 
             <div class="input-group">
-                <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required disabled>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required disabled
+                    data-i18n-placeholder="ph_confirm_password">
                 <span class="eye-icon" id="toggleRegConfirmPassword">👁️</span>
             </div>
 
-            <div class="remember-me">
-                <input type="checkbox" id="regRemember" checked>
-                <label for="regRemember">Remember me</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="remember-me" style="margin-bottom: 0;">
+                    <input type="checkbox" id="regRemember" checked>
+                    <label for="regRemember" data-i18n="remember_me">Remember me</label>
+                </div>
+                <!-- Language SVG Logo -->
+                <button type="button" onclick="showLanguagePopup()"
+                    style="background: none; border: none; cursor: pointer; color: #53c9c2; transition: color 0.3s; padding: 0; display: flex;"
+                    onmouseover="this.style.color='#054b50'" onmouseout="this.style.color='#53c9c2'"
+                    title="Change Language">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                </button>
             </div>
 
-            <button type="submit" class="action-btn">Register</button>
+            <button type="submit" class="action-btn" data-i18n="btn_register">Register</button>
         </form>
 
         <div class="toggle-link">
-            Already have an account? <a id="showLoginBtn">Login</a>
+            <span data-i18n="already_have_account">Already have an account?</span> <a id="showLoginBtn"
+                data-i18n="link_login">Login</a>
         </div>
     </div>
 
     <div class="form-container hidden" id="loginSection">
-        <h1>WELCOME BACK!</h1>
+        <h1 data-i18n="welcome_back">WELCOME BACK!</h1>
 
-        <div id="loginError" class="error-message">
+        <div id="loginError" class="error-message" data-i18n="login_error_invalid">
             Incorrect email & password
         </div>
 
         <form id="loginForm">
             <div class="input-group">
-                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="email" id="loginEmail" placeholder="Email" required data-i18n-placeholder="ph_email">
             </div>
 
             <div class="input-group">
-                <input type="password" id="loginPassword" placeholder="Password" required>
+                <input type="password" id="loginPassword" placeholder="Password" required
+                    data-i18n-placeholder="ph_password">
                 <span class="eye-icon" id="toggleLoginPassword">👁️</span>
             </div>
 
-            <div class="remember-me">
-                <input type="checkbox" id="loginRemember" checked>
-                <label for="loginRemember">Remember me</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="remember-me" style="margin-bottom: 0;">
+                    <input type="checkbox" id="loginRemember" checked>
+                    <label for="loginRemember" data-i18n="remember_me">Remember me</label>
+                </div>
+                <!-- Language SVG Logo -->
+                <button type="button" onclick="showLanguagePopup()"
+                    style="background: none; border: none; cursor: pointer; color: #53c9c2; transition: color 0.3s; padding: 0; display: flex;"
+                    onmouseover="this.style.color='#054b50'" onmouseout="this.style.color='#53c9c2'"
+                    title="Change Language">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                </button>
             </div>
 
-            <button type="submit" class="action-btn">Login</button>
+            <button type="submit" class="action-btn" data-i18n="btn_login">Login</button>
         </form>
 
         <div class="toggle-link">
-            Don't have an account? <a id="showRegisterBtn">Register</a>
+            <span data-i18n="dont_have_account">Don't have an account?</span> <a id="showRegisterBtn"
+                data-i18n="link_register">Register</a>
         </div>
     </div>
 
@@ -454,6 +656,33 @@
         const showRegisterBtn = document.getElementById('showRegisterBtn');
         const loginError = document.getElementById('loginError');
         const registerError = document.getElementById('registerError');
+
+        // --- Intro Splash Logic ---
+        const introOverlay = document.getElementById('intro-overlay');
+
+        // Generate floating particles inside splash
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'splash-particle';
+            const size = Math.random() * 5 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = Math.random() * 100 + 'vh';
+            p.style.animationDuration = (Math.random() * 6 + 5) + 's';
+            p.style.animationDelay = (Math.random() * 4) + 's';
+            introOverlay.appendChild(p);
+        }
+
+        function hideIntro() {
+            introOverlay.style.opacity = '0';
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+            }, 900);
+        }
+
+        // Auto-dismiss after loading bar completes (~2.8s)
+        setTimeout(hideIntro, 2800);
 
         function clearErrors() {
             loginError.classList.remove('show');
@@ -531,7 +760,8 @@
             clearErrors();
 
             document.getElementById('loginEmail').value = email;
-            alert("Registration Successful! Now you can Login.");
+            const alertMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[localStorage.getItem('sn_lang') || 'en']?.alert_registration_success) ? TRANSLATIONS[localStorage.getItem('sn_lang') || 'en'].alert_registration_success : "Registration Successful! Now you can Login.";
+            alert(alertMsg);
         });
 
         // --- 4. Login Logic (Checking Data) ---
@@ -579,6 +809,9 @@
             particlesContainer.appendChild(particle);
         }
     </script>
+    <!-- language icon handled in form -->
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
 </body>
 
 </html>

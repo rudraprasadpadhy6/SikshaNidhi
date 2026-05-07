@@ -6,8 +6,8 @@ import os
 
 PORT = 8000
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, '..', '..', 'data', 'schemes.db')
-DIRECTORY = os.path.join(BASE_DIR, '..', '..')
+DB_PATH = os.path.join(BASE_DIR, 'data', 'schemes.db')
+DIRECTORY = os.path.join(BASE_DIR, '..', 'frontend')
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -104,7 +104,8 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         'name': html_payload,
                         'description': scheme['description'],
                         'official_website': scheme['official_website'],
-                        'priority': scheme['priority']
+                        'priority': scheme['priority'],
+                        'docs': scheme.get('documents_required', '1. Aadhar Card\n2. Income Certificate\n3. Bank Passbook\n4. Previous Year Marksheet\n5. Passport Size Photo')
                     })
                 
                 # Sort by priority descending
@@ -188,8 +189,8 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 if __name__ == '__main__':
-    import database
-    database.init_db()
+    import Capitaldatabase
+    Capitaldatabase.init_db()
     
     with socketserver.TCPServer(("", PORT), CustomHandler) as httpd:
         print(f"Server serving at port {PORT}")

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixa | Advanced Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary-dark: #034b4e;
+            --primary-light: #0f8680;
+            --bg-color: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2f1 0%, #cbd5e1 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 560px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(3, 75, 78, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.5s ease;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            transition: all 0.5s ease;
+            gap: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ✨ NEW: Language Selector Styling */
+        .lang-select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: auto;
+        }
+
+        .lang-select option {
+            color: #334155;
+            background: white;
+        }
+
+        .lang-select:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .mode-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-inactive {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .header-icon {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            animation: ring-pulse 3s infinite alternate;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .header-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center;
+            animation: bot-fly 3.5s ease-in-out infinite;
+        }
+
+        @keyframes bot-fly {
+            0% {
+                transform: scale(1.6) translateY(0px) rotate(0deg);
+            }
+
+            25% {
+                transform: scale(1.6) translateY(-4px) rotate(3deg);
+            }
+
+            50% {
+                transform: scale(1.6) translateY(-6px) rotate(0deg);
+            }
+
+            75% {
+                transform: scale(1.6) translateY(-4px) rotate(-3deg);
+            }
+
+            100% {
+                transform: scale(1.6) translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes ring-pulse {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.1);
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 0 2px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.7);
+            background-image: url('bot_background.jpeg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: lighten;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 88%;
+            animation: fadeInUp 0.3s ease forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .message-wrapper.bot {
+            align-self: flex-start;
+        }
+
+        .message-wrapper.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            padding: 0 6px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .emotion-badge {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .message {
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message p {
+            margin-bottom: 8px;
+        }
+
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .user-msg {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+            color: white;
+            border-radius: 20px 20px 4px 20px;
+            transition: all 0.5s ease;
+        }
+
+        .bot-msg {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--text-main);
+            border-radius: 4px 20px 20px 20px;
+            border: 1px solid rgba(3, 75, 78, 0.15);
+            border-left: 3px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+
+        .input-container-wrapper {
+            padding: 16px 24px 24px 24px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        .input-area {
+            display: flex;
+            padding: 8px;
+            background: white;
+            gap: 10px;
+            align-items: center;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .icon-btn:hover {
+            background: #e2e8f0;
+            color: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+        }
+
+        .icon-btn.mic-active {
+            color: white;
+            background: #ef4444;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        input[type="text"]::placeholder {
+            color: #94a3b8;
+        }
+
+        button.send-btn {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 10px rgba(3, 75, 78, 0.3);
+        }
+
+        button.send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(3, 75, 78, 0.4);
+        }
+
+        button.send-btn:active {
+            transform: scale(0.95);
+        }
+
+        button.send-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-left: -2px;
+        }
+
+        #listening-status-bar {
+            display: none;
+            background: rgba(224, 242, 241, 0.9);
+            color: var(--primary-dark);
+            padding: 8px 24px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-top: 1px solid rgba(3, 75, 78, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        #live-transcript {
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.8;
+            margin-left: 5px;
+        }
+
+        /* ✨ NEW: Advanced Animated Thinking Indicator */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 4px 20px 20px 20px;
+            border: 1px solid rgba(3, 75, 78, 0.15);
+            color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 10px;
+            width: fit-content;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .spinner-ring {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(15, 134, 128, 0.2);
+            border-top: 3px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .thinking-text {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .thinking-text span {
+            animation: fade-text 2s infinite;
+        }
+
+        @keyframes fade-text {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Therapy Mode Rainbow CSS */
+        @keyframes rainbow-flow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .therapy-active .chat-header,
+        .therapy-active .user-msg,
+        .therapy-active .send-btn {
+            background: linear-gradient(270deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
+            background-size: 600% 600%;
+            animation: rainbow-flow 10s ease infinite;
+            color: #1e293b;
+            box-shadow: 0 4px 15px rgba(161, 196, 253, 0.4);
+        }
+
+        .therapy-active .mode-toggle {
+            border-color: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .therapy-active .mode-active {
+            color: #d946ef;
+        }
+
+        .therapy-active .mode-inactive {
+            color: rgba(30, 41, 59, 0.6);
+        }
+
+        .therapy-active .spinner-ring {
+            border-top-color: #d946ef;
+        }
+
+        .therapy-active .typing-indicator {
+            color: #d946ef;
+        }
+
+        @keyframes gentle-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.95);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes soft-pulse {
+            from {
+                box-shadow: 0 0 0 rgba(217, 70, 239, 0);
+            }
+
+            to {
+                box-shadow: 0 0 10px rgba(217, 70, 239, 0.15);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-4px);
+            }
+
+            75% {
+                transform: translateX(4px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container" id="main-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <div class="header-icon" id="main-avatar"><img src="bot_logo.jpeg" alt="Pixa Logo"></div>
+                <span class="header-title">Pixa</span>
+            </div>
+
+            <select class="lang-select" id="lang-select" onchange="changeLanguage()">
+                <option value="English">🇬🇧 English</option>
+                <option value="Hindi">🇮🇳 Hindi</option>
+                <option value="Odia">🇮🇳 Odia</option>
+            </select>
+
+            <div id="voice-toggle-btn" class="icon-btn" onclick="toggleVoice()" title="Toggle Voice (Read Text)"
+                style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255,255,255,0.4); width: 34px; height: 34px; margin-right: 8px; flex-shrink: 0;">
+                <svg id="voice-icon" viewBox="0 0 24 24"
+                    style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2;">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" id="voice-waves"
+                        style="display: none;"></path>
+                    <line x1="23" y1="1" x2="1" y2="23" id="voice-mute-line"></line>
+                </svg>
+            </div>
+
+            <div class="mode-toggle" id="mode-toggle" onclick="toggleTherapyMode()">
+                <span class="mode-label mode-active" id="label-standard">Standard</span>
+                <span class="mode-label mode-inactive" id="label-therapy">Therapy</span>
+            </div>
+        </div>
+
+        <div id="listening-status-bar">🎙️ Status: <span id="live-transcript">Waiting for speech...</span></div>
+
+        <div class="chat-box" id="chat-box">
+        </div>
+
+        <div class="typing-indicator" id="typing">
+            <div class="spinner-ring"></div>
+            <div class="thinking-text" id="thinking-text"><span>Pixa is thinking...</span></div>
+        </div>
+
+        <div class="input-container-wrapper">
+            <div class="input-area">
+                <div id="mic-btn" class="icon-btn" onclick="toggleMicrophone()" title="Click to speak">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </div>
+                <input type="text" id="user-input" placeholder="Message Pixa..." onkeypress="handleKeyPress(event)"
+                    autocomplete="off">
+                <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg></button>
+            </div>
+        </div>
+        <div style="font-size: 0.65rem; color: #94a3b8; text-align: center; padding: 5px; background: transparent;">
+            Pixa is an AI assistant. For serious medical or legal matters, please consult a human professional.
+        </div>
+    </div>
+
+    <script>
+        let sessionId = Math.random().toString(36).substring(2, 15);
+        const mainContainer = document.getElementById("main-container");
+        const chatBox = document.getElementById("chat-box");
+        const typingIndicator = document.getElementById("typing");
+        const thinkingTextNode = document.getElementById("thinking-text");
+        const inputField = document.getElementById("user-input");
+        const micBtn = document.getElementById("mic-btn");
+        const listeningStatusBar = document.getElementById("listening-status-bar");
+        const liveTranscript = document.getElementById("live-transcript");
+
+        let isTherapyMode = false;
+        let isVoiceActive = false; // Default to off as per request
+        let currentAudio = null;
+        let currentLang = "English";
+
+        const emotionColors = { happy: "#034b4e", excited: "#f59e0b", empathetic: "#d946ef", neutral: "#64748b", thinking: "#034b4e", sad: "#3b82f6", stern: "#ef4444", playful: "#ec4899", confused: "#8b5cf6" };
+        const emotionAnimations = { happy: "gentle-bounce 0.5s ease", excited: "pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", empathetic: "soft-pulse 2s infinite alternate", stern: "shake 0.4s ease", sad: "none", playful: "gentle-bounce 0.4s ease", confused: "none", neutral: "none", thinking: "none" };
+
+        // Initialize Default Chat
+        renderWelcomeMessage();
+
+        // ✨ NEW: Language Change Logic
+        function changeLanguage() {
+            currentLang = document.getElementById("lang-select").value;
+            sessionId = Math.random().toString(36).substring(2, 15); // Reset memory
+
+            // Stop audio and mic if running
+            if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+            if (isListening && recognition) stopListening();
+
+            // Update UI Text
+            if (currentLang === "Hindi") {
+                inputField.placeholder = isTherapyMode ? "आप आज कैसा महसूस कर रहे हैं?" : "Pixa को संदेश भेजें...";
+                if (recognition) recognition.lang = 'hi-IN';
+            } else if (currentLang === "Odia") {
+                inputField.placeholder = isTherapyMode ? "ଆପଣ ଆଜି କିପରି ଅନୁଭବ କରୁଛନ୍ତି?" : "Pixa କୁ ମେସେଜ୍ କରନ୍ତୁ...";
+                if (recognition) recognition.lang = 'or-IN';
+            } else {
+                inputField.placeholder = isTherapyMode ? "How are you feeling today?" : "Message Pixa...";
+                if (recognition) recognition.lang = 'en-IN';
+            }
+
+            renderWelcomeMessage();
+        }
+
+        function renderWelcomeMessage() {
+            chatBox.innerHTML = ''; // Wipe chat
+            let msg = "Hi I'm <strong>Pixa</strong>! 👋<br><br>How can I help you today?";
+            if (currentLang === "Hindi") msg = "नमस्ते, मैं <strong>Pixa</strong> हूँ! 👋<br><br>आज मैं आपकी कैसे मदद कर सकती हूँ?";
+            if (currentLang === "Odia") msg = "ନମସ୍କାର, ମୁଁ <strong>Pixa</strong>! 👋<br><br>ଆଜି ମୁଁ ଆପଣଙ୍କୁ କିପରି ସାହାଯ୍ୟ କରିପାରିବି?";
+
+            const botHtml = `
+            <div class="message-wrapper bot">
+                <div class="message-sender"><strong>Pixa</strong> <span class="emotion-badge" style="color:#034b4e; background:#e0f2f1; margin-left: 6px;">Ready</span></div>
+                <div class="message bot-msg" style="border-left-color: #034b4e;">${msg}</div>
+            </div>
+        `;
+            chatBox.insertAdjacentHTML('beforeend', botHtml);
+        }
+
+        function toggleVoice() {
+            isVoiceActive = !isVoiceActive;
+            const waves = document.getElementById("voice-waves");
+            const muteLine = document.getElementById("voice-mute-line");
+            const btn = document.getElementById("voice-toggle-btn");
+
+            if (isVoiceActive) {
+                waves.style.display = "block";
+                muteLine.style.display = "none";
+                btn.style.background = "rgba(255, 255, 255, 0.4)";
+                btn.style.color = "white";
+            } else {
+                waves.style.display = "none";
+                muteLine.style.display = "block";
+                btn.style.background = "rgba(255, 255, 255, 0.2)";
+                if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+            }
+        }
+
+        function toggleTherapyMode() {
+            isTherapyMode = !isTherapyMode;
+            const standardLabel = document.getElementById('label-standard');
+            const therapyLabel = document.getElementById('label-therapy');
+
+            if (isTherapyMode) {
+                standardLabel.classList.replace('mode-active', 'mode-inactive');
+                therapyLabel.classList.replace('mode-inactive', 'mode-active');
+                mainContainer.classList.add('therapy-active');
+                mainContainer.style.boxShadow = "0 20px 40px rgba(161, 196, 253, 0.25), 0 1px 3px rgba(0,0,0,0.05)";
+            } else {
+                therapyLabel.classList.replace('mode-active', 'mode-inactive');
+                standardLabel.classList.replace('mode-inactive', 'mode-active');
+                mainContainer.classList.remove('therapy-active');
+                mainContainer.style.boxShadow = "0 20px 40px rgba(3, 75, 78, 0.15), 0 1px 3px rgba(0,0,0,0.05)";
+            }
+
+            changeLanguage(); // Call this to update placeholder text instantly based on mode
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isListening = false;
+        let silenceTimer = null;
+
+        function resetSilenceTimer() {
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(() => {
+                if (isListening) {
+                    stopListening();
+                    if (inputField.value.trim() !== "") sendMessage();
+                }
+            }, 5000);
+        }
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-IN';
+
+            recognition.onstart = function () {
+                isListening = true;
+                micBtn.classList.add("mic-active");
+                listeningStatusBar.style.display = "block";
+                liveTranscript.textContent = "Listening...";
+                if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+                resetSilenceTimer();
+            };
+
+            recognition.onresult = function (event) {
+                resetSilenceTimer();
+                let interim_transcript = '';
+                let final_transcript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) final_transcript += event.results[i][0].transcript;
+                    else interim_transcript += event.results[i][0].transcript;
+                }
+
+                liveTranscript.textContent = '"' + (interim_transcript || final_transcript) + '"';
+                if (final_transcript) {
+                    inputField.value = inputField.value.trim() ? inputField.value + " " + final_transcript.trim() : final_transcript.trim();
+                }
+            };
+
+            recognition.onerror = function (event) {
+                console.warn("Microphone Status:", event.error);
+                if (event.error === 'network') liveTranscript.textContent = "Network hiccup! Click mic to try again.";
+                else if (event.error === 'not-allowed') liveTranscript.textContent = "Please allow mic access in your browser.";
+                else liveTranscript.textContent = "Mic stopped automatically.";
+                stopListening();
+            };
+
+            recognition.onend = function () { stopListening(); };
+        } else {
+            micBtn.style.display = "none";
+        }
+
+        function toggleMicrophone() {
+            if (!recognition) return alert("Your browser doesn't support voice recognition. Try Google Chrome!");
+            if (isListening) recognition.stop();
+            else {
+                inputField.value = "";
+                try { recognition.start(); } catch (e) { console.log(e); }
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            clearTimeout(silenceTimer);
+            micBtn.classList.remove("mic-active");
+            setTimeout(() => { listeningStatusBar.style.display = "none"; }, 2500);
+        }
+
+        // ✨ NEW: Dynamic Thinking Animation Loop
+        let thinkingInterval;
+        function showThinkingIndicator() {
+            typingIndicator.style.display = "flex";
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const phrases = ["Pixa is thinking...", "Pixa is analyzing...", "Fetching details...", "Almost there..."];
+            let i = 0;
+            thinkingTextNode.innerHTML = `<span>${phrases[i]}</span>`;
+
+            thinkingInterval = setInterval(() => {
+                i = (i + 1) % phrases.length;
+                thinkingTextNode.innerHTML = `<span>${phrases[i]}</span>`;
+            }, 2000);
+        }
+
+        function hideThinkingIndicator() {
+            typingIndicator.style.display = "none";
+            clearInterval(thinkingInterval);
+        }
+
+        async function sendMessage() {
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            if (isListening && recognition) {
+                recognition.stop();
+                clearTimeout(silenceTimer);
+            }
+
+            const userHtml = `<div class="message-wrapper user"><div class="message user-msg">${message}</div></div>`;
+            chatBox.insertAdjacentHTML('beforeend', userHtml);
+
+            const payload = {
+                session_id: sessionId,
+                user_message: message,
+                therapy_mode: isTherapyMode,
+                language: currentLang // Send selected language to Python
+            };
+            inputField.value = "";
+
+            showThinkingIndicator(); // Start the animated thinking sequence
+
+            try {
+                const response = await fetch("http://127.0.0.1:8001/api/chat", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                hideThinkingIndicator();
+
+                if (response.ok) {
+                    const currentEmotion = (data.emotion || "neutral").toLowerCase();
+                    const badgeColor = emotionColors[currentEmotion] || emotionColors.neutral;
+                    const badgeBg = `${badgeColor}15`;
+                    const anim = emotionAnimations[currentEmotion] || "none";
+                    const formattedHtml = marked.parse(data.reply || "Processing...");
+
+                    if (data.audio_base64 && isVoiceActive) {
+                        if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+                        currentAudio = new Audio("data:audio/mp3;base64," + data.audio_base64);
+                        currentAudio.play();
+                    }
+
+                    const botHtml = `
+                    <div class="message-wrapper bot">
+                        <div class="message-sender">
+                            <strong>Pixa</strong> <span class="emotion-badge" style="color:${badgeColor}; background:${badgeBg}; margin-left: 6px;">${currentEmotion}</span>
+                        </div>
+                        <div class="message bot-msg" style="border-left-color: ${badgeColor}; animation: ${anim};">
+                            ${formattedHtml}
+                        </div>
+                    </div>
+                `;
+                    chatBox.insertAdjacentHTML('beforeend', botHtml);
+                } else {
+                    const errorText = typeof data.detail === 'object' ? JSON.stringify(data.detail) : data.detail;
+                    chatBox.insertAdjacentHTML('beforeend', `<div class="message-wrapper bot"><div class="message bot-msg" style="border-left-color: red;">Error: ${errorText}</div></div>`);
+                }
+            } catch (error) {
+                hideThinkingIndicator();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="message-wrapper bot"><div class="message bot-msg" style="border-left-color: red;">Network error. Make sure Python backend is running!</div></div>`);
+            }
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event) { if (event.key === "Enter") { sendMessage(); } }
+    </script>
+
+</body>
+
+</html>
