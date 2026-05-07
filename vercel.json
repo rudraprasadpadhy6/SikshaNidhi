@@ -1,28 +1,15 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    { "src": "/config.js",       "dest": "/frontend/config.js" },
-    { "src": "/styles.css",      "dest": "/frontend/styles.css" },
-    { "src": "/translations.js", "dest": "/frontend/translations.js" },
-    { "src": "/i18n.js",         "dest": "/frontend/i18n.js" },
-    { "src": "/dashboard",       "dest": "/frontend/dashboard.html" },
-    { "src": "/dashboard.html",  "dest": "/frontend/dashboard.html" },
-    { "src": "/scholar",         "dest": "/frontend/index1.html" },
-    { "src": "/index1.html",     "dest": "/frontend/index1.html" },
-    { "src": "/capital",         "dest": "/frontend/index2.html" },
-    { "src": "/index2.html",     "dest": "/frontend/index2.html" },
-    { "src": "/pixa",            "dest": "/frontend/PixaBot.html" },
-    { "src": "/PixaBot.html",    "dest": "/frontend/PixaBot.html" },
-    { "src": "/admin",           "dest": "/frontend/feedback_admin.html" },
-    { "src": "/login",           "dest": "/frontend/login.html" },
-    { "src": "/login.html",      "dest": "/frontend/login.html" },
-    { "src": "/(.*\\.(jpeg|jpg|png|mp4|svg|ico))", "dest": "/frontend/$1" },
-    { "src": "/",                "dest": "/frontend/login.html" }
+  "outputDirectory": "frontend",
+  "rewrites": [
+    { "source": "/config.js",        "destination": "/config.js" },
+    { "source": "/styles.css",       "destination": "/styles.css" },
+    { "source": "/translations.js",  "destination": "/translations.js" },
+    { "source": "/i18n.js",          "destination": "/i18n.js" },
+    { "source": "/dashboard",        "destination": "/dashboard.html" },
+    { "source": "/scholar",          "destination": "/index1.html" },
+    { "source": "/capital",          "destination": "/index2.html" },
+    { "source": "/pixa",             "destination": "/PixaBot.html" },
+    { "source": "/admin",            "destination": "/feedback_admin.html" },
+    { "source": "/login",            "destination": "/login.html" }
   ]
 }
