@@ -403,7 +403,7 @@
             }
         }
     </style>
-</head>
+  <script src="/config.js"></script>`n</head>
 <body>
 <!-- PixaBot Floating Bubble -->
 <div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
@@ -984,7 +984,7 @@
 
             try {
                 document.querySelector('.btn-find').innerText = 'Searching...';
-                const response = await fetch('/api/find-opportunities', {
+                const response = await fetch((window.API_BASE||'')+'/api/find-opportunities', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1249,7 +1249,7 @@
             const btn = document.getElementById('fb-sub-btn');
             btn.disabled=true; btn.textContent='Sending...';
             try {
-                const res = await fetch('/api/feedback/submit', {
+                const res = await fetch((window.API_BASE||'')+'/api/feedback/submit', {
                     method:'POST', headers:{'Content-Type':'application/json'},
                     body: JSON.stringify({ rating:_fbR, category:document.getElementById('fb-cat').value, message:msg, user_name:'User', page:'UniCapital.AI' })
                 });

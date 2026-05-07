@@ -2,53 +2,27 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    },
-    {
       "src": "frontend/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/frontend/dashboard.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/frontend/login.html"
-    },
-    {
-      "src": "/scholar",
-      "dest": "/frontend/index1.html"
-    },
-    {
-      "src": "/capital",
-      "dest": "/frontend/index2.html"
-    },
-    {
-      "src": "/pixa",
-      "dest": "/frontend/PixaBot.html"
-    },
-    {
-      "src": "/admin",
-      "dest": "/frontend/feedback_admin.html"
-    },
-    {
-      "src": "/(.*\\.(html|css|js|jpeg|jpg|png|mp4|ico|svg))",
-      "dest": "/frontend/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/frontend/login.html"
-    }
+    { "src": "/config.js",       "dest": "/frontend/config.js" },
+    { "src": "/styles.css",      "dest": "/frontend/styles.css" },
+    { "src": "/translations.js", "dest": "/frontend/translations.js" },
+    { "src": "/i18n.js",         "dest": "/frontend/i18n.js" },
+    { "src": "/dashboard",       "dest": "/frontend/dashboard.html" },
+    { "src": "/dashboard.html",  "dest": "/frontend/dashboard.html" },
+    { "src": "/scholar",         "dest": "/frontend/index1.html" },
+    { "src": "/index1.html",     "dest": "/frontend/index1.html" },
+    { "src": "/capital",         "dest": "/frontend/index2.html" },
+    { "src": "/index2.html",     "dest": "/frontend/index2.html" },
+    { "src": "/pixa",            "dest": "/frontend/PixaBot.html" },
+    { "src": "/PixaBot.html",    "dest": "/frontend/PixaBot.html" },
+    { "src": "/admin",           "dest": "/frontend/feedback_admin.html" },
+    { "src": "/login",           "dest": "/frontend/login.html" },
+    { "src": "/login.html",      "dest": "/frontend/login.html" },
+    { "src": "/(.*\\.(jpeg|jpg|png|mp4|svg|ico))", "dest": "/frontend/$1" },
+    { "src": "/",                "dest": "/frontend/login.html" }
   ]
 }

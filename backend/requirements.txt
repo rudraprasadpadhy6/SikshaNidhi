@@ -1,8 +1,7 @@
-fastapi
-uvicorn
+flask
+flask-cors
 groq
 python-dotenv
 pydantic
-flask
-flask-cors
 edge-tts
+gunicorn

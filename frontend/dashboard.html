@@ -890,7 +890,7 @@
             flex-shrink: 0;
         }
     </style>
-</head>
+  <script src="/config.js"></script>`n</head>
 
 <body>
 
@@ -1052,7 +1052,7 @@
 
         async function fetchNotifications() {
             try {
-                const response = await fetch('/api/notifications');
+                const response = await fetch((window.API_BASE||'')+'/api/notifications');
                 const data = await response.json();
 
                 if (data.status === 'success' && data.notifications.length > 0) {
@@ -1123,7 +1123,7 @@
         // Fetch Live Scholarships for Sidebar
         async function fetchLiveScholarships() {
             try {
-                const response = await fetch('/api/live_scholarships', {
+                const response = await fetch((window.API_BASE||'')+'/api/live_scholarships', {
                     method: 'GET'
                 });
                 const data = await response.json();
@@ -2221,7 +2221,7 @@
             const userName = document.getElementById('display-user-name')?.textContent?.trim() || 'Anonymous';
 
             try {
-                const res = await fetch('/api/feedback/submit', {
+                const res = await fetch((window.API_BASE||'')+'/api/feedback/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

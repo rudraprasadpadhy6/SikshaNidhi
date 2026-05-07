@@ -605,7 +605,7 @@
             }
         }
     </style>
-</head>
+  <script src="/config.js"></script>`n</head>
 
 <body>
     <!-- PixaBot Floating Bubble -->
@@ -1305,7 +1305,7 @@
             document.getElementById('loader-view').style.display = 'flex';
 
             try {
-                const res = await fetch('/api/search', {
+                const res = await fetch((window.API_BASE||'')+'/api/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1880,7 +1880,7 @@
             const btn = document.getElementById('fb-sub-btn');
             btn.disabled = true; btn.textContent = 'Sending...';
             try {
-                const res = await fetch('/api/feedback/submit', {
+                const res = await fetch((window.API_BASE||'')+'/api/feedback/submit', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ rating: _fbR, category: document.getElementById('fb-cat').value, message: msg, user_name: 'User', page: 'UniScholar.AI' })
                 });
