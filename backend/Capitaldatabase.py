@@ -1,35 +1,56 @@
 import sqlite3
 import json
 import os
-
-DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'schemes.db')
+from db_helper import get_db_connection, is_postgres
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection('schemes')
     cursor = conn.cursor()
 
     cursor.execute('DROP TABLE IF EXISTS financial_schemes')
 
-    cursor.execute('''
-    CREATE TABLE financial_schemes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        description TEXT,
-        long_description TEXT,
-        why_chosen TEXT,
-        official_website TEXT,
-        target_states TEXT,
-        min_age INTEGER,
-        max_age INTEGER,
-        marital_status TEXT,
-        categories TEXT,
-        disability_required BOOLEAN,
-        education_levels TEXT,
-        employment_statuses TEXT,
-        priority INTEGER,
-        documents_required TEXT
-    )
-    ''')
+    if is_postgres():
+        cursor.execute('''
+        CREATE TABLE financial_schemes (
+            id SERIAL PRIMARY KEY,
+            name TEXT,
+            description TEXT,
+            long_description TEXT,
+            why_chosen TEXT,
+            official_website TEXT,
+            target_states TEXT,
+            min_age INTEGER,
+            max_age INTEGER,
+            marital_status TEXT,
+            categories TEXT,
+            disability_required BOOLEAN,
+            education_levels TEXT,
+            employment_statuses TEXT,
+            priority INTEGER,
+            documents_required TEXT
+        )
+        ''')
+    else:
+        cursor.execute('''
+        CREATE TABLE financial_schemes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            description TEXT,
+            long_description TEXT,
+            why_chosen TEXT,
+            official_website TEXT,
+            target_states TEXT,
+            min_age INTEGER,
+            max_age INTEGER,
+            marital_status TEXT,
+            categories TEXT,
+            disability_required BOOLEAN,
+            education_levels TEXT,
+            employment_statuses TEXT,
+            priority INTEGER,
+            documents_required TEXT
+        )
+        ''')
     
     schemes = [
         (

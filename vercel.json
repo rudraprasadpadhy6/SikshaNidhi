@@ -1,15 +1,54 @@
 {
   "outputDirectory": "frontend",
   "rewrites": [
-    { "source": "/config.js",        "destination": "/config.js" },
-    { "source": "/styles.css",       "destination": "/styles.css" },
-    { "source": "/translations.js",  "destination": "/translations.js" },
-    { "source": "/i18n.js",          "destination": "/i18n.js" },
-    { "source": "/dashboard",        "destination": "/dashboard.html" },
-    { "source": "/scholar",          "destination": "/index1.html" },
-    { "source": "/capital",          "destination": "/index2.html" },
-    { "source": "/pixa",             "destination": "/PixaBot.html" },
-    { "source": "/admin",            "destination": "/feedback_admin.html" },
-    { "source": "/login",            "destination": "/login.html" }
-  ]
+    {
+      "source": "/config.js",
+      "destination": "/config.js"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/styles.css"
+    },
+    {
+      "source": "/translations.js",
+      "destination": "/translations.js"
+    },
+    {
+      "source": "/i18n.js",
+      "destination": "/i18n.js"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/scholar",
+      "destination": "/index1.html"
+    },
+    {
+      "source": "/capital",
+      "destination": "/index2.html"
+    },
+    {
+      "source": "/pixa",
+      "destination": "/PixaBot.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/feedback_admin.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    }
+  ],
+  "experimentalServices": {
+    "frontend": {
+      "routePrefix": "/"
+    },
+    "backend": {
+      "entrypoint": "backend",
+      "routePrefix": "/_/backend"
+    }
+  }
 }

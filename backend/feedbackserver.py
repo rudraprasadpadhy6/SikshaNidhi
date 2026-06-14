@@ -1,14 +1,13 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import sqlite3
 import os
 import csv
 import io
 from datetime import datetime
 from feedbackdatabase import init_feedback_db
+from db_helper import get_db_connection
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'data', 'feedback.db')
 FRONTEND_PATH = os.path.join(BASE_DIR, '..', 'frontend')
 
 # Load admin key from .env
@@ -23,9 +22,7 @@ CORS(app)
 init_feedback_db()
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return get_db_connection('feedback')
 
 # ─────────────────────────────────────────
 # USER ROUTE: Submit Feedback

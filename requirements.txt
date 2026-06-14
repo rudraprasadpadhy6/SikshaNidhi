@@ -4,3 +4,4 @@ groq
 python-dotenv
 pydantic
 edge-tts
+psycopg2-binary

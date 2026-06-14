@@ -1,20 +1,20 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-import sqlite3
 import os
 import json
+import sqlite3
 from datetime import datetime, timedelta
+from db_helper import get_db_connection
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'data', 'scholarships.db')
 FRONTEND_PATH = os.path.join(BASE_DIR, '..', 'frontend', 'index1.html')
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend connectivity
 
 def get_scholarships(payload):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection('scholarships')
+    conn.row_factory = sqlite3.Row if hasattr(conn, 'row_factory') else None
     c = conn.cursor()
     
     # 1. Extract values from frontend payload with defaults
@@ -102,8 +102,8 @@ def index():
 @app.route('/api/notifications', methods=['GET'])
 def get_notifications():
     try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
+        conn = get_db_connection('scholarships')
+        conn.row_factory = sqlite3.Row if hasattr(conn, 'row_factory') else None
         c = conn.cursor()
         
         today = datetime.now()
@@ -138,8 +138,8 @@ def get_notifications():
 @app.route('/api/live_scholarships', methods=['GET'])
 def get_live_scholarships():
     try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
+        conn = get_db_connection('scholarships')
+        conn.row_factory = sqlite3.Row if hasattr(conn, 'row_factory') else None
         c = conn.cursor()
         
         today = datetime.now().strftime('%Y-%m-%d')

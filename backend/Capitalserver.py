@@ -1,12 +1,11 @@
 import http.server
 import socketserver
 import json
-import sqlite3
 import os
+from db_helper import get_db_connection
 
 PORT = 8000
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'data', 'schemes.db')
 DIRECTORY = os.path.join(BASE_DIR, '..', 'frontend')
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
@@ -29,7 +28,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 employment = data.get('employment', '')
                 
                 # Query DB
-                conn = sqlite3.connect(DB_PATH)
+                conn = get_db_connection('schemes')
                 cursor = conn.cursor()
                 cursor.execute('SELECT * FROM financial_schemes')
                 columns = [column[0] for column in cursor.description]
@@ -151,7 +150,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 employment_statuses = json.dumps(data.get('employment_statuses', []))
                 priority = data.get('priority', 5)
                 
-                conn = sqlite3.connect(DB_PATH)
+                conn = get_db_connection('schemes')
                 cursor = conn.cursor()
                 cursor.execute('''
                     INSERT INTO financial_schemes (

@@ -1,32 +1,52 @@
-import sqlite3
-import os
-
-DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'scholarships.db')
+from db_helper import get_db_connection, is_postgres
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection('scholarships')
     c = conn.cursor()
     
     # Create scholarships table
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS scholarships (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            scholarship_type TEXT, 
-            amount INTEGER,
-            description TEXT,
-            start_date TEXT,
-            close_date TEXT,
-            url TEXT,
-            min_age INTEGER,
-            max_age INTEGER,
-            gender TEXT,
-            caste TEXT,
-            pwd_only BOOLEAN,
-            min_marks INTEGER,
-            max_income INTEGER
-        )
-    ''')
+    if is_postgres():
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS scholarships (
+                id SERIAL PRIMARY KEY,
+                name TEXT,
+                scholarship_type TEXT, 
+                amount INTEGER,
+                description TEXT,
+                start_date TEXT,
+                close_date TEXT,
+                url TEXT,
+                min_age INTEGER,
+                max_age INTEGER,
+                gender TEXT,
+                caste TEXT,
+                pwd_only BOOLEAN,
+                min_marks INTEGER,
+                max_income INTEGER,
+                documents_required TEXT
+            )
+        ''')
+    else:
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS scholarships (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                scholarship_type TEXT, 
+                amount INTEGER,
+                description TEXT,
+                start_date TEXT,
+                close_date TEXT,
+                url TEXT,
+                min_age INTEGER,
+                max_age INTEGER,
+                gender TEXT,
+                caste TEXT,
+                pwd_only BOOLEAN,
+                min_marks INTEGER,
+                max_income INTEGER,
+                documents_required TEXT
+            )
+        ''')
     
     # Clear existing data for a fresh start
     c.execute('DELETE FROM scholarships')
@@ -57,7 +77,7 @@ def init_db():
     
     conn.commit()
     conn.close()
-    print(f"Database created at {DB_PATH} with fresh active and expired data.")
+    print("Database created with fresh active and expired data.")
 
 if __name__ == '__main__':
     init_db()

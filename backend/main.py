@@ -1,39 +1,48 @@
-import os, json, sqlite3, re, base64, asyncio, csv, io
+import os, json, re, base64, asyncio, csv, io
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
+from db_helper import get_db_connection, is_postgres
 
 load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR    = os.path.join(BASE_DIR, 'data')
-SCHOLAR_DB  = os.path.join(DATA_DIR, 'scholarships.db')
-SCHEMES_DB  = os.path.join(DATA_DIR, 'schemes.db')
-FEEDBACK_DB = os.path.join(DATA_DIR, 'feedback.db')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 ADMIN_KEY    = os.getenv('ADMIN_FEEDBACK_KEY', 'siksha-admin-2026')
 
 def _init_feedback():
-    conn = sqlite3.connect(FEEDBACK_DB)
-    conn.execute('''CREATE TABLE IF NOT EXISTS feedback (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT DEFAULT 'Anonymous',
-        rating INTEGER NOT NULL,
-        category TEXT DEFAULT 'General',
-        message TEXT NOT NULL,
-        page TEXT DEFAULT 'Unknown',
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        is_read INTEGER DEFAULT 0)''')
+    conn = get_db_connection('feedback')
+    if is_postgres():
+        conn.execute('''CREATE TABLE IF NOT EXISTS feedback (
+            id SERIAL PRIMARY KEY,
+            user_name TEXT DEFAULT 'Anonymous',
+            rating INTEGER NOT NULL,
+            category TEXT DEFAULT 'General',
+            message TEXT NOT NULL,
+            page TEXT DEFAULT 'Unknown',
+            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_read INTEGER DEFAULT 0)''')
+    else:
+        conn.execute('''CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_name TEXT DEFAULT 'Anonymous',
+            rating INTEGER NOT NULL,
+            category TEXT DEFAULT 'General',
+            message TEXT NOT NULL,
+            page TEXT DEFAULT 'Unknown',
+            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_read INTEGER DEFAULT 0)''')
     conn.commit(); conn.close()
 
 _init_feedback()
 
 # ── Scholar ───────────────────────────────────────────────
 def _get_scholarships(payload):
-    conn = sqlite3.connect(SCHOLAR_DB); conn.row_factory = sqlite3.Row; c = conn.cursor()
+    conn = get_db_connection('scholarships')
+    conn.row_factory = getattr(conn, 'row_factory', None)
+    c = conn.cursor()
     try: age = int(payload.get('age', 0))
     except: age = 0
     try: marks = int(payload.get('marks', 0))
@@ -75,7 +84,9 @@ def search_scholarships():
 @app.route('/api/notifications', methods=['GET'])
 def get_notifications():
     try:
-        conn = sqlite3.connect(SCHOLAR_DB); conn.row_factory = sqlite3.Row; c = conn.cursor()
+        conn = get_db_connection('scholarships')
+        conn.row_factory = getattr(conn, 'row_factory', None)
+        c = conn.cursor()
         now = datetime.now(); t0 = now.strftime('%Y-%m-%d'); t5 = (now+timedelta(days=5)).strftime('%Y-%m-%d')
         c.execute('SELECT name,close_date,url,documents_required FROM scholarships WHERE close_date>=? AND close_date<=?',(t0,t5))
         rows = c.fetchall(); conn.close()
@@ -87,7 +98,9 @@ def get_notifications():
 @app.route('/api/live_scholarships', methods=['GET'])
 def get_live():
     try:
-        conn = sqlite3.connect(SCHOLAR_DB); conn.row_factory = sqlite3.Row; c = conn.cursor()
+        conn = get_db_connection('scholarships')
+        conn.row_factory = getattr(conn, 'row_factory', None)
+        c = conn.cursor()
         today = datetime.now().strftime('%Y-%m-%d')
         c.execute('SELECT name,close_date,url,amount,scholarship_type,documents_required FROM scholarships WHERE close_date>=? ORDER BY close_date ASC LIMIT 10',(today,))
         rows = c.fetchall(); conn.close()
@@ -133,7 +146,8 @@ def find_opportunities():
         age = int(data.get('age',0)); state = data.get('state',''); marital = data.get('maritalStatus','')
         category = data.get('category',''); disability = data.get('disability','No')=='Yes'
         education = data.get('education',''); employment = data.get('employment','')
-        conn = sqlite3.connect(SCHEMES_DB); cur = conn.cursor()
+        conn = get_db_connection('schemes')
+        cur = conn.cursor()
         cur.execute('SELECT * FROM financial_schemes')
         cols = [c[0] for c in cur.description]; rows = cur.fetchall(); conn.close()
         eligible = []
@@ -165,7 +179,8 @@ def add_opportunity():
         r=jsonify({}); r.headers.update({'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type'}); return r
     try:
         data = request.json or {}
-        conn = sqlite3.connect(SCHEMES_DB); cur = conn.cursor()
+        conn = get_db_connection('schemes')
+        cur = conn.cursor()
         cur.execute('''INSERT INTO financial_schemes (name,description,long_description,why_chosen,official_website,
             target_states,min_age,max_age,marital_status,categories,disability_required,education_levels,employment_statuses,priority)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
@@ -180,11 +195,17 @@ def add_opportunity():
 
 # ── PixaBot ───────────────────────────────────────────────
 _smem = {}; _tmem = {}
-_SP = ("You are Pixa, educational advisor for ShikshaNidhi.\nDATE: {d}\nCURRENT LANGUAGE: {l}. Reply in {l}.\n"
-       "Output STRICTLY as JSON:\nOPTION1: {{\"action\":\"search\",\"query\":\"...\"}}\n"
-       "OPTION2: {{\"emotion\":\"happy|excited|neutral|sad|stern|playful|confused\",\"reply\":\"...\"}}")
-_TP = ("You are Pixa, empathetic therapist.\nDATE: {d}\nTHERAPY MODE. Language: {l}. Reply in {l}.\n"
-       "Output STRICTLY as JSON: {{\"emotion\":\"empathetic\",\"reply\":\"...\"}}")
+_SP = ("You are Pixa, an interactive educational advisor for the ShikshaNidhi app.\n"
+       "DATE: {d}\n"
+       "CURRENT LANGUAGE: {l}. Reply in {l}.\n"
+       "You MUST output your response STRICTLY as a single valid JSON object. Do not include any text before or after the JSON. "
+       "If you need to search for scholarships, output: {{\"action\":\"search\",\"query\":\"search query\"}}. "
+       "Otherwise, output: {{\"emotion\":\"happy|excited|neutral|sad|stern|playful|confused\",\"reply\":\"your response in {l}\"}}")
+_TP = ("You are Pixa, a deeply empathetic personal therapist and emotional safe space.\n"
+       "DATE: {d}\n"
+       "THERAPY MODE. Language: {l}. Reply in {l}.\n"
+       "You MUST output your response STRICTLY as a single valid JSON object. Do not include any text before or after the JSON. "
+       "Format: {{\"emotion\":\"empathetic\",\"reply\":\"your supportive response in {l}\"}}")
 
 def _parse(raw):
     if not raw: return {'emotion':'confused','reply':"I couldn't generate a response."}
@@ -257,7 +278,10 @@ def chat():
         return jsonify({'emotion':'confused','reply':"Connection issue. Please try again.",'audio_base64':''})
 
 # ── Feedback ──────────────────────────────────────────────
-def _fdb(): conn=sqlite3.connect(FEEDBACK_DB); conn.row_factory=sqlite3.Row; return conn
+def _fdb():
+    conn = get_db_connection('feedback')
+    conn.row_factory = getattr(conn, 'row_factory', None)
+    return conn
 
 @app.route('/api/feedback/submit', methods=['POST'])
 def submit_feedback():
