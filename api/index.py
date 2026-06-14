@@ -1,15 +1,14 @@
-import os
 import json
 import sqlite3
 import re
 import base64
 import asyncio
 import sys
+import os
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
-
 # In Vercel, __file__ is /var/task/api/index.py
 # So BASE_DIR = /var/task, DATA_DIR = /var/task/backend/data
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
