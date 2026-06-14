@@ -3,14 +3,26 @@ import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# Add parent/backend directory to path so python can find db_helper smoothly
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from backend.db_helper import get_db_connection, is_postgres
+# Clear up local path loading constraints absolutely
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(CURRENT_DIR)
+
+if CURRENT_DIR not in sys.path:
+    sys.path.append(CURRENT_DIR)
+if PARENT_DIR not in sys.path:
+    sys.path.append(PARENT_DIR)
+
+try:
+    from backend.db_helper import get_db_connection, is_postgres
+except ImportError:
+    try:
+        from db_helper import get_db_connection, is_postgres
+    except ImportError as e:
+        raise ImportError(f"Pathing Error: Could not locate db_helper.py. Checked {CURRENT_DIR} and {PARENT_DIR}. Details: {e}")
 
 app = Flask(__name__)
-CORS(app)  # Enables cross-origin resource sharing for your Netlify frontend
+CORS(app)
 
-# Helper tool to safely execute table initialization scripts
 def execute_query(conn, query, params=None):
     try:
         cursor = conn.cursor()
@@ -20,11 +32,8 @@ def execute_query(conn, query, params=None):
     except Exception as e:
         print(f"Database setup notice: {e}")
 
-# ── INITIALIZE CLOUD DATABASES ON REBOOT ──
 def init_db():
     conn = get_db_connection()
-    
-    # 1. Setup Scholarships Table Structure
     execute_query(conn, '''
         CREATE TABLE IF NOT EXISTS scholarships (
             id SERIAL PRIMARY KEY,
@@ -45,8 +54,6 @@ def init_db():
             documents_required TEXT
         );
     ''')
-    
-    # 2. Setup Financial Schemes Table Structure
     execute_query(conn, '''
         CREATE TABLE IF NOT EXISTS financial_schemes (
             id SERIAL PRIMARY KEY,
@@ -69,44 +76,36 @@ def init_db():
     ''')
     conn.close()
 
-# Trigger cloud tables verification checks gracefully on deployment startup
-init_db()
+# Safe initializer call
+try:
+    init_db()
+except Exception as e:
+    print(f"Deferred DB Initializer Check: {e}")
 
-
-# ── PRODUCTION API ENDPOINTS ──
 
 @app.route('/')
 def home():
     return jsonify({
         "status": "online",
-        "message": "SikshaNidhi Central Production Engine API is fully operational.",
+        "message": "SikshaNidhi Engine Live",
         "environment": "PostgreSQL Cloud Cluster" if is_postgres() else "Local SQLite Backup"
     })
 
 
 @app.route('/api/live_scholarships', methods=['GET'])
 def live_scholarships():
-    """
-    Queries real live records from the 'scholarships' table 
-    and streams them dynamically to your frontend layout.
-    """
     conn = None
     cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Pull records safely from the table
-        cursor.execute("""
-            SELECT name, scholarship_type, close_date, amount, url, documents_required 
-            FROM scholarships;
-        """)
+        cursor.execute("SELECT name, scholarship_type, close_date, amount, url, documents_required FROM scholarships;")
         rows = cursor.fetchall()
         
         data = []
         for row in rows:
-            # Handle RealDictCursor formatting (Dictionary rows)
-            if isinstance(row, dict):
+            if isinstance(row, dict) or hasattr(row, 'get'):
                 data.append({
                     "name": row.get("name"),
                     "type": row.get("scholarship_type"),
@@ -116,7 +115,6 @@ def live_scholarships():
                     "docs": row.get("documents_required"),
                     "status": "Ongoing"
                 })
-            # Handle standard index-tuple formatting safety fallback
             else:
                 data.append({
                     "name": row[0],
@@ -139,24 +137,18 @@ def live_scholarships():
 
 @app.route('/api/live_schemes', methods=['GET'])
 def live_schemes():
-    """
-    Queries real live records from the 'financial_schemes' table.
-    """
     conn = None
     cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        cursor.execute("""
-            SELECT name, description, official_website, priority 
-            FROM financial_schemes;
-        """)
+        cursor.execute("SELECT name, description, official_website, priority FROM financial_schemes;")
         rows = cursor.fetchall()
         
         data = []
         for row in rows:
-            if isinstance(row, dict):
+            if isinstance(row, dict) or hasattr(row, 'get'):
                 data.append({
                     "name": row.get("name"),
                     "description": row.get("description"),
