@@ -4,14 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Load the dynamic backend configuration -->
+    <script src="config.js"></script>
+
     <title data-i18n="dash_page_title">Home - Dashboard</title>
+
     <style>
+        <style>
+
         /* Base Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
         }
 
         body {
@@ -58,7 +74,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scale(1.4); /* Zoom in to crop black border */
+            transform: scale(1.4);
+            /* Zoom in to crop black border */
             display: block;
         }
 
@@ -890,7 +907,8 @@
             flex-shrink: 0;
         }
     </style>
-  <script src="/config.js"></script>`n</head>
+    <script src="/config.js"></script>`n
+</head>
 
 <body>
 
@@ -909,8 +927,12 @@
     </div>
 
     <!-- Language Switcher -->
-    <button onclick="showLanguagePopup()" style="position: absolute; top: 20px; right: 180px; background: rgba(255,255,255,0.9); border: 1px solid #48C5B9; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; color: #48C5B9;" onmouseover="this.style.color='#094A53'; this.style.borderColor='#094A53';" onmouseout="this.style.color='#48C5B9'; this.style.borderColor='#48C5B9';" title="Change Language">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button onclick="showLanguagePopup()"
+        style="position: absolute; top: 20px; right: 180px; background: rgba(255,255,255,0.9); border: 1px solid #48C5B9; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; color: #48C5B9;"
+        onmouseover="this.style.color='#094A53'; this.style.borderColor='#094A53';"
+        onmouseout="this.style.color='#48C5B9'; this.style.borderColor='#48C5B9';" title="Change Language">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="2" y1="12" x2="22" y2="12"></line>
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -922,8 +944,7 @@
         style="position: fixed; bottom: 30px; left: calc(33.333% + 20px); z-index: 9999; cursor: move;">
         <div id="pixabot-bubble"
             style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
-            <img src="bot_logo.jpeg" alt="PixaBot"
-                style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="bot_logo.jpeg" alt="PixaBot" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
 
@@ -1007,7 +1028,8 @@
                         </svg>
                         <span data-i18n="info_banner_title">SikshaNidhi</span>
                     </h3>
-                    <p data-i18n="info_banner_desc">This is an AI-powered platform designed to make scholarships and financial opportunities
+                    <p data-i18n="info_banner_desc">This is an AI-powered platform designed to make scholarships and
+                        financial opportunities
                         accessible to everyone. By simply entering your academic, personal, and financial details, our
                         intelligent system analyzes your profile and matches you with the most relevant scholarships,
                         grants, and funding options tailored to your eligibility.</p>
@@ -1078,11 +1100,11 @@
                     notificationBadge.style.display = 'none';
                     notificationList.innerHTML = '<div class="no-notifications" data-i18n="no_notifications">No scholarships closing soon.</div>';
                 }
-                
+
                 // Re-apply translations for dynamic content
                 if (typeof window.applyTranslations === 'function') {
                     window.applyTranslations(localStorage.getItem("sn_lang") || "en");
-                    
+
                     // Specific handling for parameterised strings like days left
                     const lang = localStorage.getItem("sn_lang") || "en";
                     const dict = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]) ? TRANSLATIONS[lang] : null;
@@ -1148,7 +1170,7 @@
                 } else {
                     sidebarList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.7);" data-i18n="no_active_scholarships">No active scholarships found.</div>';
                 }
-                
+
                 // Re-apply translations for dynamic content
                 if (typeof window.applyTranslations === 'function') {
                     window.applyTranslations(localStorage.getItem("sn_lang") || "en");
@@ -1163,18 +1185,18 @@
 
         // Refresh dynamic content when language changes
         window.addEventListener('languageChanged', (e) => {
-             fetchNotifications();
-             fetchLiveScholarships();
-             setTimeout(() => {
-                 const quoteText = document.getElementById('quoteText');
-                 const currentKey = `quote_${currentQuoteIndex + 1}`;
-                 if (typeof window.applyTranslations === 'function') {
-                     const lang = localStorage.getItem("sn_lang") || "en";
-                     if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang] && TRANSLATIONS[lang][currentKey]) {
-                         quoteText.textContent = TRANSLATIONS[lang][currentKey];
-                     }
-                 }
-             }, 100);
+            fetchNotifications();
+            fetchLiveScholarships();
+            setTimeout(() => {
+                const quoteText = document.getElementById('quoteText');
+                const currentKey = `quote_${currentQuoteIndex + 1}`;
+                if (typeof window.applyTranslations === 'function') {
+                    const lang = localStorage.getItem("sn_lang") || "en";
+                    if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang] && TRANSLATIONS[lang][currentKey]) {
+                        quoteText.textContent = TRANSLATIONS[lang][currentKey];
+                    }
+                }
+            }, 100);
         });
 
         // --- Quote Carousel Logic ---
@@ -1454,11 +1476,14 @@
                             </svg>
                         </div>
                         <div class="help-sec-body">
-                            <h4 data-i18n="overview_h1"><span data-i18n="help_ov_title">Welcome to SikshaNidhi!</span></h4>
-                            <p data-i18n="overview_p1"><span data-i18n="help_ov_p1">SikshaNidhi is an AI-powered scholarship &amp; financial opportunities platform built to
-                                help students discover, track, and apply for scholarships and grants that match their
-                                unique profile. This guide walks you through every feature so you can hit the ground
-                                running.</span></p>
+                            <h4 data-i18n="overview_h1"><span data-i18n="help_ov_title">Welcome to SikshaNidhi!</span>
+                            </h4>
+                            <p data-i18n="overview_p1"><span data-i18n="help_ov_p1">SikshaNidhi is an AI-powered
+                                    scholarship &amp; financial opportunities platform built to
+                                    help students discover, track, and apply for scholarships and grants that match
+                                    their
+                                    unique profile. This guide walks you through every feature so you can hit the ground
+                                    running.</span></p>
                         </div>
                     </div>
                     <div class="help-section">
@@ -1471,12 +1496,16 @@
                         <div class="help-sec-body">
                             <h4 data-i18n="overview_h2"><span data-i18n="help_ov_h2">Quick Start in 3 Steps</span></h4>
                             <ul>
-                                <li data-i18n="overview_li1"><span data-i18n="help_ov_li1"><strong>Step 1 — Dashboard:</strong> Your command centre. See live scholarships and
-                                    deadline alerts at a glance.</span></li>
-                                <li data-i18n="overview_li2"><span data-i18n="help_ov_li2"><strong>Step 2 — Choose a Portal:</strong> Click <em>UniScholar.AI</em> for academic
-                                    scholarships, or <em>UniCapital.AI</em> for financial aid &amp; grants.</span></li>
-                                <li data-i18n="overview_li3"><span data-i18n="help_ov_li3"><strong>Step 3 — Chat with PixaBot:</strong> Our AI assistant is always available at
-                                    the bottom of the screen to guide you through anything.</span></li>
+                                <li data-i18n="overview_li1"><span data-i18n="help_ov_li1"><strong>Step 1 —
+                                            Dashboard:</strong> Your command centre. See live scholarships and
+                                        deadline alerts at a glance.</span></li>
+                                <li data-i18n="overview_li2"><span data-i18n="help_ov_li2"><strong>Step 2 — Choose a
+                                            Portal:</strong> Click <em>UniScholar.AI</em> for academic
+                                        scholarships, or <em>UniCapital.AI</em> for financial aid &amp; grants.</span>
+                                </li>
+                                <li data-i18n="overview_li3"><span data-i18n="help_ov_li3"><strong>Step 3 — Chat with
+                                            PixaBot:</strong> Our AI assistant is always available at
+                                        the bottom of the screen to guide you through anything.</span></li>
                             </ul>
                         </div>
                     </div>
@@ -1487,7 +1516,8 @@
                                 <line x1="12" y1="16" x2="12" y2="12" />
                                 <line x1="12" y1="8" x2="12.01" y2="8" />
                             </svg></span>
-                        <span data-i18n="overview_tip">You can open this guide anytime by clicking the <strong>?</strong> button next to the
+                        <span data-i18n="overview_tip">You can open this guide anytime by clicking the
+                            <strong>?</strong> button next to the
                             notification bell at the top of the page.</span>
                     </div>
                 </div>
@@ -1504,9 +1534,11 @@
                         </div>
                         <div class="help-sec-body">
                             <h4><span data-i18n="help_dash_h1">Notification Bell</span></h4>
-                            <p><span data-i18n="help_dash_p1">The bell icon shows scholarships with <strong>upcoming deadlines</strong> (closing within
-                                7 days). A red pulsing dot appears when urgent alerts exist. Click the bell to expand
-                                the list — each entry includes the official link and required documents.</span></p>
+                            <p><span data-i18n="help_dash_p1">The bell icon shows scholarships with <strong>upcoming
+                                        deadlines</strong> (closing within
+                                    7 days). A red pulsing dot appears when urgent alerts exist. Click the bell to
+                                    expand
+                                    the list — each entry includes the official link and required documents.</span></p>
                         </div>
                     </div>
                     <div class="help-section">
@@ -1523,9 +1555,11 @@
                         </div>
                         <div class="help-sec-body">
                             <h4><span data-i18n="help_dash_h2">Live Scholarships Sidebar</span></h4>
-                            <p><span data-i18n="help_dash_p2">The left panel displays a <strong>real-time list</strong> of active scholarships fetched
-                                from our database. Each card shows the name, status, and a <em>Docs Required</em> link.
-                                Click any card to open the official scholarship page in a new tab.</span></p>
+                            <p><span data-i18n="help_dash_p2">The left panel displays a <strong>real-time list</strong>
+                                    of active scholarships fetched
+                                    from our database. Each card shows the name, status, and a <em>Docs Required</em>
+                                    link.
+                                    Click any card to open the official scholarship page in a new tab.</span></p>
                         </div>
                     </div>
                     <div class="help-section">
@@ -1541,10 +1575,12 @@
                         <div class="help-sec-body">
                             <h4><span data-i18n="help_dash_h3">Portal Buttons</span></h4>
                             <ul>
-                                <li><span data-i18n="help_dash_li1"><strong>UniScholar.AI</strong> — AI-powered scholarship matching based on your
-                                    academic profile.</span></li>
-                                <li><span data-i18n="help_dash_li2"><strong>UniCapital.AI</strong> — Capital &amp; financial aid portal for grants,
-                                    loans, and funding.</span></li>
+                                <li><span data-i18n="help_dash_li1"><strong>UniScholar.AI</strong> — AI-powered
+                                        scholarship matching based on your
+                                        academic profile.</span></li>
+                                <li><span data-i18n="help_dash_li2"><strong>UniCapital.AI</strong> — Capital &amp;
+                                        financial aid portal for grants,
+                                        loans, and funding.</span></li>
                             </ul>
                         </div>
                     </div>
@@ -1558,8 +1594,9 @@
                         </div>
                         <div class="help-sec-body">
                             <h4><span data-i18n="help_dash_h4">User Profile (Top-Right)</span></h4>
-                            <p><span data-i18n="help_dash_p4">Your display name appears in the top-right corner, loaded from your saved session so it
-                                always shows the name you registered with.</span></p>
+                            <p><span data-i18n="help_dash_p4">Your display name appears in the top-right corner, loaded
+                                    from your saved session so it
+                                    always shows the name you registered with.</span></p>
                         </div>
                     </div>
                     <div class="help-tip-box">
@@ -1569,7 +1606,8 @@
                                 <line x1="12" y1="16" x2="12" y2="12" />
                                 <line x1="12" y1="8" x2="12.01" y2="8" />
                             </svg></span>
-                        <span data-i18n="help_dash_tip">The motivational quote at the top of the dashboard cycles automatically every few seconds!</span>
+                        <span data-i18n="help_dash_tip">The motivational quote at the top of the dashboard cycles
+                            automatically every few seconds!</span>
                     </div>
                 </div>
 
@@ -1854,7 +1892,8 @@
                 <!-- Content injected via JS -->
             </div>
             <button onclick="closeDocsModal()"
-                style="margin-top: 25px; width: 100%; padding: 12px; background: linear-gradient(135deg, #48C5B9 0%, #094A53 100%); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(9,74,83,0.3);" data-i18n="btn_understood">Understood</button>
+                style="margin-top: 25px; width: 100%; padding: 12px; background: linear-gradient(135deg, #48C5B9 0%, #094A53 100%); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(9,74,83,0.3);"
+                data-i18n="btn_understood">Understood</button>
         </div>
     </div>
 
@@ -2154,7 +2193,8 @@
                 </select>
 
                 <div class="fb-label" data-i18n="fb_message">Your Message</div>
-                <textarea id="fb-message" placeholder="Tell us what you think... (max 500 chars)" maxlength="500" data-i18n-placeholder="ph_fb_message"
+                <textarea id="fb-message" placeholder="Tell us what you think... (max 500 chars)" maxlength="500"
+                    data-i18n-placeholder="ph_fb_message"
                     oninput="document.getElementById('fb-char-count').textContent=this.value.length+'/500'"></textarea>
                 <div id="fb-char-count">0/500</div>
 
@@ -2224,32 +2264,35 @@
             const userName = document.getElementById('display-user-name')?.textContent?.trim() || 'Anonymous';
 
             try {
-                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
-                const res = await fetch(`${baseEndpoint}/api/feedback/submit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        rating: fbSelectedRating,
-                        category: document.getElementById('fb-category').value,
-                        message: message,
-                        user_name: userName,
-                        page: 'Dashboard'
-                    })
-                });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    document.getElementById('fb-form-content').style.display = 'none';
-                    document.getElementById('fb-success').style.display = 'block';
-                    setTimeout(closeFeedback, 2800);
-                } else {
-                    alert('Error: ' + data.message);
+                try {
+                    // Define the dynamic fallback chain to read config.js smoothly
+                    const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+
+                    const res = await fetch(`${baseEndpoint}/api/feedback/submit`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            rating: fbSelectedRating,
+                            category: document.getElementById('fb-category').value,
+                            message: message,
+                            user_name: userName,
+                            page: 'Dashboard'
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        document.getElementById('fb-form-content').style.display = 'none';
+                        document.getElementById('fb-success').style.display = 'block';
+                        setTimeout(closeFeedback, 2800);
+                    } else {
+                        alert('Error: ' + data.message);
+                        btn.disabled = false; btn.textContent = 'Send Feedback 🚀';
+                    }
+                } catch (e) {
+                    alert('Could not connect to feedback server. Make sure backend is running.');
                     btn.disabled = false; btn.textContent = 'Send Feedback 🚀';
                 }
-            } catch (e) {
-                alert('Could not connect to feedback server. Make sure backend is running.');
-                btn.disabled = false; btn.textContent = 'Send Feedback 🚀';
             }
-        }
     </script>
 
     <script src="translations.js"></script>
