@@ -1,163 +1,112 @@
 import os
-import sys
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import sqlite3
-from dotenv import load_dotenv
-
-# Ensure environment variables are loaded
-load_dotenv()
-
-# We look for DATABASE_URL in the environment
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-# SQLite fallback paths (relative to backend directory)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, 'data')
-os.makedirs(DATA_DIR, exist_ok=True)
-
-SCHOLAR_DB = os.path.join(DATA_DIR, 'scholarships.db')
-SCHEMES_DB = os.path.join(DATA_DIR, 'schemes.db')
-# For feedback, use tmp on Vercel, local file otherwise
-IS_VERCEL = os.getenv('VERCEL') == '1'
-FEEDBACK_DB = '/tmp/feedback.db' if IS_VERCEL else os.path.join(DATA_DIR, 'feedback.db')
 
 def is_postgres():
-    return DATABASE_URL and (DATABASE_URL.startswith('postgres://') or DATABASE_URL.startswith('postgresql://'))
+    """Checks if a remote PostgreSQL cloud database string is configured."""
+    url = os.getenv("postgresql://neondb_owner:npg_4BPEOv9wrdQe@ep-bitter-mouse-ah5rd0il.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require")
+    return url is not None and (url.startswith("postgres://") or url.startswith("postgresql://"))
 
-class PostgresCursorWrapper:
-    def __init__(self, cursor):
-        self._cursor = cursor
-        self._lastrowid = None
-
-    def execute(self, query, params=None):
-        # Convert sqlite ? placeholders to psycopg2 %s placeholders
-        query = query.replace('?', '%s')
-        
-        # Intercept INSERT queries to get the generated id for lastrowid
-        is_insert = query.strip().upper().startswith('INSERT')
-        if is_insert and 'RETURNING' not in query.upper():
-            # Extract table name to form a proper RETURNING clause or generic RETURNING id
-            query += ' RETURNING id'
-
-        if params is not None:
-            # psycopg2 expects tuples/lists for parameters; convert dict or keep as is
-            self._cursor.execute(query, params)
-        else:
-            self._cursor.execute(query)
-
-        if is_insert:
-            try:
-                row = self._cursor.fetchone()
-                if row:
-                    if isinstance(row, dict):
-                        self._lastrowid = row.get('id')
-                    else:
-                        self._lastrowid = row[0]
-            except Exception:
-                pass
-
-    def executemany(self, query, params_list):
-        query = query.replace('?', '%s')
-        self._cursor.executemany(query, params_list)
-
-    def fetchone(self):
-        row = self._cursor.fetchone()
-        return row
-
-    def fetchall(self):
-        return self._cursor.fetchall()
-
-    @property
-    def lastrowid(self):
-        return self._lastrowid
-
-    @property
-    def description(self):
-        return self._cursor.description
-
-    def close(self):
-        self._cursor.close()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-class PostgresConnectionWrapper:
+class ProductionPostgresAdapter:
+    """Wraps a PostgreSQL connection to standardize cursor vending."""
     def __init__(self, conn):
-        self._conn = conn
-        self._row_factory = None
+        self.conn = conn
 
-    @property
-    def row_factory(self):
-        return self._row_factory
-
-    @row_factory.setter
-    def row_factory(self, val):
-        self._row_factory = val
-
-    def cursor(self):
-        from psycopg2.extras import RealDictCursor
-        cur = self._conn.cursor(cursor_factory=RealDictCursor)
-        return PostgresCursorWrapper(cur)
-
-    def execute(self, query, params=None):
-        cur = self.cursor()
-        cur.execute(query, params)
-        return cur
+    def cursor(self, *args, **kwargs):
+        # Enforce RealDictCursor so rows behave like dictionaries natively
+        return ProductionCursorWrapper(self.conn.cursor(cursor_factory=RealDictCursor))
 
     def commit(self):
-        self._conn.commit()
+        self.conn.commit()
 
     def rollback(self):
-        self._conn.rollback()
+        self.conn.rollback()
 
     def close(self):
-        self._conn.close()
+        self.conn.close()
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is not None:
-            self.rollback()
-        else:
-            self.commit()
-        self.close()
-
-# We export a unified get_db_connection function
-def get_db_connection(db_name_or_path=None):
+class ProductionCursorWrapper:
     """
-    Returns a database connection. If DATABASE_URL is set to PostgreSQL,
-    it returns a wrapper connection to PostgreSQL (sharing the same database).
-    Otherwise, it returns a local sqlite3 connection.
+    An explicit query driver that bridges the gap between SQLite syntax 
+    and PostgreSQL strict typing rules.
     """
-    global DATABASE_URL
-    # Reload environment variable in case it was written during runtime
-    load_dotenv()
-    DATABASE_URL = os.getenv('DATABASE_URL')
+    def __init__(self, cursor):
+        self.cursor = cursor
+        self.description = None
 
-    if is_postgres():
-        import psycopg2
-        url = DATABASE_URL
-        # Normalize protocol if needed
-        if url.startswith('postgres://'):
-            url = url.replace('postgres://', 'postgresql://', 1)
-        conn = psycopg2.connect(url)
-        return PostgresConnectionWrapper(conn)
-    else:
-        # Resolve SQLite path
-        path = db_name_or_path
-        if not path:
-            path = SCHOLAR_DB
-        elif 'scholarships' in path:
-            path = SCHOLAR_DB
-        elif 'schemes' in path:
-            path = SCHEMES_DB
-        elif 'feedback' in path:
-            path = FEEDBACK_DB
+    def execute(self, query, params=None):
+        # Uniformly convert standard question mark placeholders to Postgres %s format
+        query = query.replace("?", "%s")
+        
+        if params:
+            # Clean individual positional structures safely
+            cleaned = []
+            for p in params:
+                if p == 0 and not isinstance(p, bool):
+                    cleaned.append(False)
+                elif p == 1 and not isinstance(p, bool):
+                    cleaned.append(True)
+                else:
+                    cleaned.append(p)
+            params = tuple(cleaned)
             
-        conn = sqlite3.connect(path)
-        # Enable dict-style column access (r['col_name']) for all SQLite connections
+        try:
+            self.cursor.execute(query, params)
+            self.description = self.cursor.description
+            return self
+        except Exception as e:
+            raise e
+
+    def executemany(self, query, params_list):
+        """
+        Intercepts data tuples during batch insertion to convert raw integer flags 
+        (0 and 1) to explicit boolean literals (False and True) for PostgreSQL.
+        """
+        query = query.replace("?", "%s")
+        cleaned_params = []
+        
+        for params in params_list:
+            new_row = []
+            for p in params:
+                # Intercept integer representations to satisfy strict boolean constraints
+                if p == 0 and not isinstance(p, bool):
+                    new_row.append(False)
+                elif p == 1 and not isinstance(p, bool):
+                    new_row.append(True)
+                else:
+                    new_row.append(p)
+            cleaned_params.append(tuple(new_row))
+
+        try:
+            self.cursor.executemany(query, cleaned_params)
+            self.description = self.cursor.description
+            return self
+        except Exception as e:
+            raise e
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
+
+def get_db_connection(target_type='default'):
+    """
+    The main connection orchestrator. Automatically resolves your current environment 
+    state to connect to local backup instances or cloud systems smoothly.
+    """
+    url = os.getenv("DATABASE_URL")
+    if is_postgres():
+        # Fix deprecated Heroku/Render URI prefixes gracefully
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        conn = psycopg2.connect(url)
+        return ProductionPostgresAdapter(conn)
+    else:
+        # Local development environment fallback layer
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(base_dir, f"{target_type}.db")
+        conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         return conn
