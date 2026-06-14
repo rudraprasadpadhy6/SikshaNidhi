@@ -5,14 +5,20 @@ import base64
 import asyncio
 import sys
 import os
+import csv
+import io
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
-# In Vercel, __file__ is /var/task/api/index.py
-# So BASE_DIR = /var/task, DATA_DIR = /var/task/backend/data
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.join(BASE_DIR, 'backend'))
+
+# Handle directory lookup safely across local, Vercel, and Render layouts
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+
+sys.path.append(parent_dir)
+if os.path.exists(os.path.join(parent_dir, 'backend')):
+    sys.path.append(os.path.join(parent_dir, 'backend'))
 
 from db_helper import get_db_connection, is_postgres
 
@@ -24,11 +30,33 @@ CORS(app)
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 ADMIN_KEY    = os.getenv('ADMIN_FEEDBACK_KEY', 'siksha-admin-2026')
 
-# ── Feedback DB init (runs in /tmp on Vercel) ──────────────────────────────
+# ── HELPER FUNCTION TO FIX QUERY SYNTAX FOR POSTGRESQL AUTOMATICALLY ──
+def execute_query(conn, query, params=None):
+    """
+    Automator wrapper that converts standard SQLite syntax '?' placeholders 
+    to PostgreSQL '%s' formatting dynamically if running on a Neon cloud database.
+    """
+    if params is None:
+        params = ()
+    
+    # If the database engine is PostgreSQL, rewrite the query structure
+    if is_postgres():
+        # Replace SQLite style '?' placeholders with psycopg2 style '%s'
+        query = query.replace('?', '%s')
+        # Fix Boolean compatibility keyword checks
+        query = query.replace('= False', '= FALSE')
+        query = query.replace('= True', '= TRUE')
+        
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    return cursor
+
+# ── Feedback DB init ──────────────────────────────
 def _init_feedback():
     conn = get_db_connection('feedback')
     if is_postgres():
-        conn.execute('''CREATE TABLE IF NOT EXISTS feedback (
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS feedback (
             id           SERIAL PRIMARY KEY,
             user_name    TEXT    DEFAULT 'Anonymous',
             rating       INTEGER NOT NULL,
@@ -55,12 +83,11 @@ def _init_feedback():
 _init_feedback()
 
 # =============================================================================
-# SCHOLAR SERVER  (was port 5000)
+# SCHOLAR SERVER
 # =============================================================================
 def _get_scholarships(payload):
     conn = get_db_connection('scholarships')
     conn.row_factory = getattr(conn, 'row_factory', None)
-    c = conn.cursor()
     gender = payload.get('gender', 'Other')
     try:   age    = int(payload.get('age',    0))
     except: age   = 0
@@ -84,21 +111,23 @@ def _get_scholarships(payload):
     if pwd_status.lower() == 'no':
         q += ' AND pwd_only = False'
 
-    c.execute(q, params)
+    c = execute_query(conn, q, params)
     rows = c.fetchall(); conn.close()
     today  = datetime.now().strftime('%Y-%m-%d')
     result = []
     for r in rows:
-        tpfx   = '[Government]' if r['scholarship_type'] == 'Government' else '[Private]'
-        status = 'Live' if r['close_date'] >= today else 'Expired'
-        info   = (f"Scholarship Type: {r['scholarship_type']}\n"
-                  f"Start Date: {r['start_date']}\nClose Date: {r['close_date']}\n"
-                  f"Reward Amount: Rs.{r['amount']:,}\nOfficial Website: {r['url']}\n"
-                  f"----------------------------------------\nIn Details: {r['description']}")
-        result.append({'name': f"{tpfx} {r['name']} [{status}]", 'amt': r['amount'],
-                       'ds': info, 'end': r['close_date'], 'end_date': r['close_date'],
-                       'url': r['url'], 'type': r['scholarship_type'],
-                       'status': status, 'docs': r['documents_required']})
+        # Match data mapping index layout across types
+        r_dict = dict(zip([col[0] for col in c.description], r)) if is_postgres() else r
+        tpfx   = '[Government]' if r_dict['scholarship_type'] == 'Government' else '[Private]'
+        status = 'Live' if r_dict['close_date'] >= today else 'Expired'
+        info   = (f"Scholarship Type: {r_dict['scholarship_type']}\n"
+                  f"Start Date: {r_dict['start_date']}\nClose Date: {r_dict['close_date']}\n"
+                  f"Reward Amount: Rs.{r_dict['amount']:,}\nOfficial Website: {r_dict['url']}\n"
+                  f"----------------------------------------\nIn Details: {r_dict['description']}")
+        result.append({'name': f"{tpfx} {r_dict['name']} [{status}]", 'amt': r_dict['amount'],
+                       'ds': info, 'end': r_dict['close_date'], 'end_date': r_dict['close_date'],
+                       'url': r_dict['url'], 'type': r_dict['scholarship_type'],
+                       'status': status, 'docs': r_dict['documents_required']})
     return result
 
 
@@ -119,17 +148,16 @@ def search_scholarships():
 def get_notifications():
     try:
         conn = get_db_connection('scholarships')
-        conn.row_factory = getattr(conn, 'row_factory', None)
-        c = conn.cursor()
         today = datetime.now()
         t0 = today.strftime('%Y-%m-%d')
         t5 = (today + timedelta(days=5)).strftime('%Y-%m-%d')
-        c.execute('SELECT name,close_date,url,documents_required FROM scholarships WHERE close_date>=? AND close_date<=?', (t0, t5))
+        c = execute_query(conn, 'SELECT name,close_date,url,documents_required FROM scholarships WHERE close_date>=? AND close_date<=?', (t0, t5))
         rows = c.fetchall(); conn.close()
         out = []
         for r in rows:
-            dl = (datetime.strptime(r['close_date'], '%Y-%m-%d') - today).days + 1
-            out.append({'name': r['name'], 'days_left': dl, 'url': r['url'], 'docs': r['documents_required']})
+            r_dict = dict(zip([col[0] for col in c.description], r)) if is_postgres() else r
+            dl = (datetime.strptime(r_dict['close_date'], '%Y-%m-%d') - today).days + 1
+            out.append({'name': r_dict['name'], 'days_left': dl, 'url': r_dict['url'], 'docs': r_dict['documents_required']})
         return jsonify({'status': 'success', 'notifications': out})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -139,21 +167,22 @@ def get_notifications():
 def get_live_scholarships():
     try:
         conn = get_db_connection('scholarships')
-        conn.row_factory = getattr(conn, 'row_factory', None)
-        c = conn.cursor()
         today = datetime.now().strftime('%Y-%m-%d')
-        c.execute('SELECT name,close_date,url,amount,scholarship_type,documents_required FROM scholarships WHERE close_date>=? ORDER BY close_date ASC LIMIT 10', (today,))
+        c = execute_query(conn, 'SELECT name,close_date,url,amount,scholarship_type,documents_required FROM scholarships WHERE close_date>=? ORDER BY close_date ASC LIMIT 10', (today,))
         rows = c.fetchall(); conn.close()
-        live = [{'name': r['name'], 'close_date': r['close_date'], 'url': r['url'],
-                 'amt': r['amount'], 'type': r['scholarship_type'],
-                 'status': 'Ongoing', 'docs': r['documents_required']} for r in rows]
+        live = []
+        for r in rows:
+            r_dict = dict(zip([col[0] for col in c.description], r)) if is_postgres() else r
+            live.append({'name': r_dict['name'], 'close_date': r_dict['close_date'], 'url': r_dict['url'],
+                         'amt': r_dict['amount'], 'type': r_dict['scholarship_type'],
+                         'status': 'Ongoing', 'docs': r_dict['documents_required']})
         return jsonify({'status': 'success', 'data': live})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 # =============================================================================
-# CAPITAL SERVER  (was port 8000)
+# CAPITAL SERVER
 # =============================================================================
 def _build_scheme_html(scheme):
     sid = scheme['id']
@@ -209,10 +238,9 @@ def find_opportunities():
         employment   = data.get('employment', '')
 
         conn = get_db_connection('schemes')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM financial_schemes')
-        columns = [col[0] for col in cursor.description]
-        rows = cursor.fetchall(); conn.close()
+        c = execute_query(conn, 'SELECT * FROM financial_schemes')
+        columns = [col[0] for col in c.description]
+        rows = c.fetchall(); conn.close()
 
         eligible = []
         for row in rows:
@@ -249,28 +277,31 @@ def add_opportunity():
     try:
         data = request.json or {}
         conn = get_db_connection('schemes')
-        cursor = conn.cursor()
-        cursor.execute('''INSERT INTO financial_schemes
+        q = '''INSERT INTO financial_schemes
             (name,description,long_description,why_chosen,official_website,target_states,
              min_age,max_age,marital_status,categories,disability_required,
              education_levels,employment_statuses,priority)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (data.get('name','Untitled'), data.get('description',''),
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+        params = (data.get('name','Untitled'), data.get('description',''),
              data.get('long_description',''), data.get('why_chosen',''),
              data.get('official_website',''), json.dumps(data.get('target_states',['ALL'])),
              data.get('min_age'), data.get('max_age'),
              json.dumps(data.get('marital_status',[])), json.dumps(data.get('categories',[])),
              data.get('disability_required', False),
              json.dumps(data.get('education_levels',[])),
-             json.dumps(data.get('employment_statuses',[])), data.get('priority',5)))
-        conn.commit(); new_id = cursor.lastrowid; conn.close()
+             json.dumps(data.get('employment_statuses',[])), data.get('priority',5))
+        
+        c = execute_query(conn, q, params)
+        conn.commit()
+        new_id = c.lastrowid if not is_postgres() else None
+        conn.close()
         return jsonify({'success': True, 'id': new_id, 'message': 'Added successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
 # =============================================================================
-# PIXABOT  (was port 8001 / FastAPI)
+# PIXABOT 
 # =============================================================================
 _standard_memory = {}
 _therapy_memory  = {}
@@ -405,7 +436,7 @@ def chat_endpoint():
 
 
 # =============================================================================
-# FEEDBACK SERVER  (was port 8002)
+# FEEDBACK SERVER
 # =============================================================================
 def _fdb():
     conn = get_db_connection('feedback')
@@ -426,8 +457,10 @@ def submit_feedback():
             return jsonify({'status': 'error', 'message': 'Rating must be 1-5'}), 400
         if not message:
             return jsonify({'status': 'error', 'message': 'Message cannot be empty'}), 400
-        conn = _fdb(); conn.execute('INSERT INTO feedback (user_name,rating,category,message,page) VALUES (?,?,?,?,?)',
-                                    (name, rating, category, message, page))
+        
+        conn = _fdb()
+        execute_query(conn, 'INSERT INTO feedback (user_name,rating,category,message,page) VALUES (?,?,?,?,?)',
+                      (name, rating, category, message, page))
         conn.commit(); conn.close()
         return jsonify({'status': 'success', 'message': 'Feedback submitted successfully!'})
     except Exception as e:
@@ -447,9 +480,16 @@ def get_all_feedback():
     if request.headers.get('X-Admin-Key', '') != ADMIN_KEY:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     try:
-        conn = _fdb(); c = conn.cursor()
-        c.execute('SELECT * FROM feedback ORDER BY submitted_at DESC')
-        rows = [dict(r) for r in c.fetchall()]; conn.close()
+        conn = _fdb()
+        c = execute_query(conn, 'SELECT * FROM feedback ORDER BY submitted_at DESC')
+        columns = [col[0] for col in c.description]
+        raw_rows = c.fetchall()
+        
+        rows = []
+        for r in raw_rows:
+            rows.append(dict(zip(columns, r)) if is_postgres() else dict(r))
+            
+        conn.close()
         return jsonify({'status': 'success', 'data': rows})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -460,13 +500,20 @@ def get_stats():
     if request.headers.get('X-Admin-Key', '') != ADMIN_KEY:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     try:
-        conn = _fdb(); c = conn.cursor()
-        c.execute('SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM feedback')
-        row = c.fetchone()
-        c.execute('SELECT COUNT(*) as unread FROM feedback WHERE is_read=0')
-        unread = c.fetchone(); conn.close()
-        return jsonify({'status': 'success', 'total': row['total'],
-                        'avg_rating': round(row['avg_rating'] or 0, 1), 'unread': unread['unread']})
+        conn = _fdb()
+        c1 = execute_query(conn, 'SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM feedback')
+        r1 = c1.fetchone()
+        
+        c2 = execute_query(conn, 'SELECT COUNT(*) as unread FROM feedback WHERE is_read=0')
+        r2 = c2.fetchone()
+        conn.close()
+        
+        total = r1[0] if is_postgres() else r1['total']
+        avg_rating = r1[1] if is_postgres() else r1['avg_rating']
+        unread = r2[0] if is_postgres() else r2['unread']
+        
+        return jsonify({'status': 'success', 'total': total,
+                        'avg_rating': round(avg_rating or 0, 1), 'unread': unread})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -476,7 +523,8 @@ def mark_read(fid):
     if request.headers.get('X-Admin-Key', '') != ADMIN_KEY:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     try:
-        conn = _fdb(); conn.execute('UPDATE feedback SET is_read=1 WHERE id=?', (fid,))
+        conn = _fdb()
+        execute_query(conn, 'UPDATE feedback SET is_read=1 WHERE id=?', (fid,))
         conn.commit(); conn.close()
         return jsonify({'status': 'success'})
     except Exception as e:
@@ -488,7 +536,8 @@ def delete_feedback(fid):
     if request.headers.get('X-Admin-Key', '') != ADMIN_KEY:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     try:
-        conn = _fdb(); conn.execute('DELETE FROM feedback WHERE id=?', (fid,))
+        conn = _fdb()
+        execute_query(conn, 'DELETE FROM feedback WHERE id=?', (fid,))
         conn.commit(); conn.close()
         return jsonify({'status': 'success'})
     except Exception as e:
@@ -497,23 +546,26 @@ def delete_feedback(fid):
 
 @app.route('/api/feedback/export', methods=['GET'])
 def export_csv():
-    import csv, io
     if request.headers.get('X-Admin-Key', '') != ADMIN_KEY:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     try:
-        conn = _fdb(); c = conn.cursor()
-        c.execute('SELECT id,user_name,rating,category,message,page,submitted_at,is_read FROM feedback ORDER BY submitted_at DESC')
+        conn = _fdb()
+        c = execute_query(conn, 'SELECT id,user_name,rating,category,message,page,submitted_at,is_read FROM feedback ORDER BY submitted_at DESC')
+        columns = [col[0] for col in c.description]
         rows = c.fetchall(); conn.close()
+        
         out = io.StringIO()
         w = csv.writer(out)
         w.writerow(['ID','User','Rating','Category','Message','Page','Submitted At','Is Read'])
         for r in rows:
-            w.writerow([r['id'],r['user_name'],r['rating'],r['category'],r['message'],r['page'],r['submitted_at'],'Yes' if r['is_read'] else 'No'])
+            r_dict = dict(zip(columns, r)) if is_postgres() else dict(r)
+            w.writerow([r_dict['id'], r_dict['user_name'], r_dict['rating'], r_dict['category'], r_dict['message'], r_dict['page'], r_dict['submitted_at'], 'Yes' if r_dict['is_read'] else 'No'])
         return Response(out.getvalue(), mimetype='text/csv',
                         headers={'Content-Disposition': 'attachment; filename=SikshaNidhi_Feedback.csv'})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-# Vercel entry point
-# The variable must be named `app` — Vercel auto-detects it.
+# Continuous loop agent for standard Render routing bindings
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
