@@ -1043,6 +1043,7 @@
         </div>
     </div>
 
+    <script src="/config.js"></script>
     <script>
         // --- Notification Logic ---
         const notificationBtn = document.getElementById('notificationBtn');
@@ -1052,7 +1053,8 @@
 
         async function fetchNotifications() {
             try {
-                const response = await fetch((window.API_BASE||'')+'/api/notifications');
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                const response = await fetch(`${baseEndpoint}/api/notifications`);
                 const data = await response.json();
 
                 if (data.status === 'success' && data.notifications.length > 0) {
@@ -1123,7 +1125,8 @@
         // Fetch Live Scholarships for Sidebar
         async function fetchLiveScholarships() {
             try {
-                const response = await fetch((window.API_BASE||'')+'/api/live_scholarships', {
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                const response = await fetch(`${baseEndpoint}/api/live_scholarships`, {
                     method: 'GET'
                 });
                 const data = await response.json();
@@ -2221,7 +2224,8 @@
             const userName = document.getElementById('display-user-name')?.textContent?.trim() || 'Anonymous';
 
             try {
-                const res = await fetch((window.API_BASE||'')+'/api/feedback/submit', {
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                const res = await fetch(`${baseEndpoint}/api/feedback/submit`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
