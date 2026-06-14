@@ -3,7 +3,7 @@ import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# Clear up local path loading constraints absolutely
+# Fix directory paths absolutely so Python can always locate db_helper
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(CURRENT_DIR)
 
@@ -21,7 +21,7 @@ except ImportError:
         raise ImportError(f"Pathing Error: Could not locate db_helper.py. Checked {CURRENT_DIR} and {PARENT_DIR}. Details: {e}")
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allows your Netlify frontend to communicate with this API safely
 
 def execute_query(conn, query, params=None):
     try:
@@ -33,7 +33,10 @@ def execute_query(conn, query, params=None):
         print(f"Database setup notice: {e}")
 
 def init_db():
+    """Verifies that the database structure exists perfectly on launch."""
     conn = get_db_connection()
+    
+    # 1. Ensure Scholarships Table exists
     execute_query(conn, '''
         CREATE TABLE IF NOT EXISTS scholarships (
             id SERIAL PRIMARY KEY,
@@ -54,6 +57,8 @@ def init_db():
             documents_required TEXT
         );
     ''')
+    
+    # 2. Ensure Financial Schemes Table exists
     execute_query(conn, '''
         CREATE TABLE IF NOT EXISTS financial_schemes (
             id SERIAL PRIMARY KEY,
@@ -76,12 +81,14 @@ def init_db():
     ''')
     conn.close()
 
-# Safe initializer call
+# Safe database verification check on startup
 try:
     init_db()
 except Exception as e:
     print(f"Deferred DB Initializer Check: {e}")
 
+
+# ── PRODUCTION API ENDPOINTS ──
 
 @app.route('/')
 def home():
@@ -94,6 +101,7 @@ def home():
 
 @app.route('/api/live_scholarships', methods=['GET'])
 def live_scholarships():
+    """Fetches clean rows dynamically from the cloud database."""
     conn = None
     cursor = None
     try:
@@ -105,6 +113,7 @@ def live_scholarships():
         
         data = []
         for row in rows:
+            # Handle RealDictCursor dictionary formatting safely
             if isinstance(row, dict) or hasattr(row, 'get'):
                 data.append({
                     "name": row.get("name"),
@@ -115,6 +124,7 @@ def live_scholarships():
                     "docs": row.get("documents_required"),
                     "status": "Ongoing"
                 })
+            # Handle index-based tuple fallbacks safely
             else:
                 data.append({
                     "name": row[0],
@@ -137,6 +147,7 @@ def live_scholarships():
 
 @app.route('/api/live_schemes', methods=['GET'])
 def live_schemes():
+    """Fetches financial scheme data records dynamically."""
     conn = None
     cursor = None
     try:
