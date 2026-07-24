@@ -1074,7 +1074,7 @@
 
         async function fetchNotifications() {
             try {
-                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || window.API_URL || 'https://sikshanidhi-p3lo.onrender.com';
                 const response = await fetch(`${baseEndpoint}/api/notifications`);
                 const data = await response.json();
 
@@ -1146,7 +1146,7 @@
         // Fetch Live Scholarships for Sidebar
         async function fetchLiveScholarships() {
             try {
-                const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || window.API_URL || 'https://sikshanidhi-p3lo.onrender.com';
                 const response = await fetch(`${baseEndpoint}/api/live_scholarships`, {
                     method: 'GET'
                 });
@@ -2265,7 +2265,7 @@
             try {
                 try {
                     // Define the dynamic fallback chain to read config.js smoothly
-                    const baseEndpoint = window.API_BASE_URL || window.API_BASE || '';
+                    const baseEndpoint = window.API_BASE_URL || window.API_BASE || window.API_URL || 'https://sikshanidhi-p3lo.onrender.com';
 
                     const res = await fetch(`${baseEndpoint}/api/feedback/submit`, {
                         method: 'POST',

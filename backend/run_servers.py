@@ -22,8 +22,8 @@ def start_servers():
     p2 = subprocess.Popen([sys.executable, '-m', 'http.server', '3000'], cwd=frontend_dir)
 
     print()
-    print('  Backend API   : http://localhost:5000')
-    print('  Frontend      : http://localhost:3000/login.html')
+    print('  Backend API   : https://sikshanidhi-p3lo.onrender.com')
+    print('  Frontend      : http://localhost:3000/index.html')
     print('  Admin Panel   : http://localhost:3000/feedback_admin.html')
     print('  PixaBot       : http://localhost:3000/PixaBot.html')
     print()

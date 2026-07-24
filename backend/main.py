@@ -643,6 +643,14 @@ def export_csv():
         return Response(out.getvalue(),mimetype='text/csv',headers={'Content-Disposition':'attachment; filename=SikshaNidhi_Feedback.csv'})
     return jsonify({'status':'error','message':'Unauthorized'}),403
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "status": "success",
+        "message": "SikshaNidhi Backend is Live 🚀",
+        "health": "/health"
+    })
+
 @app.route('/health', methods=['GET'])
 def health(): return jsonify({'status':'ok','message':'SikshaNidhi In-Memory Engine Running'})
 

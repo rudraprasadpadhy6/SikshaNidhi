@@ -16,7 +16,7 @@ APPATHON/
 │   └── .env.example          # Template for environment variables
 │
 ├── frontend/                 # Static HTML/CSS/JS Frontend
-│   ├── login.html            # 🔐 Login page
+│   ├── index.html            # 🔐 Login page
 │   ├── dashboard.html        # 📊 Main dashboard
 │   ├── index1.html           # 🎓 Scholarship Finder (Scholar)
 │   ├── index2.html           # 💰 Financial Scheme Finder (Capital)
@@ -74,7 +74,7 @@ python backend/main.py
 python -m http.server 3000 --directory frontend
 ```
 
-Open your browser: **http://localhost:3000/login.html**
+Open your browser: **http://localhost:3000/index.html**
 
 ---
 

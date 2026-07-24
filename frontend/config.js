@@ -1,12 +1,8 @@
-// frontend/config.js — Auto-detects local vs production
-(function () {
-  var isLocal = window.location.hostname === 'localhost' ||
-                window.location.hostname === '127.0.0.1';
-  var url = isLocal
-    ? 'http://localhost:5000'
-    : 'https://sikshanidhi.onrender.com';
+// frontend/config.js
+const API_URL = "https://sikshanidhi-p3lo.onrender.com";
+const API_BASE_URL = "https://sikshanidhi-p3lo.onrender.com";
+const API_BASE = "https://sikshanidhi-p3lo.onrender.com";
 
-  // Set both variable names used across all HTML pages
-  window.API_BASE_URL = url;
-  window.API_BASE     = url;
-})();
+window.API_URL = API_URL;
+window.API_BASE_URL = API_BASE_URL;
+window.API_BASE = API_BASE;
