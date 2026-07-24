@@ -3,184 +3,100 @@ import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# Fix directory paths absolutely so Python can always locate db_helper
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PARENT_DIR = os.path.dirname(CURRENT_DIR)
-
-if CURRENT_DIR not in sys.path:
-    sys.path.append(CURRENT_DIR)
-if PARENT_DIR not in sys.path:
-    sys.path.append(PARENT_DIR)
-
-try:
-    from backend.db_helper import get_db_connection, is_postgres
-except ImportError:
-    try:
-        from db_helper import get_db_connection, is_postgres
-    except ImportError as e:
-        raise ImportError(f"Pathing Error: Could not locate db_helper.py. Checked {CURRENT_DIR} and {PARENT_DIR}. Details: {e}")
-
 app = Flask(__name__)
-CORS(app)  # Allows your Netlify frontend to communicate with this API safely
+CORS(app)
 
-def execute_query(conn, query, params=None):
-    try:
-        cursor = conn.cursor()
-        cursor.execute(query, params or ())
-        conn.commit()
-        cursor.close()
-    except Exception as e:
-        print(f"Database setup notice: {e}")
+# In-Memory Datasets for Vercel Serverless API
+SCHOLARSHIPS_DATA = [
+    {
+        "name": "Post Matric Scholarship for SC",
+        "type": "Government",
+        "close_date": "2026-12-31",
+        "amt": 25000,
+        "url": "https://scholarships.gov.in",
+        "docs": "1. Aadhar Card\n2. Income Certificate\n3. Caste Certificate\n4. Marksheet\n5. Bank Passbook",
+        "status": "Ongoing"
+    },
+    {
+        "name": "Pragati Scholarship for Girls",
+        "type": "Government",
+        "close_date": "2026-12-31",
+        "amt": 50000,
+        "url": "https://aicte-india.org",
+        "docs": "1. Aadhar Card\n2. Income Certificate\n3. Marksheet\n4. Admission Letter",
+        "status": "Ongoing"
+    },
+    {
+        "name": "National Merit-cum-Means Scholarship",
+        "type": "Government",
+        "close_date": "2027-01-31",
+        "amt": 12000,
+        "url": "https://scholarships.gov.in",
+        "docs": "1. Aadhar Card\n2. Income Certificate\n3. Marksheet",
+        "status": "Ongoing"
+    },
+    {
+        "name": "Tata Trust Medical/Engineering",
+        "type": "Private",
+        "close_date": "2026-08-31",
+        "amt": 60000,
+        "url": "https://www.tatatrusts.org",
+        "docs": "1. Aadhar Card\n2. College ID\n3. Marksheet\n4. Fee Receipt",
+        "status": "Ongoing"
+    },
+    {
+        "name": "Reliance Foundation Scholarship",
+        "type": "Private",
+        "close_date": "2027-01-31",
+        "amt": 200000,
+        "url": "https://www.reliancefoundation.org",
+        "docs": "1. Aadhar Card\n2. Income Proof\n3. Academic Records",
+        "status": "Ongoing"
+    }
+]
 
-def init_db():
-    """Verifies that the database structure exists perfectly on launch."""
-    conn = get_db_connection()
-    
-    # 1. Ensure Scholarships Table exists
-    execute_query(conn, '''
-        CREATE TABLE IF NOT EXISTS scholarships (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            scholarship_type TEXT,
-            start_date TEXT,
-            close_date TEXT,
-            amount INTEGER,
-            url TEXT,
-            description TEXT,
-            min_age INTEGER,
-            max_age INTEGER,
-            gender TEXT,
-            caste TEXT,
-            min_marks REAL,
-            max_income REAL,
-            pwd_only BOOLEAN DEFAULT FALSE,
-            documents_required TEXT
-        );
-    ''')
-    
-    # 2. Ensure Financial Schemes Table exists
-    execute_query(conn, '''
-        CREATE TABLE IF NOT EXISTS financial_schemes (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            long_description TEXT,
-            why_chosen TEXT,
-            official_website TEXT,
-            target_states TEXT,
-            min_age INTEGER,
-            max_age INTEGER,
-            marital_status TEXT,
-            categories TEXT,
-            disability_required BOOLEAN DEFAULT FALSE,
-            education_levels TEXT,
-            employment_statuses TEXT,
-            priority INTEGER,
-            documents_required TEXT
-        );
-    ''')
-    conn.close()
-
-# Safe database verification check on startup
-try:
-    init_db()
-except Exception as e:
-    print(f"Deferred DB Initializer Check: {e}")
-
-
-# ── PRODUCTION API ENDPOINTS ──
+FINANCIAL_SCHEMES_DATA = [
+    {
+        "name": "Post Matric Scholarship for Minorities",
+        "description": "Scholarship for students belonging to minority communities to pursue higher education.",
+        "url": "https://scholarships.gov.in/",
+        "priority_score": 10
+    },
+    {
+        "name": "Deendayal Disabled Rehabilitation Scheme",
+        "description": "Financial assistance to provide equal opportunities, equity, and social justice to persons with disabilities.",
+        "url": "https://disabilityaffairs.gov.in/",
+        "priority_score": 9
+    },
+    {
+        "name": "Indira Gandhi National Widow Pension Scheme",
+        "description": "Provides monthly pension to widows living below poverty line.",
+        "url": "https://nsap.nic.in/",
+        "priority_score": 8
+    },
+    {
+        "name": "Stand Up India Scheme",
+        "description": "Facilitates bank loans between ₹10 lakh and ₹1 crore to SC, ST, and women borrowers.",
+        "url": "https://www.standupmitra.in/",
+        "priority_score": 7
+    }
+]
 
 @app.route('/')
 def home():
     return jsonify({
         "status": "online",
         "message": "SikshaNidhi Engine Live",
-        "environment": "PostgreSQL Cloud Cluster" if is_postgres() else "Local SQLite Backup"
+        "environment": "In-Memory Engine (Database-Free)"
     })
-
 
 @app.route('/api/live_scholarships', methods=['GET'])
 def live_scholarships():
-    """Fetches clean rows dynamically from the cloud database."""
-    conn = None
-    cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT name, scholarship_type, close_date, amount, url, documents_required FROM scholarships;")
-        rows = cursor.fetchall()
-        
-        data = []
-        for row in rows:
-            # Handle RealDictCursor dictionary formatting safely
-            if isinstance(row, dict) or hasattr(row, 'get'):
-                data.append({
-                    "name": row.get("name"),
-                    "type": row.get("scholarship_type"),
-                    "close_date": str(row.get("close_date")),
-                    "amt": row.get("amount"),
-                    "url": row.get("url"),
-                    "docs": row.get("documents_required"),
-                    "status": "Ongoing"
-                })
-            # Handle index-based tuple fallbacks safely
-            else:
-                data.append({
-                    "name": row[0],
-                    "type": row[1],
-                    "close_date": str(row[2]),
-                    "amt": row[3],
-                    "url": row[4],
-                    "docs": row[5],
-                    "status": "Ongoing"
-                })
-                
-        return jsonify({"data": data, "status": "success"}), 200
-        
-    except Exception as e:
-        return jsonify({"data": [], "status": "error", "message": str(e)}), 500
-    finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
-
+    return jsonify({"data": SCHOLARSHIPS_DATA, "status": "success"}), 200
 
 @app.route('/api/live_schemes', methods=['GET'])
 def live_schemes():
-    """Fetches financial scheme data records dynamically."""
-    conn = None
-    cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT name, description, official_website, priority FROM financial_schemes;")
-        rows = cursor.fetchall()
-        
-        data = []
-        for row in rows:
-            if isinstance(row, dict) or hasattr(row, 'get'):
-                data.append({
-                    "name": row.get("name"),
-                    "description": row.get("description"),
-                    "url": row.get("official_website"),
-                    "priority_score": row.get("priority")
-                })
-            else:
-                data.append({
-                    "name": row[0],
-                    "description": row[1],
-                    "url": row[2],
-                    "priority_score": row[3]
-                })
-                
-        return jsonify({"data": data, "status": "success"}), 200
-        
-    except Exception as e:
-        return jsonify({"data": [], "status": "error", "message": str(e)}), 500
-    finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
+    return jsonify({"data": FINANCIAL_SCHEMES_DATA, "status": "success"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

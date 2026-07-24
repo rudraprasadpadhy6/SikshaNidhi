@@ -11,8 +11,6 @@
     <title data-i18n="dash_page_title">Home - Dashboard</title>
 
     <style>
-        <style>
-
         /* Base Reset */
         * {
             margin: 0;
@@ -21,17 +19,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI',
-        Tahoma,
-        Geneva,
-        Verdana,
-        sans-serif;
-        }
-
         body {
             display: flex;
+            flex-direction: row;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
@@ -41,13 +31,18 @@
         /* --- Left Sidebar Area --- */
         .sidebar {
             width: 33.333%;
+            min-width: 340px;
+            max-width: 440px;
+            height: 100vh;
+            overflow-y: auto;
             background: linear-gradient(135deg, #48C5B9 0%, #094A53 100%);
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            padding: 60px 40px;
+            padding: 40px 30px;
             box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
             z-index: 2;
+            flex-shrink: 0;
         }
 
         /* App Name & Logo Container */
@@ -179,11 +174,15 @@
 
         /* --- Right Main Area --- */
         .main-content {
-            width: 66.667%;
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
             background-color: #ffffff;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding: 50px 40px;
             position: relative;
             z-index: 1;
         }

@@ -1,82 +1,122 @@
-# ShikshaNidhi (APPATHON)
+# 🎓 SikshaNidhi — Empowering Every Student
 
-ShikshaNidhi is an innovative educational financial aid portal and intelligence platform. It enables students and users to easily discover scholarships, explore financial schemes, and interact with an AI educational advisor/therapist.
+SikshaNidhi is an AI-powered educational assistant and scholarship discovery platform built for students across India. It helps users find scholarships, financial schemes, and provides mental wellness support through PixaBot — all running completely **database-free** with an in-memory engine.
 
-## 🚀 Key Features
+---
 
-- **Scholarship Portal (`/scholar`):** Search and filter government and private scholarships based on age, gender, caste, income, and marks. Track live and upcoming scholarships easily.
-- **Financial Schemes (`/capital`):** Discover state and central financial schemes tailored to your marital status, education level, employment status, category, and disability status.
-- **PixaBot AI (`/pixa`):** An interactive educational advisor and empathetic personal therapist powered by Groq AI (Llama 3.1) and Edge TTS for voice responses. It supports multiple languages (English, Hindi, Odia) and can fetch scholarship data directly in the chat.
-- **Admin Dashboard & Feedback System (`/admin`):** A secure feedback mechanism where users can rate and review their experience, and administrators can view, manage, and export feedback as CSV.
-- **Multilingual Support:** The application is fully internationalized (i18n), allowing users to switch languages easily via `translations.js`.
+## 🚀 Project Structure
 
-## 💻 Tech Stack
+```
+APPATHON/
+├── backend/                  # Python Flask Backend (API)
+│   ├── main.py               # 🌟 Main unified server — all API routes
+│   ├── run_servers.py        # 🚀 Local dev launcher (backend + frontend)
+│   ├── requirements.txt      # Python dependencies
+│   ├── .env                  # Secrets (GROQ_API_KEY, ADMIN_FEEDBACK_KEY)
+│   └── .env.example          # Template for environment variables
+│
+├── frontend/                 # Static HTML/CSS/JS Frontend
+│   ├── login.html            # 🔐 Login page
+│   ├── dashboard.html        # 📊 Main dashboard
+│   ├── index1.html           # 🎓 Scholarship Finder (Scholar)
+│   ├── index2.html           # 💰 Financial Scheme Finder (Capital)
+│   ├── PixaBot.html          # 🤖 AI Chatbot (PixaBot)
+│   ├── feedback_admin.html   # 🛡️ Admin Feedback Panel
+│   ├── config.js             # API URL configuration
+│   ├── translations.js       # Multi-language translations
+│   ├── i18n.js               # Internationalization logic
+│   └── styles.css            # Global styles
+│
+├── api/
+│   └── index.py              # Vercel Serverless API handlers
+│
+├── vercel.json               # Vercel deployment configuration
+├── Procfile                  # Render/Heroku deployment config
+└── requirements.txt          # Root-level Python dependencies
+```
 
-### Frontend
-- HTML5, CSS3, JavaScript (Vanilla)
-- Custom Internationalization System (`i18n.js`)
+---
 
-### Backend
-- **Python & Flask:** Core API handling endpoints.
-- **SQLite:** Lightweight local databases for scholarships (`scholarships.db`), schemes (`schemes.db`), and user feedback.
-- **Groq API (Llama-3.1-8b):** Fast AI inference engine for PixaBot's intelligence.
-- **edge-tts:** Text-to-speech generation for PixaBot's voice responses.
-- **Vercel:** Serverless deployment using `vercel.json` and the consolidated `api/index.py` serverless function.
+## ⚡ Quick Start (Local Development)
 
-## 📂 Project Structure
+### 1. Install Dependencies
 
-- `/frontend/` - Contains all frontend assets, including HTML pages (`dashboard.html`, `index1.html`, `PixaBot.html`, `feedback_admin.html`), CSS, and JavaScript.
-- `/backend/` - Contains backend python scripts, microservices, database schemas, and the SQLite `.db` files located inside `/backend/data/`.
-- `/api/` - Vercel serverless entry point (`index.py`), which consolidates the Flask application for production.
-- `vercel.json` - Configuration for URL rewriting and serverless deployment on Vercel.
+```bash
+pip install -r backend/requirements.txt
+```
 
-## ⚙️ How to Run Locally
+### 2. Configure Environment
 
-### Prerequisites
-- Python 3.8+
-- A [Groq API Key](https://console.groq.com/) for PixaBot
+Copy and fill in your keys:
+```bash
+cp backend/.env.example backend/.env
+```
 
-### Setup Instructions
+Edit `backend/.env`:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+ADMIN_FEEDBACK_KEY=your_custom_admin_key
+```
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd APPATHON
-   ```
+### 3. Run the Project
 
-2. **Set up the Python Environment:**
-   Create a virtual environment and install dependencies.
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On Mac/Linux:
-   source venv/bin/activate
-   
-   pip install -r requirements.txt
-   ```
+**Option A — Run everything with one command:**
+```bash
+python backend/run_servers.py
+```
 
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory with the following variables:
-   ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   ADMIN_FEEDBACK_KEY=siksha-admin-2026
-   ```
+**Option B — Run servers individually:**
+```bash
+# Terminal 1: Backend API
+python backend/main.py
 
-4. **Run the Backend:**
-   Run the consolidated API server locally.
-   ```bash
-   export FLASK_APP=api/index.py
-   flask run --port 5000
-   ```
+# Terminal 2: Frontend
+python -m http.server 3000 --directory frontend
+```
 
-5. **Run the Frontend:**
-   Use any local web server to serve the `frontend` folder.
-   ```bash
-   cd frontend
-   python -m http.server 3000
-   ```
-   Open your browser and navigate to `http://localhost:3000`.
+Open your browser: **http://localhost:3000/login.html**
 
-## 🛡️ Security & Administration
-- The Admin dashboard (`/admin`) is protected by a custom `ADMIN_FEEDBACK_KEY`. Ensure this key is kept secret and configured correctly in your deployment environment variables to prevent unauthorized access to user feedback data.
+---
+
+## 🛡️ Admin Panel
+
+Access the Feedback Admin Panel at:
+```
+http://localhost:3000/feedback_admin.html
+```
+Use the `ADMIN_FEEDBACK_KEY` you set in `.env` to log in.
+
+---
+
+## 🤖 Features
+
+| Feature | Description |
+|---|---|
+| 🎓 Scholar | Search & filter scholarships by age, gender, caste, marks, income |
+| 💰 Capital | Match government financial schemes to your profile |
+| 🤖 PixaBot | AI chat advisor (Groq/Llama 3.1) with voice & multilingual support |
+| 🧠 Therapy Mode | Emotional support mode within PixaBot |
+| 📬 Feedback | Users can leave feedback; admins can view, manage, and export |
+
+---
+
+## ☁️ Deployment
+
+### Vercel (Frontend + API)
+Push to GitHub and import into Vercel. Set environment variables in the Vercel dashboard.
+
+### Render/Railway (Backend)
+The `Procfile` is already configured:
+```
+web: cd backend && gunicorn main:app
+```
+
+---
+
+## 🔧 Tech Stack
+
+- **Backend**: Python, Flask, Flask-CORS
+- **AI**: Groq API (Llama 3.1 8B Instant)
+- **TTS**: Edge-TTS (Multi-lingual voice support)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Data**: In-memory (no database required)

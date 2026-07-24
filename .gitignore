@@ -37,10 +37,3 @@ Thumbs.db
 
 # Logs
 *.log
-
-# NOTE: backend/data/*.db files ARE committed intentionally
-# Vercel needs them to serve scholarship/scheme data (read-only).
-# Only feedback.db is excluded since it's re-created in /tmp on Vercel.
-backend/data/feedback.db
-
-.vercel
