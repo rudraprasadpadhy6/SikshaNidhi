@@ -761,8 +761,6 @@
             clearErrors();
 
             document.getElementById('loginEmail').value = email;
-            const alertMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[localStorage.getItem('sn_lang') || 'en']?.alert_registration_success) ? TRANSLATIONS[localStorage.getItem('sn_lang') || 'en'].alert_registration_success : "Registration Successful! Now you can Login.";
-            alert(alertMsg);
         });
 
         // --- 4. Login Logic (Checking Data) ---
