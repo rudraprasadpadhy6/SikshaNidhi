@@ -1,0 +1,29 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/scholar",
+      "destination": "/index1.html"
+    },
+    {
+      "source": "/capital",
+      "destination": "/index2.html"
+    },
+    {
+      "source": "/pixa",
+      "destination": "/PixaBot.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/feedback_admin.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    }
+  ]
+}

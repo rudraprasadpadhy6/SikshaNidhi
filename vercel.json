@@ -1,29 +1,61 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
     {
+      "source": "/dashboard.html",
+      "destination": "/frontend/dashboard.html"
+    },
+    {
       "source": "/dashboard",
-      "destination": "/dashboard.html"
+      "destination": "/frontend/dashboard.html"
+    },
+    {
+      "source": "/index1.html",
+      "destination": "/frontend/index1.html"
     },
     {
       "source": "/scholar",
-      "destination": "/index1.html"
+      "destination": "/frontend/index1.html"
+    },
+    {
+      "source": "/index2.html",
+      "destination": "/frontend/index2.html"
     },
     {
       "source": "/capital",
-      "destination": "/index2.html"
+      "destination": "/frontend/index2.html"
+    },
+    {
+      "source": "/PixaBot.html",
+      "destination": "/frontend/PixaBot.html"
     },
     {
       "source": "/pixa",
-      "destination": "/PixaBot.html"
+      "destination": "/frontend/PixaBot.html"
+    },
+    {
+      "source": "/feedback_admin.html",
+      "destination": "/frontend/feedback_admin.html"
     },
     {
       "source": "/admin",
-      "destination": "/feedback_admin.html"
+      "destination": "/frontend/feedback_admin.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/frontend/index.html"
     },
     {
       "source": "/login",
-      "destination": "/index.html"
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/frontend/:path*"
     }
   ]
 }
