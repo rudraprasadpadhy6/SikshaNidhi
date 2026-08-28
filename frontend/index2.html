@@ -4,7 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>UniCapital.AI | Dashboard</title>
+<link rel="icon" type="image/jpeg" href="app_logo.jpeg">
+<title>SikshaNidhi | Scholarship · Financial Opportunities</title>
 <script src="https://www.gstatic.com/charts/loader.js" type="text/javascript"></script>
 <style>
         :root {
@@ -396,17 +397,17 @@
                 opacity: 0;
                 transform: translateX(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
     </style>
-  <script src="/config.js"></script>`n</head>
+  <script src="/config.js"></script>
+</head>
 <body>
 <!-- PixaBot Floating Bubble -->
-<div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
+<div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(380px + 20px); z-index: 9999; cursor: move;">
 <div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
 <img alt="PixaBot" src="bot_logo.jpeg" style="width: 100%; height: 100%; object-fit: cover;"/>
 </div>
@@ -774,6 +775,15 @@
 
         nextBtn.addEventListener('click', handleNext);
         backBtn.addEventListener('click', handleBack);
+
+        // Press Enter key to change/advance question in UniCapital
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                // If enter key pressed in any input or form, trigger handleNext()
+                e.preventDefault();
+                handleNext();
+            }
+        });
 
         // --- ENHANCED VOICE ASSISTANT & TTS LOGIC ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

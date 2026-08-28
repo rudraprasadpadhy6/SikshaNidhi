@@ -5,7 +5,8 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>UniScholar.AI</title>
+    <link rel="icon" type="image/jpeg" href="app_logo.jpeg">
+    <title>SikshaNidhi | Scholarship · Financial Opportunities</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -605,12 +606,13 @@
             }
         }
     </style>
-  <script src="/config.js"></script>`n</head>
+  <script src="/config.js"></script>
+</head>
 
 <body>
     <!-- PixaBot Floating Bubble -->
     <div id="pixabot-container"
-        style="position: fixed; bottom: 30px; left: calc(350px + 20px); z-index: 9999; cursor: move;">
+        style="position: fixed; bottom: 30px; left: calc(320px + 20px); z-index: 9999; cursor: move;">
         <div id="pixabot-bubble"
             style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
             <img alt="PixaBot" src="bot_logo.jpeg"
@@ -1155,6 +1157,14 @@
             });
             return isValid;
         }
+
+        // Press Enter key to advance step in UniScholar
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                move(1);
+            }
+        });
 
         function move(dir) {
             if (dir === 1 && !validateCurrentStep()) return;
