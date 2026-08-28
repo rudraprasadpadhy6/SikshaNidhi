@@ -573,6 +573,32 @@
                 transform: translateX(4px);
             }
         }
+
+        /* Mobile & Phone Screen Responsiveness */
+        @media (max-width: 900px) {
+            body {
+                padding: 0;
+            }
+
+            .chat-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100vh !important;
+                border-radius: 0 !important;
+            }
+
+            .chat-header {
+                padding: 14px 16px !important;
+            }
+
+            .messages-container {
+                padding: 16px 14px !important;
+            }
+
+            .input-area {
+                padding: 14px 16px !important;
+            }
+        }
     </style>
     <script src="/config.js"></script>
 </head>

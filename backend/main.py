@@ -546,14 +546,14 @@ def chat():
         if sid not in mem: mem[sid] = [{'role':'system','content':prompt}]
         else: mem[sid][0]['content'] = prompt
         msgs = mem[sid]; msgs.append({'role':'user','content':msg})
-        client = Groq(api_key=GROQ_API_KEY); MODEL='llama-3.1-8b-instant'
+        client = Groq(api_key=GROQ_API_KEY); MODEL='groq/compound-mini'
         resp = client.chat.completions.create(model=MODEL,messages=msgs,max_tokens=1024,temperature=temp,response_format={'type':'json_object'})
         raw = resp.choices[0].message.content; parsed = _parse(raw)
         if not therapy and parsed.get('action')=='search':
             res = _bot_search(parsed.get('query',''))
             msgs.append({'role':'assistant','content':raw})
             msgs.append({'role':'user','content':f'[SYSTEM: DB returned: {res}. Reply in {lang} using Option2 JSON.]'})
-            r2 = client.chat.completions.create(model=MODEL,messages=msgs,max_tokens=1024,temperature=0.5,response_format={'type':'json_object'})
+            r2 = client.chat.completions.create(model='groq/compound-mini',messages=msgs,max_tokens=1024,temperature=0.5,response_format={'type':'json_object'})
             parsed = _parse(r2.choices[0].message.content)
         if therapy: parsed['emotion']='empathetic'
         else:
