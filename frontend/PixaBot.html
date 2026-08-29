@@ -51,26 +51,26 @@
         .chat-header {
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
-            padding: 8px 10px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
             z-index: 10;
             transition: all 0.3s ease;
-            gap: 4px;
+            gap: 8px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
         .header-title {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 1.7rem;
+            font-weight: 800;
             letter-spacing: 0.2px;
         }
 
@@ -78,7 +78,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
@@ -87,8 +87,8 @@
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.35);
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -108,8 +108,8 @@
         }
 
         .hdr-icon-btn svg {
-            width: 15px;
-            height: 15px;
+            width: 22px;
+            height: 22px;
             fill: none;
             stroke: currentColor;
             stroke-width: 2;
@@ -213,9 +213,9 @@
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
-            font-size: 1.1rem;
+            width: 42px;
+            height: 42px;
+            font-size: 1.4rem;
             line-height: 1;
             cursor: pointer;
             display: flex;
@@ -232,8 +232,8 @@
         }
 
         .header-icon {
-            width: 28px;
-            height: 28px;
+            width: 44px;
+            height: 44px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -338,36 +338,37 @@
         .message-sender {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.65rem;
+            gap: 6px;
+            font-size: 1.05rem;
             color: var(--text-muted);
-            margin-bottom: 2px;
-            padding: 0 4px;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 6px;
+            margin-bottom: 4px;
+            padding: 2px 6px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
             width: fit-content;
         }
 
         .emotion-badge {
-            font-size: 0.55rem;
-            padding: 2px 5px;
+            font-size: 0.85rem;
+            padding: 3px 8px;
             border-radius: 8px;
             background: #e2e8f0;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
-            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-weight: 800;
         }
 
         .message {
-            padding: 9px 12px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            padding: 18px 24px;
+            font-size: 1.45rem;
+            line-height: 1.7;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            font-weight: 500;
         }
 
         .message p {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .message p:last-child {
@@ -377,33 +378,33 @@
         .user-msg {
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
-            border-radius: 14px 14px 2px 14px;
+            border-radius: 18px 18px 4px 18px;
             transition: all 0.3s ease;
         }
 
         .bot-msg {
             background-color: rgba(255, 255, 255, 0.95);
             color: var(--text-main);
-            border-radius: 2px 14px 14px 14px;
+            border-radius: 4px 18px 18px 18px;
             border: 1px solid rgba(3, 75, 78, 0.15);
-            border-left: 3px solid transparent;
+            border-left: 4px solid #0f8680;
             backdrop-filter: blur(5px);
         }
 
         .input-container-wrapper {
-            padding: 6px 10px 10px 10px;
+            padding: 12px 18px 16px 18px;
             background: linear-gradient(to top, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0) 100%);
         }
 
         .input-area {
             display: flex;
-            padding: 4px 6px;
+            padding: 8px 12px;
             background: white;
-            gap: 6px;
+            gap: 10px;
             align-items: center;
-            border-radius: 22px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 32px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .icon-btn {
@@ -412,8 +413,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 30px;
-            height: 30px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             transition: all 0.2s;
             background: #f8fafc;
@@ -427,8 +428,8 @@
         }
 
         .icon-btn svg {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
             fill: none;
             stroke: currentColor;
             stroke-width: 2.2;
@@ -456,28 +457,118 @@
 
         input[type="text"] {
             flex: 1;
-            padding: 6px 8px;
+            padding: 10px 14px;
             border: none;
             background: transparent;
             outline: none;
-            font-size: 0.85rem;
+            font-size: 1.4rem;
+            font-weight: 500;
             color: var(--text-main);
             min-width: 0;
         }
 
         input[type="text"]::placeholder {
             color: #94a3b8;
+            font-size: 1.35rem;
         }
 
         button.send-btn {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
             border: none;
             cursor: pointer;
+        }
+
+        /* ─── DESKTOP IFRAME INTERFACE SCALING FOR PIXABOT (min-width: 400px) ─── */
+        @media (min-width: 400px) {
+            .chat-container {
+                max-height: 100vh !important;
+                height: 100vh !important;
+            }
+            .chat-header {
+                padding: 18px 24px !important;
+            }
+            .header-title {
+                font-size: 1.9rem !important;
+                font-weight: 900 !important;
+            }
+            .header-icon {
+                width: 50px !important;
+                height: 50px !important;
+            }
+            .bot-status {
+                font-size: 1.1rem !important;
+            }
+            .hdr-icon-btn, .close-header-btn {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 1.6rem !important;
+            }
+            .message-sender {
+                font-size: 1.15rem !important;
+                font-weight: 800 !important;
+            }
+            .emotion-badge {
+                font-size: 0.92rem !important;
+            }
+            .message {
+                font-size: 1.55rem !important;
+                line-height: 1.7 !important;
+                padding: 20px 26px !important;
+                border-radius: 24px !important;
+                font-weight: 600 !important;
+            }
+            .input-container-wrapper {
+                padding: 16px 22px 20px 22px !important;
+            }
+            .input-area {
+                padding: 14px 20px !important;
+                border-radius: 36px !important;
+            }
+            .icon-btn {
+                width: 52px !important;
+                height: 52px !important;
+            }
+            .icon-btn svg {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            input[type="text"] {
+                font-size: 1.45rem !important;
+                padding: 14px 22px !important;
+                font-weight: 600 !important;
+            }
+            input[type="text"]::placeholder {
+                font-size: 1.4rem !important;
+                font-weight: 500 !important;
+            }
+            button.send-btn {
+                width: 56px !important;
+                height: 56px !important;
+                min-width: 56px !important;
+            }
+            button.send-btn svg {
+                width: 30px !important;
+                height: 30px !important;
+            }
+            .sp-label {
+                font-size: 1.05rem !important;
+            }
+            .sp-select {
+                font-size: 1.15rem !important;
+                padding: 12px 18px !important;
+            }
+            .sp-mode-btn {
+                font-size: 1.1rem !important;
+                padding: 12px 0 !important;
+            }
+        }
+
+        button.send-btn {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -641,8 +732,8 @@
             color: rgba(30, 41, 59, 0.6);
         }
 
-        /* Mobile & Small Screen Responsiveness (< 768px) */
-        @media (max-width: 767px) {
+        /* Extra Small Mobile Devices Only (< 351px) */
+        @media (max-width: 350px) {
             body {
                 height: 100vh;
                 overflow: hidden;

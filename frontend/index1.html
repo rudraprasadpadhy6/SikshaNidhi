@@ -991,6 +991,166 @@
                 overflow-x: auto !important;
             }
         }
+
+        /* ─── LAPTOP / DESKTOP BIG INTERFACE (min-width: 951px) ─── */
+        @media (min-width: 951px) {
+            #app-window {
+                width: 95vw !important;
+                max-width: 1550px !important;
+                height: 92vh !important;
+                min-height: 860px !important;
+                max-height: 1000px !important;
+            }
+
+            /* Floating PixaBot Bubble Scaling (Laptop) */
+            #pixabot-bubble {
+                width: 90px !important;
+                height: 90px !important;
+                border-width: 4px !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35) !important;
+            }
+
+            #fb-trigger {
+                padding: 14px 24px !important;
+                font-size: 1.05rem !important;
+                bottom: 35px !important;
+                right: 35px !important;
+            }
+            #fb-trigger svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            .sidebar {
+                width: 420px !important;
+                padding: 48px 40px !important;
+                overflow-y: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                box-sizing: border-box !important;
+            }
+
+            .logo {
+                font-size: 2.8rem !important;
+                margin-bottom: 35px !important;
+            }
+
+            .step {
+                font-size: 1.5rem !important;
+                font-weight: 700 !important;
+                margin-bottom: 22px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 16px !important;
+            }
+
+            .step-num {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.3rem !important;
+                font-weight: 800 !important;
+                margin-right: 14px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .step-icon {
+                width: 32px !important;
+                height: 32px !important;
+                margin-right: 14px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .voice-label {
+                font-size: 1.25rem !important;
+                font-weight: 700 !important;
+            }
+
+            .main-content {
+                padding: 60px 80px !important;
+                overflow-y: auto !important;
+            }
+
+            h2 {
+                font-size: 3rem !important;
+                margin-bottom: 16px !important;
+            }
+
+            p.subtitle {
+                font-size: 1.25rem !important;
+                margin-bottom: 45px !important;
+            }
+
+            .radio-group, .grid-radio-group {
+                max-width: 760px !important;
+                gap: 24px !important;
+            }
+
+            .radio-card span {
+                padding: 24px 30px !important;
+                font-size: 1.25rem !important;
+                font-weight: 700 !important;
+                border-radius: 20px !important;
+            }
+
+            .input-group {
+                max-width: 650px !important;
+            }
+
+            label {
+                font-size: 1.1rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            input[type="text"], input[type="number"], input[type="date"], select {
+                font-size: 1.15rem !important;
+                padding: 20px 24px !important;
+                border-radius: 16px !important;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 20px 48px !important;
+                font-size: 1.25rem !important;
+                font-weight: 700 !important;
+                border-radius: 16px !important;
+            }
+
+            .voice-label {
+                font-size: 1.1rem !important;
+            }
+
+            /* Feedback Modal Scaling (Picture 5) */
+            #fb-modal {
+                width: 540px !important;
+                padding: 40px 45px !important;
+                border-radius: 26px !important;
+            }
+            #fb-modal h3 {
+                font-size: 1.75rem !important;
+            }
+            #fb-modal .fb-sub {
+                font-size: 1.05rem !important;
+            }
+            .fb-star {
+                font-size: 2.6rem !important;
+            }
+            #fb-category {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+            }
+            #fb-message {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+                min-height: 130px !important;
+            }
+            #fb-submit {
+                padding: 18px !important;
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+                border-radius: 16px !important;
+            }
+        }
     </style>
   <script src="/config.js"></script>
 </head>
@@ -2034,8 +2194,8 @@
                         iframe.style.bottom = '85px';
                         iframe.style.borderRadius = '18px';
                     } else {
-                        const width = 330;
-                        const height = Math.min(460, window.innerHeight - 100);
+                        const width = 580;
+                        const height = Math.min(720, window.innerHeight - 50);
                         let leftPos = botRect.left;
                         if (leftPos + width > window.innerWidth) leftPos = window.innerWidth - width - 20;
                         if (leftPos < 10) leftPos = 10;

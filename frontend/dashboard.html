@@ -183,7 +183,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 50px 40px;
+            padding: 45px 60px 80px;
             position: relative;
             z-index: 1;
         }
@@ -193,66 +193,64 @@
             text-align: center;
             color: #374151;
             animation: fadeIn 0.8s ease;
-        }
-
-        .welcome-msg h2 {
-            font-size: 36px;
-            font-weight: 600;
-            color: #1f2937;
             margin-bottom: 5px;
         }
 
+        .welcome-msg h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
         .welcome-msg p {
-            font-size: 18px;
+            font-size: 20px;
             color: #6b7280;
         }
 
-        /* --- Quote Box (Increased Size and Font) --- */
+        /* --- Quote Box (Generous Laptop Width) --- */
         .quote-box {
             background: rgba(168, 240, 240, 0.25);
-            border: 1px solid rgba(72, 197, 185, 0.4);
-            border-radius: 12px;
-            padding: 20px 30px;
-            /* Increased padding */
-            margin-bottom: 25px;
+            border: 1.5px solid rgba(72, 197, 185, 0.45);
+            border-radius: 16px;
+            padding: 24px 40px;
+            margin-bottom: 30px;
             text-align: center;
             width: 100%;
-            max-width: 700px;
-            /* Increased width */
-            min-height: 90px;
-            /* Increased height */
+            max-width: 1050px;
+            min-height: 95px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(72, 197, 185, 0.2);
+            box-shadow: 0 4px 20px rgba(72, 197, 185, 0.18);
             overflow: hidden;
         }
 
         .quote-box p {
             color: #094A53;
-            font-size: 24px;
-            /* Significantly increased font size */
+            font-size: 26px;
             font-style: italic;
             font-weight: 700;
             margin: 0;
             transition: opacity 0.5s ease;
         }
 
-        /* --- Theme Banner Styles --- */
+        /* --- Theme Banner Styles (Expanded Laptop Width & Typography) --- */
         .info-banner {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: linear-gradient(135deg, #48C5B9 0%, #094A53 100%);
-            border-radius: 20px;
-            padding: 45px 50px;
-            margin-top: 30px;
+            border-radius: 24px;
+            padding: 50px 60px;
+            margin-top: 25px;
             width: 100%;
-            max-width: 800px;
-            box-shadow: 0 0 25px rgba(9, 74, 83, 0.3);
+            max-width: 1050px;
+            box-shadow: 0 12px 35px rgba(9, 74, 83, 0.25);
             animation: fadeIn 1s ease 0.3s forwards;
             opacity: 0;
-            gap: 40px;
+            gap: 45px;
         }
 
         .info-content {
@@ -262,33 +260,33 @@
 
         .info-content h3 {
             color: #ffffff;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .info-content p {
             color: #E0F7FA;
-            font-size: 18px;
-            line-height: 1.7;
+            font-size: 19.5px;
+            line-height: 1.75;
             font-weight: 500;
         }
 
         .info-visual {
             flex-shrink: 0;
-            width: 140px;
-            height: 140px;
+            width: 170px;
+            height: 170px;
             background: rgba(255, 255, 255, 0.6);
-            border: 4px solid rgba(255, 255, 255, 0.9);
+            border: 5px solid rgba(255, 255, 255, 0.95);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
 
@@ -298,13 +296,13 @@
             object-fit: cover;
         }
 
-        /* --- Action Buttons & Prompt --- */
+        /* --- Action Buttons & Prompt (Prominent Laptop Sizing) --- */
         .portal-prompt {
-            margin-top: 35px;
-            margin-bottom: -10px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #4b5563;
+            margin-top: 40px;
+            margin-bottom: -5px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #374151;
             animation: fadeIn 1s ease 0.4s forwards;
             opacity: 0;
         }
@@ -313,9 +311,9 @@
             display: flex;
             flex-direction: row;
             width: 100%;
-            max-width: 540px;
-            gap: 18px;
-            margin-top: 20px;
+            max-width: 760px;
+            gap: 26px;
+            margin-top: 25px;
             animation: fadeIn 1s ease 0.5s forwards;
             opacity: 0;
         }
@@ -335,8 +333,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 16px 14px;
-            border-radius: 12px;
+            padding: 24px 28px;
+            border-radius: 16px;
             border: none;
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -346,30 +344,26 @@
         }
 
         .action-btn svg {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 8px;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 10px;
             fill: none;
-            stroke-width: 2;
+            stroke-width: 2.2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
         .btn-cyan {
             background: linear-gradient(135deg, #48C5B9 0%, #2E9E94 100%);
-            /* Creates the 3D 'thickness' under the button */
             box-shadow: 0 8px 0 #18655E, 0 15px 20px rgba(0, 0, 0, 0.2);
             transform: translateY(-4px);
-            /* Base raised position */
         }
 
         .btn-cyan:hover {
             background: linear-gradient(135deg, #57D1C6 0%, #35B1A6 100%);
-            /* Slightly lighter on hover */
             box-shadow: 0 8px 0 #18655E, 0 15px 25px rgba(72, 197, 185, 0.4);
         }
 
-        /* The physical 'click' push-down effect */
         .btn-cyan:active {
             transform: translateY(4px);
             box-shadow: 0 0px 0 #18655E, 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -380,9 +374,287 @@
         }
 
         .btn-cyan span {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── LAPTOP / DESKTOP BIG & PROMINENT INTERFACE (min-width: 951px) ─── */
+        @media (min-width: 951px) {
+            .main-content {
+                padding: 40px 60px 80px !important;
+            }
+
+            /* Main Quote Box */
+            .quote-box {
+                max-width: 1200px !important;
+                padding: 28px 50px !important;
+                min-height: 110px !important;
+                border-radius: 20px !important;
+                margin-bottom: 35px !important;
+            }
+            .quote-box p {
+                font-size: 30px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Welcome Header */
+            .welcome-msg h2 {
+                font-size: 48px !important;
+                margin-bottom: 8px !important;
+            }
+            .welcome-msg p {
+                font-size: 22px !important;
+            }
+
+            /* Info Theme Banner */
+            .info-banner {
+                max-width: 1200px !important;
+                padding: 60px 70px !important;
+                gap: 50px !important;
+                border-radius: 28px !important;
+                margin-top: 30px !important;
+            }
+            .info-content h3 {
+                font-size: 42px !important;
+                margin-bottom: 20px !important;
+                gap: 16px !important;
+            }
+            .info-content h3 svg {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            .info-content p {
+                font-size: 22px !important;
+                line-height: 1.8 !important;
+            }
+            .info-visual {
+                width: 200px !important;
+                height: 200px !important;
+                border-width: 6px !important;
+            }
+
+            /* Portal Prompt */
+            .portal-prompt {
+                font-size: 24px !important;
+                margin-top: 45px !important;
+            }
+
+            /* Action Buttons (UniScholar & UniCapital) */
+            .action-buttons {
+                max-width: 900px !important;
+                gap: 32px !important;
+                margin-top: 30px !important;
+            }
+            .action-btn {
+                padding: 30px 36px !important;
+                border-radius: 20px !important;
+            }
+            .action-btn svg {
+                width: 40px !important;
+                height: 40px !important;
+                margin-bottom: 12px !important;
+            }
+            .btn-cyan span {
+                font-size: 24px !important;
+                letter-spacing: 0.6px !important;
+            }
+
+            /* Sidebar scholarship text & elements */
+            .app-name {
+                font-size: 32px !important;
+            }
+            .brand-title {
+                font-size: 22px !important;
+            }
+            .sidebar-section-title {
+                font-size: 20px !important;
+            }
+            .scholarship-item h4 {
+                font-size: 18px !important;
+            }
+            .scholarship-item p {
+                font-size: 14.5px !important;
+            }
+
+            /* Notification & Help buttons scaling (Laptop) */
+            .notification-area {
+                top: 25px !important;
+                left: 45px !important;
+                gap: 16px !important;
+            }
+            .notification-container, .about-btn {
+                width: 56px !important;
+                height: 56px !important;
+                border-width: 2px !important;
+            }
+            .notification-icon {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            .about-btn span {
+                font-size: 26px !important;
+            }
+
+            /* Language Globe & Profile controls scaling (Laptop) */
+            .top-right-header-controls {
+                top: 25px !important;
+                right: 45px !important;
+                gap: 16px !important;
+            }
+            .top-right-header-controls button[onclick="showLanguagePopup()"] {
+                width: 56px !important;
+                height: 56px !important;
+                border-width: 2px !important;
+            }
+            .top-right-header-controls button[onclick="showLanguagePopup()"] svg {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            #user-avatar-btn {
+                height: 56px !important;
+                padding: 0 22px 0 16px !important;
+                border-radius: 36px !important;
+            }
+            #user-avatar-btn svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+            #user-avatar-letter {
+                font-size: 20px !important;
+            }
+
+            /* Floating PixaBot Bubble Scaling (Laptop) */
+            #pixabot-bubble {
+                width: 90px !important;
+                height: 90px !important;
+                border-width: 4px !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35) !important;
+            }
+
+            /* Feedback floating trigger button scaling (Laptop) */
+            #fb-trigger {
+                padding: 14px 24px !important;
+                font-size: 1.05rem !important;
+                bottom: 35px !important;
+                right: 35px !important;
+            }
+            #fb-trigger svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            /* Notification Dropdown Scaling (Laptop / Picture 3) */
+            .notification-dropdown {
+                width: 420px !important;
+                padding: 24px !important;
+                border-radius: 20px !important;
+            }
+            .notification-header {
+                font-size: 19px !important;
+                margin-bottom: 18px !important;
+                font-weight: 700 !important;
+            }
+            .notification-item {
+                padding: 16px !important;
+                border-radius: 14px !important;
+            }
+            .notification-item h5 {
+                font-size: 16.5px !important;
+                font-weight: 700 !important;
+                margin-bottom: 6px !important;
+            }
+            .notification-item p {
+                font-size: 14.5px !important;
+                font-weight: 600 !important;
+            }
+            .notification-item a {
+                font-size: 14.5px !important;
+                font-weight: 700 !important;
+            }
+
+            /* Help Modal Scaling (Laptop / Picture 4) */
+            #help-modal {
+                width: 600px !important;
+                max-width: 90vw !important;
+                border-radius: 24px !important;
+            }
+            .help-header {
+                padding: 20px 24px !important;
+            }
+            .help-header-text h2 {
+                font-size: 22px !important;
+                font-weight: 800 !important;
+            }
+            .help-header-text p {
+                font-size: 14px !important;
+            }
+            .help-tabs {
+                padding: 0 20px !important;
+            }
+            .help-tab {
+                padding: 14px 18px !important;
+                font-size: 15px !important;
+                font-weight: 600 !important;
+            }
+            .help-sec-body {
+                padding: 24px !important;
+            }
+            .help-sec-body h4 {
+                font-size: 18px !important;
+                font-weight: 800 !important;
+            }
+            .help-sec-body p, .help-sec-body li {
+                font-size: 15.5px !important;
+                line-height: 1.65 !important;
+            }
+            .help-tip-box {
+                font-size: 15px !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+            }
+
+            /* Feedback Modal Scaling (Laptop / Picture 5) */
+            #fb-modal {
+                width: 540px !important;
+                padding: 40px 45px !important;
+                border-radius: 26px !important;
+            }
+            #fb-modal h3 {
+                font-size: 1.75rem !important;
+            }
+            #fb-modal .fb-sub {
+                font-size: 1.05rem !important;
+                margin-bottom: 24px !important;
+            }
+            .fb-label {
+                font-size: 0.85rem !important;
+                letter-spacing: 1px !important;
+                margin-bottom: 12px !important;
+            }
+            .fb-star {
+                font-size: 2.6rem !important;
+            }
+            #fb-category {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+                margin-bottom: 22px !important;
+            }
+            #fb-message {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+                min-height: 130px !important;
+            }
+            #fb-submit {
+                padding: 18px !important;
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+                border-radius: 16px !important;
+                margin-top: 24px !important;
+            }
         }
 
         /* --- CLICK SHINE & GLOW EFFECTS --- */
@@ -1745,8 +2017,8 @@
                         iframe.style.bottom = '85px';
                         iframe.style.borderRadius = '18px';
                     } else {
-                        const width = 330;
-                        const height = Math.min(460, window.innerHeight - 100);
+                        const width = 580;
+                        const height = Math.min(720, window.innerHeight - 50);
                         let leftPos = botRect.left;
                         if (leftPos + width > window.innerWidth) leftPos = window.innerWidth - width - 20;
                         if (leftPos < 10) leftPos = 10;

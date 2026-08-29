@@ -1638,8 +1638,8 @@
                         iframe.style.bottom = '85px';
                         iframe.style.borderRadius = '18px';
                     } else {
-                        const width = 330;
-                        const height = Math.min(460, window.innerHeight - 100);
+                        const width = 580;
+                        const height = Math.min(720, window.innerHeight - 50);
                         let leftPos = botRect.left;
                         if (leftPos + width > window.innerWidth) leftPos = window.innerWidth - width - 20;
                         if (leftPos < 10) leftPos = 10;
@@ -1727,7 +1727,146 @@
         #fb-cat:focus { border-color:#4dcbc6;background:white; }
         #fb-msg { width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-family:'Segoe UI',sans-serif;font-size:0.9rem;color:#374151;outline:none;resize:vertical;min-height:100px;margin-bottom:6px;background:#f9fafb;transition:border-color 0.2s; }
         #fb-msg:focus { border-color:#4dcbc6;background:white; }
-        #fb-cnt { font-size:0.75rem;color:#9ca3af;text-align:right;margin-bottom:18px; }
+        /* ─── LAPTOP / DESKTOP BIG INTERFACE (min-width: 951px) ─── */
+        @media (min-width: 951px) {
+            .app-container {
+                width: 95vw !important;
+                max-width: 1550px !important;
+                height: 92vh !important;
+                min-height: 860px !important;
+                max-height: 1000px !important;
+            }
+
+            /* Floating PixaBot Bubble Scaling (Laptop) */
+            #pixabot-bubble {
+                width: 90px !important;
+                height: 90px !important;
+                border-width: 4px !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35) !important;
+            }
+
+            #fb-trigger {
+                padding: 14px 24px !important;
+                font-size: 1.05rem !important;
+                bottom: 35px !important;
+                right: 35px !important;
+            }
+            #fb-trigger svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            .sidebar {
+                width: 420px !important;
+                padding: 48px 40px !important;
+                overflow-y: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                box-sizing: border-box !important;
+            }
+
+            .logo {
+                font-size: 2.8rem !important;
+                margin-bottom: 35px !important;
+            }
+
+            .step {
+                font-size: 1.5rem !important;
+                font-weight: 700 !important;
+                margin-bottom: 22px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 16px !important;
+            }
+
+            .circle {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.3rem !important;
+                font-weight: 800 !important;
+                margin-right: 14px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .step-icon {
+                width: 32px !important;
+                height: 32px !important;
+                margin-right: 14px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .voice-assistant-container {
+                font-size: 1.25rem !important;
+                font-weight: 700 !important;
+            }
+
+            .content-area {
+                padding: 60px 80px !important;
+                overflow-y: auto !important;
+            }
+
+            h2 {
+                font-size: 3rem !important;
+                margin-bottom: 16px !important;
+            }
+
+            .subtitle {
+                font-size: 1.25rem !important;
+                margin-bottom: 45px !important;
+            }
+
+            .options-grid {
+                max-width: 760px !important;
+                gap: 22px !important;
+            }
+
+            .option-card {
+                padding: 26px 34px !important;
+                font-size: 1.2rem !important;
+                font-weight: 700 !important;
+                border-radius: 18px !important;
+            }
+
+            .btn {
+                padding: 20px 52px !important;
+                font-size: 1.2rem !important;
+                font-weight: 700 !important;
+                border-radius: 16px !important;
+            }
+
+            /* Feedback Modal Scaling (Picture 5) */
+            #fb-modal {
+                width: 540px !important;
+                padding: 40px 45px !important;
+                border-radius: 26px !important;
+            }
+            #fb-modal h3 {
+                font-size: 1.75rem !important;
+            }
+            #fb-modal .fb-sub {
+                font-size: 1.05rem !important;
+            }
+            .fb-star {
+                font-size: 2.6rem !important;
+            }
+            #fb-cat {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+            }
+            #fb-msg {
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                border-radius: 14px !important;
+                min-height: 130px !important;
+            }
+            #fb-sub-btn {
+                padding: 18px !important;
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+                border-radius: 16px !important;
+            }
+        }
         #fb-sub-btn { width:100%;padding:15px;background:linear-gradient(135deg,#4dcbc6,#054c5a);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Segoe UI',sans-serif;box-shadow:0 4px 15px rgba(77,203,198,0.35);transition:transform 0.2s,box-shadow 0.2s; }
         #fb-sub-btn:hover { transform:translateY(-2px);box-shadow:0 8px 25px rgba(77,203,198,0.5); }
         #fb-sub-btn:disabled { opacity:0.65;cursor:not-allowed;transform:none; }
