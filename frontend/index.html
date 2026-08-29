@@ -333,6 +333,7 @@
             body {
                 height: auto;
                 overflow-y: auto;
+                overflow-x: hidden;
             }
 
             .page-container {
@@ -340,13 +341,14 @@
                 height: auto;
                 max-height: none;
                 overflow: visible;
+                width: 100%;
             }
 
             .hero-section {
                 padding: 0;
                 width: 100%;
                 height: auto;
-                max-height: 450px;
+                max-height: 380px;
             }
 
             .hero-full-img {
@@ -356,34 +358,62 @@
             }
 
             .form-section {
-                padding: 40px 30px;
+                padding: 35px 25px;
                 height: auto;
                 max-height: none;
                 overflow-y: visible;
+                width: 100%;
             }
         }
 
-        /* Small Phone Screen Adjustments */
-        @media (max-width: 600px) {
+        /* Mobile Phone Screen Specifics (< 768px) */
+        @media (max-width: 767px) {
+            body {
+                width: 100%;
+                overflow-x: hidden;
+            }
+
             .hero-section {
-                max-height: 220px;
+                max-height: 240px;
             }
 
             .form-section {
                 padding: 24px 18px;
             }
 
+            .form-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+
             .form-title {
                 font-size: 1.5rem;
+                margin-bottom: 24px;
+            }
+
+            .input-field {
+                font-size: 16px; /* Prevents auto-zoom on mobile safari */
+            }
+
+            .top-right-bar {
+                margin-bottom: 15px;
+            }
+
+            .splash-stage {
+                width: 90vw;
+                max-width: 90vw;
+                padding: 10px;
             }
 
             .splash-app-name {
                 font-size: 32px !important;
+                text-align: center;
             }
 
             .splash-tagline {
                 font-size: 11px !important;
                 letter-spacing: 1px !important;
+                text-align: center;
             }
 
             .logo-sweep-container {
@@ -398,6 +428,26 @@
 
             .splash-bar-wrap {
                 width: 170px !important;
+            }
+        }
+
+        /* Extra Small Screens (<= 380px) */
+        @media (max-width: 380px) {
+            .hero-section {
+                max-height: 180px;
+            }
+
+            .form-section {
+                padding: 18px 12px;
+            }
+
+            .form-title {
+                font-size: 1.35rem;
+            }
+
+            .submit-btn {
+                padding: 12px;
+                font-size: 14px;
             }
         }
     </style>

@@ -34,106 +34,206 @@
 
         .chat-container {
             width: 100%;
-            max-width: 560px;
-            background: rgba(255, 255, 255, 0.95);
+            max-width: 320px;
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
-            border-radius: 28px;
-            box-shadow: 0 20px 40px rgba(3, 75, 78, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 18px;
+            box-shadow: 0 16px 36px rgba(3, 75, 78, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
-            height: 95vh;
+            height: 92vh;
+            max-height: 440px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
         }
 
         .chat-header {
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
-            padding: 16px 24px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
             z-index: 10;
-            transition: all 0.5s ease;
-            gap: 10px;
+            transition: all 0.3s ease;
+            gap: 4px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .header-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
         }
 
-        /* ✨ NEW: Language Selector Styling */
-        .lang-select {
+        /* ── Settings Dropdown Panel ── */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .hdr-icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .hdr-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.08);
+        }
+
+        .hdr-icon-btn.close-btn:hover {
+            background: rgba(239, 68, 68, 0.85);
+            border-color: #ef4444;
+        }
+
+        .hdr-icon-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Settings Dropdown */
+        .settings-wrapper {
+            position: relative;
+        }
+
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(3, 75, 78, 0.2);
+            padding: 10px;
+            min-width: 190px;
+            z-index: 999;
+            animation: dropIn 0.2s ease;
+        }
+
+        .settings-panel.open { display: block; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .sp-section {
+            margin-bottom: 8px;
+        }
+
+        .sp-section:last-child { margin-bottom: 0; }
+
+        .sp-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #64748b;
+            padding: 2px 4px 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sp-select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #334155;
+            background: #f8fafc;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .sp-select:focus { border-color: #0f8680; }
+
+        .sp-mode-toggle {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .sp-mode-btn {
+            flex: 1;
+            padding: 5px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: transparent;
+            color: #64748b;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .sp-mode-btn.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+        }
+
+        /* Therapy rainbow on header */
+        .therapy-active .chat-header { background: linear-gradient(270deg,#ff9a9e,#fecfef,#a1c4fd,#c2e9fb); background-size: 400%; animation: rainbow-flow 8s ease infinite; }
+        .therapy-active .user-msg, .therapy-active .send-btn { background: linear-gradient(270deg,#ff9a9e,#fecfef,#a1c4fd,#c2e9fb); background-size: 400%; animation: rainbow-flow 8s ease infinite; color:#1e293b; }
+
+        .close-header-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            outline: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            font-size: 1.1rem;
+            line-height: 1;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-right: auto;
-        }
-
-        .lang-select option {
-            color: #334155;
-            background: white;
-        }
-
-        .lang-select:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .mode-toggle {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
         }
 
-        .mode-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .mode-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .mode-active {
-            background: white;
-            color: var(--primary-dark);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .mode-inactive {
-            color: rgba(255, 255, 255, 0.8);
+        .close-header-btn:hover {
+            background: rgba(239, 68, 68, 0.9);
+            border-color: rgba(239, 68, 68, 1);
+            transform: scale(1.08);
         }
 
         .header-icon {
-            width: 44px;
-            height: 44px;
+            width: 28px;
+            height: 28px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -187,7 +287,7 @@
 
         .chat-box {
             flex: 1;
-            padding: 24px;
+            padding: 10px 12px;
             overflow-y: auto;
             background-color: rgba(255, 255, 255, 0.7);
             background-image: url('bot_background.jpeg');
@@ -197,12 +297,12 @@
             background-blend-mode: lighten;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 10px;
             scroll-behavior: smooth;
         }
 
         .chat-box::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
 
         .chat-box::-webkit-scrollbar-thumb {
@@ -213,10 +313,10 @@
         .message-wrapper {
             display: flex;
             flex-direction: column;
-            max-width: 88%;
+            max-width: 92%;
             animation: fadeInUp 0.3s ease forwards;
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(8px);
         }
 
         .message-wrapper.bot {
@@ -238,36 +338,36 @@
         .message-sender {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
+            gap: 4px;
+            font-size: 0.65rem;
             color: var(--text-muted);
-            margin-bottom: 6px;
-            padding: 0 6px;
+            margin-bottom: 2px;
+            padding: 0 4px;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
             width: fit-content;
         }
 
         .emotion-badge {
-            font-size: 0.65rem;
-            padding: 3px 8px;
-            border-radius: 12px;
+            font-size: 0.55rem;
+            padding: 2px 5px;
+            border-radius: 8px;
             background: #e2e8f0;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             font-weight: 700;
         }
 
         .message {
-            padding: 14px 18px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 9px 12px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
         .message p {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .message p:last-child {
@@ -277,33 +377,33 @@
         .user-msg {
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
-            border-radius: 20px 20px 4px 20px;
-            transition: all 0.5s ease;
+            border-radius: 14px 14px 2px 14px;
+            transition: all 0.3s ease;
         }
 
         .bot-msg {
             background-color: rgba(255, 255, 255, 0.95);
             color: var(--text-main);
-            border-radius: 4px 20px 20px 20px;
+            border-radius: 2px 14px 14px 14px;
             border: 1px solid rgba(3, 75, 78, 0.15);
             border-left: 3px solid transparent;
             backdrop-filter: blur(5px);
         }
 
         .input-container-wrapper {
-            padding: 16px 24px 24px 24px;
-            background: linear-gradient(to top, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+            padding: 6px 10px 10px 10px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0) 100%);
         }
 
         .input-area {
             display: flex;
-            padding: 8px;
+            padding: 4px 6px;
             background: white;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
-            border-radius: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 22px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .icon-btn {
@@ -312,11 +412,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             transition: all 0.2s;
             background: #f8fafc;
+            flex-shrink: 0;
         }
 
         .icon-btn:hover {
@@ -326,8 +427,8 @@
         }
 
         .icon-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             fill: none;
             stroke: currentColor;
             stroke-width: 2.2;
@@ -355,12 +456,13 @@
 
         input[type="text"] {
             flex: 1;
-            padding: 12px 16px;
+            padding: 6px 8px;
             border: none;
             background: transparent;
             outline: none;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--text-main);
+            min-width: 0;
         }
 
         input[type="text"]::placeholder {
@@ -368,9 +470,9 @@
         }
 
         button.send-btn {
-            width: 44px;
-            height: 44px;
-            min-width: 44px;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
@@ -379,13 +481,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.5s ease;
-            box-shadow: 0 4px 10px rgba(3, 75, 78, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(3, 75, 78, 0.3);
+            flex-shrink: 0;
         }
 
         button.send-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(3, 75, 78, 0.4);
+            box-shadow: 0 4px 10px rgba(3, 75, 78, 0.4);
         }
 
         button.send-btn:active {
@@ -393,22 +496,42 @@
         }
 
         button.send-btn svg {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             fill: none;
             stroke: currentColor;
             stroke-width: 2.5;
             stroke-linecap: round;
             stroke-linejoin: round;
-            margin-left: -2px;
+            margin-left: -1px;
+        }
+
+        button.send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 12px rgba(3, 75, 78, 0.4);
+        }
+
+        button.send-btn:active {
+            transform: scale(0.95);
+        }
+
+        button.send-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin="round;
+            margin-left: -1px;
         }
 
         #listening-status-bar {
             display: none;
             background: rgba(224, 242, 241, 0.9);
             color: var(--primary-dark);
-            padding: 8px 24px;
-            font-size: 0.8rem;
+            padding: 6px 16px;
+            font-size: 0.75rem;
             font-weight: 600;
             border-top: 1px solid rgba(3, 75, 78, 0.1);
             backdrop-filter: blur(5px);
@@ -426,24 +549,24 @@
             display: none;
             align-self: flex-start;
             background: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px;
-            border-radius: 4px 20px 20px 20px;
+            padding: 10px 16px;
+            border-radius: 4px 16px 16px 16px;
             border: 1px solid rgba(3, 75, 78, 0.15);
             color: var(--primary-dark);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             width: fit-content;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .spinner-ring {
-            width: 18px;
-            height: 18px;
-            border: 3px solid rgba(15, 134, 128, 0.2);
-            border-top: 3px solid var(--primary-light);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(15, 134, 128, 0.2);
+            border-top: 2px solid var(--primary-light);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -516,6 +639,107 @@
 
         .therapy-active .mode-inactive {
             color: rgba(30, 41, 59, 0.6);
+        }
+
+        /* Mobile & Small Screen Responsiveness (< 768px) */
+        @media (max-width: 767px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+                padding: 0;
+            }
+
+            .chat-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border-radius: 0 !important;
+                border: none !important;
+            }
+
+            .chat-header {
+                padding: 8px 10px !important;
+                gap: 4px !important;
+            }
+
+            .header-left {
+                gap: 6px !important;
+            }
+
+            .header-title {
+                font-size: 0.95rem !important;
+            }
+
+            .header-icon {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            .lang-select {
+                padding: 3px 5px !important;
+                font-size: 0.72rem !important;
+                max-width: 85px !important;
+            }
+
+            #voice-toggle-btn {
+                width: 30px !important;
+                height: 30px !important;
+                margin-right: 2px !important;
+            }
+
+            .mode-toggle {
+                padding: 2px !important;
+            }
+
+            .mode-label {
+                font-size: 0.65rem !important;
+                padding: 3px 6px !important;
+            }
+
+            .chat-box {
+                padding: 12px 10px !important;
+                gap: 10px !important;
+            }
+
+            .message-wrapper {
+                max-width: 92% !important;
+            }
+
+            .message {
+                padding: 10px 12px !important;
+                font-size: 0.88rem !important;
+            }
+
+            .input-container-wrapper {
+                padding: 8px 10px 10px 10px !important;
+            }
+
+            .input-area {
+                padding: 4px 6px !important;
+                gap: 6px !important;
+            }
+
+            .icon-btn {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            button.send-btn {
+                width: 34px !important;
+                height: 34px !important;
+                min-width: 34px !important;
+            }
+
+            button.send-btn svg {
+                width: 15px !important;
+                height: 15px !important;
+            }
+
+            input[type="text"] {
+                font-size: 16px !important; /* Prevents auto-zoom on mobile safari */
+                padding: 6px 8px !important;
+            }
         }
 
         .therapy-active .spinner-ring {
@@ -612,26 +836,67 @@
                 <span class="header-title">Pixa</span>
             </div>
 
-            <select class="lang-select" id="lang-select" onchange="changeLanguage()">
-                <option value="English">🇬🇧 English</option>
-                <option value="Hindi">🇮🇳 Hindi</option>
-                <option value="Odia">🇮🇳 Odia</option>
-            </select>
+            <div class="header-right">
+                <!-- Speaker / Voice Toggle -->
+                <div id="voice-toggle-btn" class="hdr-icon-btn" onclick="toggleVoice()" title="Toggle Voice">
+                    <svg id="voice-icon" viewBox="0 0 24 24">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" id="voice-waves" style="display:none;"></path>
+                        <line x1="23" y1="1" x2="1" y2="23" id="voice-mute-line"></line>
+                    </svg>
+                </div>
 
-            <div id="voice-toggle-btn" class="icon-btn" onclick="toggleVoice()" title="Toggle Voice (Read Text)"
-                style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255,255,255,0.4); width: 34px; height: 34px; margin-right: 8px; flex-shrink: 0;">
-                <svg id="voice-icon" viewBox="0 0 24 24"
-                    style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2;">
-                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" id="voice-waves"
-                        style="display: none;"></path>
-                    <line x1="23" y1="1" x2="1" y2="23" id="voice-mute-line"></line>
-                </svg>
-            </div>
+                <!-- Settings Icon -->
+                <div class="settings-wrapper">
+                    <div class="hdr-icon-btn" id="settings-btn" onclick="toggleSettings()" title="Settings">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
 
-            <div class="mode-toggle" id="mode-toggle" onclick="toggleTherapyMode()">
-                <span class="mode-label mode-active" id="label-standard">Standard</span>
-                <span class="mode-label mode-inactive" id="label-therapy">Therapy</span>
+                    <!-- Settings Dropdown Panel -->
+                    <div class="settings-panel" id="settings-panel">
+                        <div class="sp-section">
+                            <span class="sp-label">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f8680" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                                Language
+                            </span>
+                            <select class="sp-select" id="lang-select" onchange="changeLanguage()">
+                                <option value="English">🇬🇧 English</option>
+                                <option value="Hindi">🇮🇳 Hindi</option>
+                                <option value="Odia">🇮🇳 Odia</option>
+                            </select>
+                        </div>
+                        <div class="sp-section">
+                            <span class="sp-label">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f8680" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                                </svg>
+                                Mode
+                            </span>
+                            <div class="sp-mode-toggle">
+                                <button class="sp-mode-btn active" id="sp-btn-std" onclick="setModeStd()">STD</button>
+                                <button class="sp-mode-btn" id="sp-btn-thp" onclick="setModeTHP()">THP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Close Button -->
+                <button class="close-header-btn" onclick="closePixaBotWindow()" title="Exit PixaBot">&times;</button>
             </div>
         </div>
 
@@ -669,6 +934,18 @@
     </div>
 
     <script>
+        function closePixaBotWindow() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'close-pixabot' }, '*');
+            } else {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.close();
+                }
+            }
+        }
+
         let sessionId = Math.random().toString(36).substring(2, 15);
         const mainContainer = document.getElementById("main-container");
         const chatBox = document.getElementById("chat-box");
@@ -748,25 +1025,43 @@
             }
         }
 
-        function toggleTherapyMode() {
-            isTherapyMode = !isTherapyMode;
-            const standardLabel = document.getElementById('label-standard');
-            const therapyLabel = document.getElementById('label-therapy');
+        // Settings Panel Toggle
+        function toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.classList.toggle('open');
+        }
 
-            if (isTherapyMode) {
-                standardLabel.classList.replace('mode-active', 'mode-inactive');
-                therapyLabel.classList.replace('mode-inactive', 'mode-active');
+        // Close settings panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrapper = document.querySelector('.settings-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('settings-panel').classList.remove('open');
+            }
+        });
+
+        function _applyTherapyUI(active) {
+            isTherapyMode = active;
+            const stdBtn = document.getElementById('sp-btn-std');
+            const thpBtn = document.getElementById('sp-btn-thp');
+            if (stdBtn && thpBtn) {
+                stdBtn.classList.toggle('active', !active);
+                thpBtn.classList.toggle('active', active);
+            }
+            if (active) {
                 mainContainer.classList.add('therapy-active');
                 mainContainer.style.boxShadow = "0 20px 40px rgba(161, 196, 253, 0.25), 0 1px 3px rgba(0,0,0,0.05)";
             } else {
-                therapyLabel.classList.replace('mode-active', 'mode-inactive');
-                standardLabel.classList.replace('mode-inactive', 'mode-active');
                 mainContainer.classList.remove('therapy-active');
                 mainContainer.style.boxShadow = "0 20px 40px rgba(3, 75, 78, 0.15), 0 1px 3px rgba(0,0,0,0.05)";
             }
-
-            changeLanguage(); // Call this to update placeholder text instantly based on mode
+            changeLanguage();
         }
+
+        function setModeStd() { _applyTherapyUI(false); }
+        function setModeTHP() { _applyTherapyUI(true); }
+        // Keep backward compat
+        function toggleTherapyMode() { _applyTherapyUI(!isTherapyMode); }
+
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;

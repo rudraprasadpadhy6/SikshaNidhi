@@ -403,48 +403,366 @@
             }
         }
 
-        /* Mobile & Phone Screen Responsiveness */
-        @media (max-width: 900px) {
+        /* Mobile Progress Stepper & Voice Float Base (Hidden on Desktop) */
+        .mobile-stepper-header,
+        .mobile-steps-sheet-overlay,
+        .mobile-voice-float-btn {
+            display: none !important;
+        }
+
+        /* Mobile & Phone Screen Responsiveness (< 768px) */
+        @media (max-width: 767px) {
             body {
-                align-items: flex-start;
-                background-color: #ffffff;
+                padding: 0 !important;
+                background-color: #ffffff !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+                flex-direction: column !important;
+            }
+
+            /* HIDE PERMANENT DESKTOP SIDEBAR & VOICE BOX ON MOBILE */
+            aside.sidebar,
+            .sidebar,
+            .voice-section {
+                display: none !important;
             }
 
             .app-container {
-                width: 100%;
-                max-width: 100%;
-                height: auto;
-                min-height: 100vh;
-                border-radius: 0;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: 100vh !important;
+                border-radius: 0 !important;
+                flex-direction: column !important;
+                box-shadow: none !important;
+                overflow-y: auto !important;
+                border: none !important;
+            }
+
+            /* SHOW COMPACT MOBILE STEPPER HEADER AT TOP */
+            .mobile-stepper-header {
+                display: flex !important;
                 flex-direction: column;
-                box-shadow: none;
-            }
-
-            .sidebar {
                 width: 100%;
-                padding: 24px 20px;
-                border-radius: 0;
+                background: linear-gradient(135deg, #054c5a 0%, #094A53 100%);
+                color: white;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
             }
 
-            .logo {
-                font-size: 1.8rem;
-                margin-bottom: 20px;
+            .mobile-top-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .main-content {
-                width: 100%;
-                padding: 24px 20px 100px 20px;
-                flex: 1;
+            .mobile-back-btn {
+                background: rgba(255, 255, 255, 0.15) !important;
+                border: none !important;
+                color: white !important;
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                max-width: 36px !important;
+                flex-shrink: 0 !important;
+                border-radius: 50% !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                cursor: pointer !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .mobile-back-btn svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            .mobile-app-title {
+                font-family: 'Playfair Display', 'Segoe UI', serif;
+                font-size: 18px;
+                font-weight: 700;
+                color: white;
+            }
+
+            .mobile-user-badge {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-progress-section {
+                padding: 10px 16px 14px 16px;
+                cursor: pointer;
+            }
+
+            .mobile-progress-dots {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                position: relative;
+            }
+
+            .mobile-progress-dots::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                right: 10px;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.2);
+                z-index: 1;
+                transform: translateY(-50%);
+            }
+
+            .mobile-dot {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: #054c5a;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: 700;
+                color: rgba(255, 255, 255, 0.6);
+                z-index: 2;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-dot.completed {
+                background: #4dcbc6;
+                border-color: #4dcbc6;
+                color: #054c5a;
+            }
+
+            .mobile-dot.active {
+                background: #ffffff;
+                border-color: #4dcbc6;
+                color: #054c5a;
+                box-shadow: 0 0 10px rgba(77, 203, 198, 0.8);
+                transform: scale(1.15);
+            }
+
+            .mobile-progress-text {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: #e0f2f4;
+            }
+
+            .step-count-label {
+                font-weight: 700;
+                color: #4dcbc6;
+            }
+
+            .step-name-label {
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            /* Mobile Steps Bottom Sheet Modal */
+            .mobile-steps-sheet-overlay {
+                display: block !important;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+                z-index: 10000;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            .mobile-steps-sheet-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .mobile-steps-sheet {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                border-radius: 20px 20px 0 0;
+                padding: 20px;
+                transform: translateY(100%);
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                max-height: 75vh;
+                overflow-y: auto;
+            }
+
+            .mobile-steps-sheet-overlay.active .mobile-steps-sheet {
+                transform: translateY(0);
+            }
+
+            .mobile-sheet-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .mobile-sheet-header h3 {
+                margin: 0;
+                font-size: 16px;
+                color: #054c5a;
+                font-weight: 700;
+            }
+
+            .sheet-close-btn {
+                background: #f1f5f9;
+                border: none;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                font-size: 20px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #64748b;
+            }
+
+            .mobile-sheet-item {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 12px 14px;
+                border-radius: 12px;
+                margin-bottom: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #475569;
+                background: #f8fafc;
+            }
+
+            .mobile-sheet-item.completed {
+                color: #0f766e;
+                background: #f0fdf4;
+            }
+
+            .mobile-sheet-item.active {
+                color: #054c5a;
+                background: #e0f2f4;
+                font-weight: 700;
+                border: 1px solid #4dcbc6;
+            }
+
+            .sheet-item-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 700;
+            }
+
+            /* MAIN QUESTION CONTENT AREA OCCUPIES 100% FULL WIDTH */
+            .content-area {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 24px 16px 90px 16px !important;
+                flex: 1 !important;
+                box-sizing: border-box !important;
+                background: #ffffff !important;
+                color: #223335 !important;
+                position: static !important;
+                box-shadow: none !important;
+            }
+
+            h2 {
+                font-size: 22px !important;
+                margin-bottom: 8px !important;
+                color: #054c5a !important;
+            }
+
+            .subtitle {
+                font-size: 14px !important;
+                margin-bottom: 20px !important;
+                color: #555555 !important;
             }
 
             .options-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+            }
+
+            input[type="number"],
+            select {
+                font-size: 16px !important;
+                padding: 14px 16px !important;
+                width: 100% !important;
             }
 
             .nav-buttons {
-                position: relative;
-                bottom: 0;
-                margin-top: 30px;
+                position: relative !important;
+                bottom: 0 !important;
+                margin-top: 30px !important;
+                flex-direction: column-reverse !important;
+                gap: 12px !important;
+            }
+
+            .nav-buttons button,
+            .btn-next, .btn-back, .btn {
+                width: 100% !important;
+                padding: 16px 20px !important;
+                font-size: 1rem !important;
+                margin-left: 0 !important;
+            }
+
+            .btn-find {
+                padding: 18px 30px !important;
+                font-size: 18px !important;
+                width: 100% !important;
+            }
+
+            /* Floating Voice Assistant Button on Mobile */
+            .mobile-voice-float-btn {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 25px !important;
+                right: 20px !important;
+                width: 48px !important;
+                height: 48px !important;
+                min-width: 48px !important;
+                max-width: 48px !important;
+                flex-shrink: 0 !important;
+                border-radius: 50% !important;
+                padding: 0 !important;
+                background: linear-gradient(135deg, #054c5a 0%, #4dcbc6 100%) !important;
+                color: white !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(5, 76, 90, 0.4) !important;
+                align-items: center !important;
+                justify-content: center !important;
+                z-index: 9998 !important;
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .mobile-voice-float-btn.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
             }
 
             #pixabot-container {
@@ -452,11 +770,74 @@
                 left: auto !important;
                 right: 20px !important;
             }
+
+            #pixabot-bubble {
+                width: 55px !important;
+                height: 55px !important;
+            }
+
+            #india-map {
+                height: 300px !important;
+            }
         }
     </style>
   <script src="/config.js"></script>
 </head>
 <body>
+
+<!-- Compact Mobile Top Stepper Header (< 768px) -->
+<div class="mobile-stepper-header" id="mobileStepperHeader">
+    <div class="mobile-top-bar">
+        <button type="button" class="mobile-back-btn" onclick="window.location.href='dashboard.html'" title="Back to Dashboard">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        <div class="mobile-app-title">UniCapital.AI</div>
+        <div class="mobile-user-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </div>
+    </div>
+
+    <div class="mobile-progress-section" onclick="toggleMobileStepsSheet()">
+        <div class="mobile-progress-dots" id="mobileProgressDots">
+            <!-- Populated dynamically by JS -->
+        </div>
+        <div class="mobile-progress-text">
+            <span class="step-count-label" id="mobileStepCountLabel">Step 1 of 7</span>
+            <span class="step-name-label" id="mobileStepNameLabel">Age Details</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto; opacity:0.7;">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Steps Bottom Sheet Modal -->
+<div class="mobile-steps-sheet-overlay" id="mobileStepsSheetOverlay" onclick="closeMobileStepsSheet()">
+    <div class="mobile-steps-sheet" onclick="event.stopPropagation()">
+        <div class="mobile-sheet-header">
+            <h3>Progress Overview</h3>
+            <button type="button" class="sheet-close-btn" onclick="closeMobileStepsSheet()">&times;</button>
+        </div>
+        <div class="mobile-sheet-steps" id="mobileSheetSteps">
+            <!-- Populated dynamically by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Floating Voice Assistant Button for Mobile -->
+<button type="button" class="mobile-voice-float-btn" id="mobileVoiceFloatBtn" onclick="toggleMobileVoice()" title="Toggle Voice Assistant">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" x2="12" y1="19" y2="22"></line>
+    </svg>
+</button>
+
 <!-- PixaBot Floating Bubble -->
 <div id="pixabot-container" style="position: fixed; bottom: 30px; left: calc(380px + 20px); z-index: 9999; cursor: move;">
 <div id="pixabot-bubble" style="width: 70px; height: 70px; border-radius: 50%; background: white; border: 3px solid #0f8680; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; transition: transform 0.3s;">
@@ -799,8 +1180,78 @@
                 setTimeout(() => geoChart.draw(geoData, geoOptions), 50);
             }
 
+            // Update compact mobile progress stepper
+            renderMobileProgress();
+
             // Speak the new question when UI updates
             speakCurrentQuestion();
+        }
+
+        // --- MOBILE PROGRESS STEPPER FUNCTIONS ---
+        function renderMobileProgress() {
+            const stepNames = ["Age Details", "Location", "Marital Status", "Category", "Disability", "Education", "Employment"];
+            const currentStepIndex = Math.min(Math.max(0, current), stepNames.length - 1);
+
+            const stepCountLabel = document.getElementById('mobileStepCountLabel');
+            const stepNameLabel = document.getElementById('mobileStepNameLabel');
+            if (stepCountLabel) stepCountLabel.textContent = `Step ${currentStepIndex + 1} of ${stepNames.length}`;
+            if (stepNameLabel) stepNameLabel.textContent = stepNames[currentStepIndex];
+
+            const dotsContainer = document.getElementById('mobileProgressDots');
+            if (dotsContainer) {
+                let dotsHtml = '';
+                for (let i = 0; i < stepNames.length; i++) {
+                    if (i < currentStepIndex) {
+                        dotsHtml += `<div class="mobile-dot completed">✓</div>`;
+                    } else if (i === currentStepIndex) {
+                        dotsHtml += `<div class="mobile-dot active">●</div>`;
+                    } else {
+                        dotsHtml += `<div class="mobile-dot">○</div>`;
+                    }
+                }
+                dotsContainer.innerHTML = dotsHtml;
+            }
+
+            const sheetContainer = document.getElementById('mobileSheetSteps');
+            if (sheetContainer) {
+                let sheetHtml = '';
+                stepNames.forEach((name, i) => {
+                    let statusClass = i < currentStepIndex ? 'completed' : (i === currentStepIndex ? 'active' : '');
+                    let iconSymbol = i < currentStepIndex ? '✓' : (i === currentStepIndex ? '●' : '○');
+                    sheetHtml += `
+                        <div class="mobile-sheet-item ${statusClass}">
+                            <div class="sheet-item-icon">${iconSymbol}</div>
+                            <span>${i + 1}. ${name}</span>
+                        </div>
+                    `;
+                });
+                sheetContainer.innerHTML = sheetHtml;
+            }
+        }
+
+        function toggleMobileStepsSheet() {
+            const overlay = document.getElementById('mobileStepsSheetOverlay');
+            if (overlay) {
+                renderMobileProgress();
+                overlay.classList.toggle('active');
+            }
+        }
+
+        function closeMobileStepsSheet() {
+            const overlay = document.getElementById('mobileStepsSheetOverlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        function toggleMobileVoice() {
+            const toggle = document.getElementById('voiceToggle');
+            const floatBtn = document.getElementById('mobileVoiceFloatBtn');
+            if (toggle) {
+                toggle.checked = !toggle.checked;
+                toggle.dispatchEvent(new Event('change'));
+                if (floatBtn) {
+                    floatBtn.classList.toggle('active', toggle.checked);
+                }
+            }
         }
 
         function handleNext() {
@@ -1161,27 +1612,48 @@
             function togglePixaBot() {
                 let iframe = document.getElementById('pixabot-iframe');
                 const botRect = bot.getBoundingClientRect();
+                const isMobile = window.innerWidth <= 767;
 
                 if (!iframe) {
                     iframe = document.createElement('iframe');
                     iframe.id = 'pixabot-iframe';
                     iframe.src = 'PixaBot.html';
                     iframe.style.position = 'fixed';
-                    iframe.style.width = '550px';
-                    iframe.style.height = '750px';
                     iframe.style.border = 'none';
                     iframe.style.zIndex = '10000';
-                    iframe.style.borderRadius = '20px';
                     iframe.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
                     iframe.style.transition = 'all 0.3s ease';
                     iframe.style.opacity = '0';
                     iframe.style.display = 'none';
                     document.body.appendChild(iframe);
                 }
-                
+
                 if (iframe.style.display === 'none') {
-                    iframe.style.left = botRect.left + 'px';
-                    iframe.style.top = (botRect.top - 760) + 'px';
+                    if (isMobile) {
+                        iframe.style.width = 'calc(100vw - 24px)';
+                        iframe.style.height = 'min(440px, 70vh)';
+                        iframe.style.left = '12px';
+                        iframe.style.right = '12px';
+                        iframe.style.top = 'auto';
+                        iframe.style.bottom = '85px';
+                        iframe.style.borderRadius = '18px';
+                    } else {
+                        const width = 330;
+                        const height = Math.min(460, window.innerHeight - 100);
+                        let leftPos = botRect.left;
+                        if (leftPos + width > window.innerWidth) leftPos = window.innerWidth - width - 20;
+                        if (leftPos < 10) leftPos = 10;
+                        
+                        let topPos = botRect.top - height - 10;
+                        if (topPos < 10) topPos = botRect.bottom + 10;
+
+                        iframe.style.width = width + 'px';
+                        iframe.style.height = height + 'px';
+                        iframe.style.left = leftPos + 'px';
+                        iframe.style.top = topPos + 'px';
+                        iframe.style.bottom = 'auto';
+                        iframe.style.borderRadius = '18px';
+                    }
 
                     iframe.style.display = 'block';
                     setTimeout(() => iframe.style.opacity = '1', 10);
@@ -1190,6 +1662,16 @@
                     setTimeout(() => iframe.style.display = 'none', 300);
                 }
             }
+
+            window.addEventListener('message', (e) => {
+                if (e.data && (e.data === 'close-pixabot' || e.data.type === 'close-pixabot')) {
+                    const iframe = document.getElementById('pixabot-iframe');
+                    if (iframe && iframe.style.display !== 'none') {
+                        iframe.style.opacity = '0';
+                        setTimeout(() => iframe.style.display = 'none', 300);
+                    }
+                }
+            });
 
             document.addEventListener('mousedown', (e) => {
                 const iframe = document.getElementById('pixabot-iframe');
@@ -1254,74 +1736,10 @@
         #fb-ok h4 { font-size:1.2rem;font-weight:800;color:#054c5a;margin-bottom:6px; }
         #fb-ok p { color:#6b7280;font-size:0.9rem; }
     </style>
-<button id="fb-trigger" onclick="openFB()" style="display:flex;align-items:center;gap:8px;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span data-i18n="s_bea4c2c8">Feedback</span></button>
-<div id="fb-overlay" onclick="if(event.target===this)closeFB()">
-<div id="fb-modal">
-<button id="fb-close" onclick="closeFB()">×</button>
-<div id="fb-form">
-<h3 style="display:flex;align-items:center;gap:10px;"><svg fill="none" height="22" stroke="#054c5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span data-i18n="s_0822d927">Share Your Feedback</span></h3>
-<p class="fb-sub" data-i18n="s_11654a70">Your thoughts help us improve SikshaNidhi for everyone.</p>
-<div class="fb-label" data-i18n="s_8bc61bb7">Rate Your Experience</div>
-<div class="fb-stars" id="fb-stars-row">
-<span class="fb-star" data-val="1" onclick="selMood(1)" onmouseenter="hvStar(1)" onmouseleave="uhvStar()">★</span>
-<span class="fb-star" data-val="2" onclick="selMood(2)" onmouseenter="hvStar(2)" onmouseleave="uhvStar()">★</span>
-<span class="fb-star" data-val="3" onclick="selMood(3)" onmouseenter="hvStar(3)" onmouseleave="uhvStar()">★</span>
-<span class="fb-star" data-val="4" onclick="selMood(4)" onmouseenter="hvStar(4)" onmouseleave="uhvStar()">★</span>
-<span class="fb-star" data-val="5" onclick="selMood(5)" onmouseenter="hvStar(5)" onmouseleave="uhvStar()">★</span>
-</div>
-<div class="fb-label" data-i18n="s_3adbdb3a">Category</div>
-<select id="fb-cat">
-<option value="General Feedback"><span data-i18n="s_d8f0fde7">General Feedback</span></option>
-<option value="Bug Report"><span data-i18n="s_554d91e2">Bug Report</span></option>
-<option value="Feature Suggestion"><span data-i18n="s_f45530b7">Feature Suggestion</span></option>
-<option value="Compliment"><span data-i18n="s_b5e85579">Compliment</span></option>
-</select>
-<div class="fb-label" data-i18n="s_c5be23b0">Your Message</div>
-<textarea id="fb-msg" maxlength="500" oninput="document.getElementById('fb-cnt').textContent=this.value.length+'/500'" placeholder="Tell us what you think... (max 500 chars)"></textarea>
-<div id="fb-cnt">0/500</div>
-<button id="fb-sub-btn" onclick="sendFB()" style="display:flex;align-items:center;justify-content:center;gap:8px;"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="16"><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span data-i18n="s_6f97affc">Send Feedback</span></button>
-</div>
-<div id="fb-ok">
-<div class="ck" style="color:#4dcbc6"><svg fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="56"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
-<h4><span data-i18n="s_498cd895">Thank you!</span></h4>
-<p><span data-i18n="s_d7036136">Your feedback has been received.</span><br/><span data-i18n="s_4a70f492">We really appreciate it.</span></p>
-</div>
-</div>
-</div>
-<script>
-        let _fbR = 0;
-        function openFB() {
-            document.getElementById('fb-overlay').classList.add('open');
-            document.getElementById('fb-form').style.display='block';
-            document.getElementById('fb-ok').style.display='none';
-            _fbR=0;
-            document.querySelectorAll('.fb-star').forEach(s=>s.classList.remove('selected','hovered'));
-            document.getElementById('fb-msg').value='';
-            document.getElementById('fb-cnt').textContent='0/500';
-        }
-        function closeFB() { document.getElementById('fb-overlay').classList.remove('open'); }
-        function hvStar(v){document.querySelectorAll('.fb-star').forEach(s=>s.classList.toggle('hovered',parseInt(s.dataset.val)<=v));}
-        function uhvStar(){document.querySelectorAll('.fb-star').forEach(s=>s.classList.remove('hovered'));}
-        function selMood(r){_fbR=r;document.querySelectorAll('.fb-star').forEach(s=>s.classList.toggle('selected',parseInt(s.dataset.val)<=r));}
-        async function sendFB() {
-            const msg = document.getElementById('fb-msg').value.trim();
-            if (!_fbR) { alert('Please select how you feel first! 😊'); return; }
-            if (!msg)  { alert('Please write a short message.'); return; }
-            const btn = document.getElementById('fb-sub-btn');
-            btn.disabled=true; btn.textContent='Sending...';
-            try {
-                const res = await fetch((window.API_BASE || window.API_BASE_URL || window.API_URL || 'https://sikshanidhi-2.onrender.com') + '/api/feedback/submit', {
-                    method:'POST', headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify({ rating:_fbR, category:document.getElementById('fb-cat').value, message:msg, user_name:'User', page:'UniCapital.AI' })
-                });
-                const d = await res.json();
-                if (d.status==='success') {
-                    document.getElementById('fb-form').style.display='none';
-                    document.getElementById('fb-ok').style.display='block';
-                    setTimeout(closeFB, 2800);
-                } else { alert('Error: '+d.message); btn.disabled=false; btn.textContent='Send Feedback'; }
-            } catch(e) { alert('Cannot connect to feedback server. Is backend running?'); btn.disabled=false; btn.textContent='Send Feedback'; }
-        }
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderMobileProgress === 'function') renderMobileProgress();
+        });
     </script>
 <script src="translations.js"></script><script src="i18n.js"></script></body>
 </html>
