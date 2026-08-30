@@ -210,8 +210,8 @@
             margin-bottom: 25px;
             border-radius: 12px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
+            display: block;
+            touch-action: manipulation;
         }
 
         #india-map path {
@@ -777,7 +777,39 @@
             }
 
             #india-map {
-                height: 300px !important;
+                height: 260px !important;
+                display: block !important;
+                touch-action: manipulation !important;
+            }
+
+            /* Fix span-2 option cards that overflow a single-column mobile grid */
+            .options-grid .option-card {
+                grid-column: span 1 !important;
+            }
+
+            /* Feedback Modal Mobile Fixes */
+            #fb-modal {
+                width: 95vw !important;
+                padding: 24px 20px !important;
+                border-radius: 18px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Prevent iOS Safari auto-zoom when focusing select/textarea */
+            #fb-category,
+            #fb-message {
+                font-size: 16px !important;
+            }
+
+            /* Result modal mobile sizing */
+            #results-overlay .modal-content {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                padding: 24px 18px !important;
+                border-radius: 16px !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
             }
         }
     </style>
@@ -1093,6 +1125,10 @@
 
             geoChart = new google.visualization.GeoChart(document.getElementById('india-map'));
 
+            // Do NOT draw immediately — the map container (step-1) is hidden (display:none) at page load.
+            // Drawing into a hidden container causes GeoChart to render at 0×0 on mobile.
+            // The map will be drawn when the user navigates to step 1 (Location).
+
             google.visualization.events.addListener(geoChart, 'select', function () {
                 var selection = geoChart.getSelection();
                 if (selection.length > 0) {
@@ -1177,7 +1213,12 @@
             }
 
             if (current === 1 && geoChart && geoData) {
-                setTimeout(() => geoChart.draw(geoData, geoOptions), 50);
+                // On mobile the layout reflows after step becomes active.
+                // Dispatch a resize event so GeoChart recalculates container dimensions.
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                    geoChart.draw(geoData, geoOptions);
+                }, 350);
             }
 
             // Update compact mobile progress stepper
@@ -1617,7 +1658,7 @@
                 if (!iframe) {
                     iframe = document.createElement('iframe');
                     iframe.id = 'pixabot-iframe';
-                    iframe.src = 'PixaBot.html';
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     iframe.style.position = 'fixed';
                     iframe.style.border = 'none';
                     iframe.style.zIndex = '10000';
@@ -1629,6 +1670,7 @@
                 }
 
                 if (iframe.style.display === 'none') {
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     if (isMobile) {
                         iframe.style.width = 'calc(100vw - 24px)';
                         iframe.style.height = 'min(440px, 70vh)';

@@ -69,8 +69,8 @@
         }
 
         .header-title {
-            font-size: 1.7rem;
-            font-weight: 800;
+            font-size: 1.15rem;
+            font-weight: 700;
             letter-spacing: 0.2px;
         }
 
@@ -335,13 +335,18 @@
             }
         }
 
-        .message-sender {
+        html {
+            font-size: 13px !important;
+        }
+
+        .message-sender,
+        .message-sender * {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 1.05rem;
+            font-size: 11px !important;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             padding: 2px 6px;
             font-weight: 700;
             background: rgba(255, 255, 255, 0.9);
@@ -350,25 +355,32 @@
         }
 
         .emotion-badge {
-            font-size: 0.85rem;
-            padding: 3px 8px;
-            border-radius: 8px;
+            font-size: 10px !important;
+            padding: 2px 6px;
+            border-radius: 6px;
             background: #e2e8f0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 800;
         }
 
-        .message {
-            padding: 18px 24px;
-            font-size: 1.45rem;
-            line-height: 1.7;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        .message,
+        .message *,
+        .message p,
+        .message span,
+        .message div,
+        .message strong {
+            padding: 6px 10px;
+            font-size: 12px !important;
+            line-height: 1.35 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             font-weight: 500;
         }
 
         .message p {
-            margin-bottom: 6px;
+            margin-bottom: 3px;
+            padding: 0 !important;
+            box-shadow: none !important;
         }
 
         .message p:last-child {
@@ -378,32 +390,32 @@
         .user-msg {
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
-            border-radius: 18px 18px 4px 18px;
+            border-radius: 14px 14px 2px 14px;
             transition: all 0.3s ease;
         }
 
         .bot-msg {
             background-color: rgba(255, 255, 255, 0.95);
             color: var(--text-main);
-            border-radius: 4px 18px 18px 18px;
+            border-radius: 2px 14px 14px 14px;
             border: 1px solid rgba(3, 75, 78, 0.15);
-            border-left: 4px solid #0f8680;
+            border-left: 3px solid #0f8680;
             backdrop-filter: blur(5px);
         }
 
         .input-container-wrapper {
-            padding: 12px 18px 16px 18px;
+            padding: 6px 10px 8px 10px;
             background: linear-gradient(to top, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0) 100%);
         }
 
         .input-area {
             display: flex;
-            padding: 8px 12px;
+            padding: 4px 8px;
             background: white;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
-            border-radius: 32px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
@@ -413,8 +425,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             transition: all 0.2s;
             background: #f8fafc;
@@ -428,8 +440,8 @@
         }
 
         .icon-btn svg {
-            width: 24px;
-            height: 24px;
+            width: 16px;
+            height: 16px;
             fill: none;
             stroke: currentColor;
             stroke-width: 2.2;
@@ -457,11 +469,11 @@
 
         input[type="text"] {
             flex: 1;
-            padding: 10px 14px;
+            padding: 4px 8px;
             border: none;
             background: transparent;
             outline: none;
-            font-size: 1.4rem;
+            font-size: 12px !important;
             font-weight: 500;
             color: var(--text-main);
             min-width: 0;
@@ -469,13 +481,13 @@
 
         input[type="text"]::placeholder {
             color: #94a3b8;
-            font-size: 1.35rem;
+            font-size: 11px !important;
         }
 
         button.send-btn {
-            width: 54px;
-            height: 54px;
-            min-width: 54px;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
             color: white;
@@ -483,88 +495,96 @@
             cursor: pointer;
         }
 
-        /* ─── DESKTOP IFRAME INTERFACE SCALING FOR PIXABOT (min-width: 400px) ─── */
+        /* ─── DESKTOP IFRAME INTERFACE SCALING FOR PIXABOT ─── */
         @media (min-width: 400px) {
             .chat-container {
                 max-height: 100vh !important;
                 height: 100vh !important;
             }
             .chat-header {
-                padding: 18px 24px !important;
+                padding: 8px 12px !important;
             }
             .header-title {
-                font-size: 1.9rem !important;
-                font-weight: 900 !important;
+                font-size: 14px !important;
+                font-weight: 700 !important;
             }
             .header-icon {
-                width: 50px !important;
-                height: 50px !important;
-            }
-            .bot-status {
-                font-size: 1.1rem !important;
-            }
-            .hdr-icon-btn, .close-header-btn {
-                width: 48px !important;
-                height: 48px !important;
-                font-size: 1.6rem !important;
-            }
-            .message-sender {
-                font-size: 1.15rem !important;
-                font-weight: 800 !important;
-            }
-            .emotion-badge {
-                font-size: 0.92rem !important;
-            }
-            .message {
-                font-size: 1.55rem !important;
-                line-height: 1.7 !important;
-                padding: 20px 26px !important;
-                border-radius: 24px !important;
-                font-weight: 600 !important;
-            }
-            .input-container-wrapper {
-                padding: 16px 22px 20px 22px !important;
-            }
-            .input-area {
-                padding: 14px 20px !important;
-                border-radius: 36px !important;
-            }
-            .icon-btn {
-                width: 52px !important;
-                height: 52px !important;
-            }
-            .icon-btn svg {
                 width: 28px !important;
                 height: 28px !important;
             }
-            input[type="text"] {
-                font-size: 1.45rem !important;
-                padding: 14px 22px !important;
-                font-weight: 600 !important;
+            .bot-status {
+                font-size: 10px !important;
             }
-            input[type="text"]::placeholder {
-                font-size: 1.4rem !important;
+            .hdr-icon-btn, .close-header-btn {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 14px !important;
+            }
+            .hdr-icon-btn svg {
+                width: 15px !important;
+                height: 15px !important;
+            }
+            .message-sender,
+            .message-sender * {
+                font-size: 11px !important;
+                font-weight: 700 !important;
+            }
+            .emotion-badge {
+                font-size: 10px !important;
+            }
+            .message,
+            .message *,
+            .message p,
+            .message span,
+            .message div,
+            .message strong {
+                font-size: 12px !important;
+                line-height: 1.35 !important;
                 font-weight: 500 !important;
             }
-            button.send-btn {
-                width: 56px !important;
-                height: 56px !important;
-                min-width: 56px !important;
+            .input-container-wrapper {
+                padding: 6px 10px 8px 10px !important;
             }
-            button.send-btn svg {
+            .input-area {
+                padding: 4px 8px !important;
+                border-radius: 24px !important;
+            }
+            .icon-btn {
                 width: 30px !important;
                 height: 30px !important;
             }
+            .icon-btn svg {
+                width: 16px !important;
+                height: 16px !important;
+            }
+            input[type="text"] {
+                font-size: 12px !important;
+                padding: 4px 8px !important;
+                font-weight: 500 !important;
+            }
+            input[type="text"]::placeholder {
+                font-size: 11px !important;
+                font-weight: 400 !important;
+            }
+            button.send-btn {
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+            }
+            button.send-btn svg {
+                width: 15px !important;
+                height: 15px !important;
+            }
             .sp-label {
-                font-size: 1.05rem !important;
+                font-size: 10px !important;
             }
             .sp-select {
-                font-size: 1.15rem !important;
-                padding: 12px 18px !important;
+                font-size: 11px !important;
+                padding: 4px 8px !important;
             }
             .sp-mode-btn {
-                font-size: 1.1rem !important;
-                padding: 12px 0 !important;
+                font-size: 10px !important;
+                padding: 4px 0 !important;
             }
         }
 
@@ -828,7 +848,7 @@
             }
 
             input[type="text"] {
-                font-size: 16px !important; /* Prevents auto-zoom on mobile safari */
+                font-size: 0.8rem !important;
                 padding: 6px 8px !important;
             }
         }

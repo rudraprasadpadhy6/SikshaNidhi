@@ -321,8 +321,8 @@
         @media (max-width: 640px) {
             .action-buttons {
                 flex-direction: column;
-                max-width: 320px;
-                gap: 12px;
+                max-width: 100%;
+                gap: 10px;
             }
         }
 
@@ -927,6 +927,7 @@
                 max-width: 100% !important;
                 padding: 16px 18px !important;
                 min-height: auto !important;
+                margin-bottom: 20px !important;
             }
 
             .quote-box p {
@@ -939,6 +940,7 @@
 
             .welcome-msg p {
                 font-size: 14px !important;
+                display: block !important;
             }
 
             .info-banner {
@@ -950,18 +952,21 @@
                 max-width: 100% !important;
             }
 
+            .info-visual {
+                display: flex !important;
+                width: 100px !important;
+                height: 100px !important;
+            }
+
             .info-content h3 {
                 justify-content: center !important;
                 font-size: 22px !important;
+                margin-bottom: 12px !important;
             }
 
             .info-content p {
                 font-size: 15px !important;
-            }
-
-            .info-visual {
-                width: 100px !important;
-                height: 100px !important;
+                line-height: 1.6 !important;
             }
 
             .portal-prompt {
@@ -974,12 +979,29 @@
                 flex-direction: column !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                gap: 16px !important;
+                gap: 10px !important;
+                margin-top: 12px !important;
             }
 
             .action-btn {
                 width: 100% !important;
-                padding: 20px 15px !important;
+                padding: 11px 14px !important;
+                border-radius: 12px !important;
+            }
+
+            .btn-cyan {
+                box-shadow: 0 4px 0 #18655E, 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+                transform: translateY(-2px) !important;
+            }
+
+            .action-btn svg {
+                width: 22px !important;
+                height: 22px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .btn-cyan span {
+                font-size: 15px !important;
             }
 
             #pixabot-container {
@@ -991,6 +1013,41 @@
                 width: 58px !important;
                 height: 58px !important;
             }
+
+            /* Floating Feedback Trigger on Mobile */
+            #fb-trigger {
+                bottom: 16px !important;
+                right: 16px !important;
+                padding: 10px 16px !important;
+                font-size: 0.8rem !important;
+                border-radius: 30px !important;
+            }
+
+            /* Feedback Modal Mobile Fixes */
+            #fb-modal {
+                width: 95vw !important;
+                padding: 24px 20px !important;
+                border-radius: 18px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Prevent iOS Safari auto-zoom on select/textarea focus */
+            #fb-category,
+            #fb-message {
+                font-size: 16px !important;
+            }
+
+            /* Docs modal mobile */
+            #docsModal .modal-content {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                padding: 24px 18px !important;
+                border-radius: 16px !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+            }
+
         }
 
         /* Mobile Phone Screen Specifics (< 600px) */
@@ -1017,7 +1074,7 @@
             }
 
             .main-content {
-                padding: 20px 12px !important;
+                padding: 20px 12px 80px !important;
             }
 
             .quote-box p {
@@ -1031,6 +1088,24 @@
             .info-content h3 {
                 font-size: 20px !important;
             }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .scholarship-card {
+                padding: 16px;
+            }
+
+            #help-modal {
+                width: 95vw;
+                max-height: 90vh;
+            }
+
+            .help-header {
+                padding: 18px 16px;
+            }
+
 
             .dashboard-grid {
                 grid-template-columns: 1fr !important;
@@ -1996,7 +2071,7 @@
                 if (!iframe) {
                     iframe = document.createElement('iframe');
                     iframe.id = 'pixabot-iframe';
-                    iframe.src = 'PixaBot.html';
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     iframe.style.position = 'fixed';
                     iframe.style.border = 'none';
                     iframe.style.zIndex = '10000';
@@ -2008,6 +2083,7 @@
                 }
 
                 if (iframe.style.display === 'none') {
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     if (isMobile) {
                         iframe.style.width = 'calc(100vw - 24px)';
                         iframe.style.height = 'min(440px, 70vh)';

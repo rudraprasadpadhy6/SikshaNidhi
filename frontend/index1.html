@@ -359,13 +359,14 @@
             background: #ffffff;
             border-radius: 20px;
             border: 2px solid #cce3e6;
-            overflow: hidden;
+            overflow: visible;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
             cursor: pointer;
+            touch-action: manipulation;
         }
 
         #india-map svg path {
@@ -978,17 +979,65 @@
 
             .map-layout {
                 flex-direction: column !important;
+                gap: 16px !important;
             }
 
             .map-container {
                 min-width: 0 !important;
                 width: 100% !important;
-                height: 300px !important;
+                height: 280px !important;
+                overflow: hidden !important;
+                border-radius: 14px !important;
+                touch-action: manipulation !important;
+            }
+
+            .map-container > div,
+            .map-container > div > div,
+            .map-container svg {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .state-display-box {
+                font-size: 1rem !important;
+                padding: 14px 16px !important;
             }
 
             #chart_div {
                 width: 100% !important;
                 overflow-x: auto !important;
+            }
+
+            /* Feedback Modal Mobile Fixes */
+            #fb-modal {
+                width: 95vw !important;
+                padding: 24px 20px !important;
+                border-radius: 18px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Prevent iOS Safari auto-zoom when focusing select/textarea */
+            #fb-category,
+            #fb-message {
+                font-size: 16px !important;
+            }
+
+            /* Scholarship result modal mobile sizing */
+            #modal,
+            #docsModal {
+                padding: 16px !important;
+                position: fixed !important;
+            }
+
+            #modal .modal-content,
+            #docsModal .modal-content {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                padding: 24px 18px !important;
+                border-radius: 16px !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
             }
         }
 
@@ -1481,6 +1530,10 @@
         let isAssistantSpeaking = false;
 
         window.onload = function () {
+            // Load Google Charts but do NOT draw the map immediately.
+            // The map container (view4) starts hidden (display:none), so
+            // GeoChart would render to 0×0. Instead, initMap() sets up the
+            // chart object and draws only when step 4 becomes active.
             google.charts.load('current', { 'packages': ['geochart'] });
             google.charts.setOnLoadCallback(initMap);
             renderMobileProgress();
@@ -1820,8 +1873,15 @@
             document.getElementById('btn-prev').style.visibility = step === 0 ? 'hidden' : 'visible';
             document.getElementById('btn-next').innerText = step === maxSteps ? 'Find Scholarships' : 'Continue';
 
-            if (step === 4 && mapChart) {
-                setTimeout(() => drawMap(), 50);
+            if (step === 4) {
+                // On mobile the flex layout needs to reflow before GeoChart can read container dimensions.
+                // Use a longer timeout and dispatch a resize event to force GeoChart to recalculate.
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                    if (mapChart) {
+                        drawMap();
+                    }
+                }, 350);
             }
         }
 
@@ -1920,7 +1980,8 @@
 
         function initMap() {
             document.getElementById('map-loader').style.display = 'none';
-            mapChart = new google.visualization.GeoChart(document.getElementById('india-map'));
+            const mapContainer = document.getElementById('india-map');
+            mapChart = new google.visualization.GeoChart(mapContainer);
 
             mapOptions = {
                 region: 'IN', displayMode: 'regions', resolution: 'provinces',
@@ -1929,7 +1990,9 @@
                 tooltip: { textStyle: { fontName: 'Inter', fontSize: 14 } }
             };
 
-            drawMap();
+            // Do NOT draw immediately — the map container is hidden (display:none) at page load
+            // because view4 is not the active step. Drawing into a hidden container gives 0×0 dimensions.
+            // The map will be drawn when the user navigates to step 4 via the move() function.
 
             google.visualization.events.addListener(mapChart, 'select', function () {
                 const selection = mapChart.getSelection();
@@ -2173,7 +2236,7 @@
                 if (!iframe) {
                     iframe = document.createElement('iframe');
                     iframe.id = 'pixabot-iframe';
-                    iframe.src = 'PixaBot.html';
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     iframe.style.position = 'fixed';
                     iframe.style.border = 'none';
                     iframe.style.zIndex = '10000';
@@ -2185,6 +2248,7 @@
                 }
 
                 if (iframe.style.display === 'none') {
+                    iframe.src = 'PixaBot.html?v=' + Date.now();
                     if (isMobile) {
                         iframe.style.width = 'calc(100vw - 24px)';
                         iframe.style.height = 'min(440px, 70vh)';
