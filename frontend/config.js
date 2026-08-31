@@ -10,3 +10,6 @@ const API_BASE = API_URL;
 window.API_URL = API_URL;
 window.API_BASE_URL = API_BASE_URL;
 window.API_BASE = API_BASE;
+
+// Google OAuth 2.0 Client ID
+window.GOOGLE_CLIENT_ID = "38862432617-nlfhacjd58kb8j0khv81nana2maqtoul.apps.googleusercontent.com";

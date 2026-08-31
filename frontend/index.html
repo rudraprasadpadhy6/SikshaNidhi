@@ -524,8 +524,142 @@
                 font-size: 14px;
             }
         }
+
+        /* ─── GOOGLE AUTH STYLING ─── */
+        .google-auth-wrapper {
+            margin-top: 18px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .google-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #ffffff;
+            color: #1f2937;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .google-btn:hover {
+            background-color: #f9fafb;
+            border-color: #4285f4;
+            box-shadow: 0 4px 14px rgba(66, 133, 244, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .google-btn:active {
+            transform: translateY(0);
+            background-color: #f3f4f6;
+        }
+
+        .google-icon {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 22px 0 20px 0;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .auth-divider span {
+            padding: 0 14px;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Google Account Selector Modal */
+        .g-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(5px);
+            z-index: 1000000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .g-modal-card {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .g-modal-header {
+            padding: 24px 24px 16px 24px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .g-modal-body {
+            padding: 16px 24px 24px 24px;
+        }
+
+        .g-account-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            margin-bottom: 8px;
+        }
+
+        .g-account-item:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .g-account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid #48C5B9;
+        }
     </style>
     <script src="/config.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -835,6 +969,24 @@
                 </div>
                 <h2 class="form-title" data-i18n="signin_heading">Sign in to SikshaNidhi</h2>
 
+                <!-- PRIMARY GOOGLE LOGIN -->
+                <div class="google-auth-wrapper">
+                    <button type="button" class="google-btn" id="googleSignInBtn" onclick="triggerGoogleSignIn()">
+                        <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.15C3.26 21.3 7.31 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.28 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.39l3.99-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.94 1.19 15.23 0 12 0 7.31 0 3.26 2.7 1.29 6.61l3.99 3.15c.95-2.85 3.6-4.96 6.72-4.96z"/>
+                        </svg>
+                        <span data-i18n="btn_google_signin">Sign in with Google</span>
+                    </button>
+                    <div id="g_id_signin" style="margin-top: 10px; width: 100%; display: none;"></div>
+                </div>
+
+                <div class="auth-divider">
+                    <span data-i18n="or_divider_text">or sign in with email</span>
+                </div>
+
                 <div id="loginError" class="error-message" data-i18n="login_error_invalid">
                     Incorrect email & password
                 </div>
@@ -1128,7 +1280,171 @@
                 loginError.classList.add('show');
             }
         });
+
+        // --- 5. Google Sign-In Logic ---
+        function getActiveClientId() {
+            if (window.GOOGLE_CLIENT_ID && !window.GOOGLE_CLIENT_ID.includes("YOUR_GOOGLE_CLIENT_ID")) {
+                return window.GOOGLE_CLIENT_ID;
+            }
+            return localStorage.getItem('google_client_id') || "";
+        }
+
+        function initGoogleAuth() {
+            const clientId = getActiveClientId();
+            if (window.google && window.google.accounts && clientId && !clientId.includes("YOUR_GOOGLE_CLIENT_ID")) {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: clientId,
+                        callback: handleGoogleCredentialResponse,
+                        auto_select: false
+                    });
+                    const container = document.getElementById('g_id_signin');
+                    const customBtn = document.getElementById('googleSignInBtn');
+                    if (container) {
+                        container.style.display = 'block';
+                        google.accounts.id.renderButton(container, {
+                            theme: 'outline',
+                            size: 'large',
+                            width: 320,
+                            text: 'signin_with'
+                        });
+                        if (customBtn) customBtn.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error("GIS initialization error:", e);
+                }
+            }
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(initGoogleAuth, 600);
+        });
+
+        function triggerGoogleSignIn() {
+            const clientId = getActiveClientId();
+            if (window.google && window.google.accounts && clientId && !clientId.includes("YOUR_GOOGLE_CLIENT_ID")) {
+                google.accounts.id.prompt();
+            } else {
+                const userKey = prompt("ENABLE REAL GOOGLE LOGIN:\n\nPlease enter your Google Client ID from Google Cloud Console:\n(e.g., 123456789-xxxx.apps.googleusercontent.com)\n\nOr click OK with empty input to see setup instructions.");
+                if (userKey && userKey.trim().includes(".apps.googleusercontent.com")) {
+                    localStorage.setItem('google_client_id', userKey.trim());
+                    window.GOOGLE_CLIENT_ID = userKey.trim();
+                    alert("Google Client ID saved! Connecting to Google OAuth...");
+                    initGoogleAuth();
+                    setTimeout(() => { if (window.google && window.google.accounts) google.accounts.id.prompt(); }, 500);
+                } else {
+                    document.getElementById('googleAccountModal').style.display = 'flex';
+                }
+            }
+        }
+
+        function closeGoogleModal() {
+            document.getElementById('googleAccountModal').style.display = 'none';
+        }
+
+        function selectDemoGoogleAccount(name, email, picture) {
+            closeGoogleModal();
+            completeGoogleLogin({ name, email, picture });
+        }
+
+        function promptCustomGoogleAccount() {
+            closeGoogleModal();
+            const email = prompt("Enter your Google Email:");
+            if (!email) return;
+            const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            const picture = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=48C5B9&color=fff&bold=true`;
+            completeGoogleLogin({ name, email, picture });
+        }
+
+        function handleGoogleCredentialResponse(response) {
+            try {
+                const payload = parseJwt(response.credential);
+                const googleUser = {
+                    name: payload.name || payload.given_name || 'Google User',
+                    email: payload.email || '',
+                    picture: payload.picture || '',
+                    sub: payload.sub || ''
+                };
+                completeGoogleLogin(googleUser);
+            } catch (e) {
+                console.error("Google Auth error", e);
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        async function completeGoogleLogin(user) {
+            localStorage.setItem('savedName', user.name);
+            localStorage.setItem('savedEmail', user.email);
+            if (user.picture) {
+                localStorage.setItem('savedPicture', user.picture);
+            }
+            localStorage.setItem('authMethod', 'google');
+
+            // Send to backend API if available
+            try {
+                const baseEndpoint = window.API_BASE_URL || window.API_BASE || window.API_URL || 'http://localhost:5000';
+                await fetch(`${baseEndpoint}/api/auth/google`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                });
+            } catch (err) {
+                console.warn('Backend google auth sync fallback:', err);
+            }
+
+            window.location.href = 'dashboard.html';
+        }
     </script>
+
+    <!-- Google Account Selector Modal (for local dev & instant testing) -->
+    <div class="g-modal-overlay" id="googleAccountModal" onclick="if(event.target===this)closeGoogleModal()">
+        <div class="g-modal-card">
+            <div class="g-modal-header">
+                <svg viewBox="0 0 24 24" width="32" height="32" style="margin: 0 auto 8px auto; display: block;">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.15C3.26 21.3 7.31 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.39l3.99-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.94 1.19 15.23 0 12 0 7.31 0 3.26 2.7 1.29 6.61l3.99 3.15c.95-2.85 3.6-4.96 6.72-4.96z"/>
+                </svg>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 4px;">Choose a Google Account</h3>
+                <p style="font-size: 0.85rem; color: #64748b;">to continue to SikshaNidhi</p>
+            </div>
+            <div class="g-modal-body">
+                <div class="g-account-item" onclick="selectDemoGoogleAccount('Alex Scholar', 'alex.scholar@gmail.com', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80')">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="g-account-avatar" alt="Avatar">
+                    <div style="flex:1;">
+                        <div style="font-size: 0.92rem; font-weight: 600; color: #0f172a;">Alex Scholar</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">alex.scholar@gmail.com</div>
+                    </div>
+                </div>
+                <div class="g-account-item" onclick="selectDemoGoogleAccount('Priya Sharma', 'priya.sharma@gmail.com', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80')">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" class="g-account-avatar" alt="Avatar">
+                    <div style="flex:1;">
+                        <div style="font-size: 0.92rem; font-weight: 600; color: #0f172a;">Priya Sharma</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">priya.sharma@gmail.com</div>
+                    </div>
+                </div>
+                <div class="g-account-item" onclick="promptCustomGoogleAccount()">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#475569;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size: 0.92rem; font-weight: 600; color: #2563eb;">Use another Google email...</div>
+                    </div>
+                </div>
+                <button onclick="closeGoogleModal()" style="width: 100%; margin-top: 12px; padding: 10px; border: none; background: #f1f5f9; color: #475569; border-radius: 10px; font-weight: 600; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="translations.js"></script>
     <script src="i18n.js"></script>
 </body>

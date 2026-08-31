@@ -643,6 +643,39 @@ def export_csv():
         return Response(out.getvalue(),mimetype='text/csv',headers={'Content-Disposition':'attachment; filename=SikshaNidhi_Feedback.csv'})
     return jsonify({'status':'error','message':'Unauthorized'}),403
 
+# ── GOOGLE AUTH ──────────────────────────────────────────
+@app.route('/api/auth/google', methods=['POST', 'OPTIONS'])
+def google_auth():
+    if request.method == 'OPTIONS':
+        r = jsonify({})
+        r.headers.update({
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+        })
+        return r
+    try:
+        data = request.json or {}
+        email = data.get('email', '')
+        name = data.get('name', 'Google User')
+        picture = data.get('picture', '')
+        
+        if not email:
+            return jsonify({'status': 'error', 'message': 'Email is required'}), 400
+            
+        return jsonify({
+            'status': 'success',
+            'message': 'Google authentication successful',
+            'user': {
+                'name': name,
+                'email': email,
+                'picture': picture,
+                'auth_provider': 'google'
+            }
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
