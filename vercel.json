@@ -54,6 +54,22 @@
       "destination": "/frontend/index.html"
     },
     {
+      "source": "/privacy",
+      "destination": "/frontend/privacy.html"
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/frontend/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/frontend/terms.html"
+    },
+    {
+      "source": "/terms.html",
+      "destination": "/frontend/terms.html"
+    },
+    {
       "source": "/:path*",
       "destination": "/frontend/:path*"
     }

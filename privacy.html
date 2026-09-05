@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - SikshaNidhi</title>
+    <meta name="description" content="Privacy Policy for SikshaNidhi application detailing how user data and Google OAuth information are collected, used, and protected.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #008080;
+            --soft-teal: #20b2aa;
+            --light-teal: #e6f7f7;
+            --accent-aqua: #00c9a7;
+            --dark-text: #1e293b;
+            --body-text: #334155;
+            --muted-text: #64748b;
+            --bg-gradient: linear-gradient(135deg, #f0f7f7 0%, #e0f2f2 100%);
+            --card-bg: #ffffff;
+            --border-color: rgba(0, 128, 128, 0.12);
+            --shadow-sm: 0 4px 12px rgba(0, 128, 128, 0.05);
+            --shadow-md: 0 12px 32px rgba(0, 128, 128, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--body-text);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Header */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary-teal);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .brand-logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-teal);
+        }
+
+        .back-link {
+            color: var(--primary-teal);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            background: var(--light-teal);
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: var(--soft-teal);
+            color: #ffffff;
+        }
+
+        /* Main Wrapper */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Policy Container Card */
+        .policy-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            padding: 3rem;
+        }
+
+        .policy-header {
+            border-bottom: 2px solid var(--light-teal);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            color: var(--primary-teal);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Content Typography */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--dark-text);
+            margin: 2rem 0 1rem 0;
+            padding-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.2rem;
+            background: var(--primary-teal);
+            border-radius: 4px;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.025rem;
+        }
+
+        ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        /* Highlight Box for Google OAuth */
+        .highlight-box {
+            background: var(--light-teal);
+            border-left: 4px solid var(--primary-teal);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary-teal);
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Contact Box */
+        .contact-card {
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--soft-teal) 100%);
+            color: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            margin-top: 2.5rem;
+        }
+
+        .contact-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-card p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .email-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .email-item {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 14px;
+            border-radius: 6px;
+            width: fit-content;
+            transition: background 0.2s ease;
+        }
+
+        .email-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--primary-teal);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            main {
+                margin: 1.25rem auto;
+                padding: 0 1rem;
+            }
+
+            .policy-card {
+                padding: 1.75rem 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .email-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="https://sikshanidhi45.vercel.app" class="brand-logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                </svg>
+                SikshaNidhi
+            </a>
+            <a href="https://sikshanidhi45.vercel.app" class="back-link">
+                &larr; Back to App
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="policy-card">
+            <div class="policy-header">
+                <h1>Privacy Policy</h1>
+                <div class="meta-info">
+                    <span><strong>App Name:</strong> SikshaNidhi</span>
+                    <span><strong>Effective Date:</strong> September 5, 2026</span>
+                    <span><strong>Website:</strong> <a href="https://sikshanidhi45.vercel.app" style="color: var(--primary-teal);">sikshanidhi45.vercel.app</a></span>
+                </div>
+            </div>
+
+            <p>At <strong>SikshaNidhi</strong>, accessible from <strong>sikshanidhi45.vercel.app</strong>, protecting your privacy is one of our top priorities. This Privacy Policy outlines the types of information we collect, how it is used, stored, and protected when you use our web application, particularly concerning data accessed via Google OAuth authentication.</p>
+
+            <h2>1. Information We Collect</h2>
+            <p>SikshaNidhi collects minimal personal information necessary to deliver a personalized, secure, and seamless scholarship discovery experience.</p>
+            <p>When you log in or register on SikshaNidhi using <strong>Google OAuth 2.0</strong>, we request permission to access the following basic profile information from your Google account:</p>
+            <ul>
+                <li><strong>Full Name:</strong> To address you personally within the application.</li>
+                <li><strong>Email Address:</strong> To uniquely identify your account, send critical notifications, and provide updates.</li>
+                <li><strong>Profile Picture URL:</strong> To display your profile avatar within the application interface.</li>
+            </ul>
+            <p>We do not request or access private Google data such as Google Contacts, Gmail messages, Google Drive files, or granular calendar data.</p>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We use the collected information strictly for legitimate operational purposes, including:</p>
+            <ul>
+                <li>Authenticating your identity and providing access to your secure SikshaNidhi account.</li>
+                <li>Personalizing your user profile, dashboard, and scholarship recommendations.</li>
+                <li>Communicating essential app updates, security alerts, and administrative messages.</li>
+                <li>Ensuring platform integrity and preventing fraud or misuse.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>Google OAuth & Limited Use Disclosure</h3>
+                <p>SikshaNidhi strictly complies with the <strong>Google API Services User Data Policy</strong>, including the <em>Limited Use</em> requirements.</p>
+                <p>Data obtained through Google OAuth is used <strong>solely</strong> to provide and improve user-facing features on SikshaNidhi. We do <strong>NOT</strong> transfer, sell, or disclose your Google data to third parties, nor do we use it for advertising, target marketing, or training machine learning/AI models.</p>
+            </div>
+
+            <h2>3. Data Storage and Security</h2>
+            <p>We take data security very seriously. Your basic user information is stored securely using industry-standard technical measures:</p>
+            <ul>
+                <li><strong>Encryption in Transit:</strong> All communication between your web browser and our servers is encrypted using Secure Sockets Layer (SSL/TLS) technology.</li>
+                <li><strong>Access Control:</strong> Access to user data is strictly restricted to authorized administrative personnel only.</li>
+                <li><strong>Secure Infrastructure:</strong> Our databases and hosting servers are maintained on secure cloud infrastructure adhering to modern industry security standards.</li>
+            </ul>
+
+            <h2>4. Data Sharing and Third Parties</h2>
+            <p>We do <strong>not</strong> sell, trade, rent, or lease your personal information or Google profile data to any third-party companies or advertisers. We will only disclose your information if required by law or in good faith to comply with legal obligations or enforce our Terms of Service.</p>
+
+            <h2>5. Cookies and Tracking</h2>
+            <p>SikshaNidhi uses essential cookies and local storage technology strictly required for user authentication, session maintenance, and language preference storage. We do not use third-party tracking cookies or behavioral advertising trackers.</p>
+
+            <h2>6. Your Rights and Data Deletion</h2>
+            <p>You have full control over your personal data on SikshaNidhi:</p>
+            <ul>
+                <li><strong>Access & Update:</strong> You can view and update your profile information within your account settings.</li>
+                <li><strong>Revoke Google Access:</strong> You can revoke SikshaNidhi's access to your Google Account at any time via your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" style="color: var(--primary-teal);">Google Security Settings</a>.</li>
+                <li><strong>Account Deletion:</strong> You can request complete deletion of your account and associated profile data by contacting our support team via email. Upon receipt of your request, your data will be permanently purged from our servers within 7 business days.</li>
+            </ul>
+
+            <h2>7. Children's Privacy</h2>
+            <p>SikshaNidhi is intended for general audiences, specifically students seeking educational scholarship opportunities. We do not knowingly collect personal data from children under the age of 13 without verified parental consent.</p>
+
+            <h2>8. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. Any modifications will be posted on this page with an updated "Effective Date". We encourage users to review this page periodically.</p>
+
+            <div class="contact-card">
+                <h3>Contact Us & Privacy Support</h3>
+                <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact our administrative team at:</p>
+                <div class="email-list">
+                    <a href="mailto:rudraprasadpadhy6@gmail.com" class="email-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        rudraprasadpadhy6@gmail.com
+                    </a>
+                    <a href="mailto:rlagrawal318@gmail.com" class="email-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        rlagrawal318@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SikshaNidhi. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>

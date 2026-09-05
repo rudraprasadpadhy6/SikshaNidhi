@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - SikshaNidhi</title>
+    <meta name="description" content="Terms of Service for SikshaNidhi application governing the use of our scholarship guidance platform and services.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #008080;
+            --soft-teal: #20b2aa;
+            --light-teal: #e6f7f7;
+            --accent-aqua: #00c9a7;
+            --dark-text: #1e293b;
+            --body-text: #334155;
+            --muted-text: #64748b;
+            --bg-gradient: linear-gradient(135deg, #f0f7f7 0%, #e0f2f2 100%);
+            --card-bg: #ffffff;
+            --border-color: rgba(0, 128, 128, 0.12);
+            --shadow-sm: 0 4px 12px rgba(0, 128, 128, 0.05);
+            --shadow-md: 0 12px 32px rgba(0, 128, 128, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--body-text);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Header */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary-teal);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .brand-logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-teal);
+        }
+
+        .back-link {
+            color: var(--primary-teal);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            background: var(--light-teal);
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: var(--soft-teal);
+            color: #ffffff;
+        }
+
+        /* Main Wrapper */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Terms Container Card */
+        .terms-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            padding: 3rem;
+        }
+
+        .terms-header {
+            border-bottom: 2px solid var(--light-teal);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            color: var(--primary-teal);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .meta-info {
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Content Typography */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--dark-text);
+            margin: 2rem 0 1rem 0;
+            padding-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.2rem;
+            background: var(--primary-teal);
+            border-radius: 4px;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.025rem;
+        }
+
+        ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: var(--light-teal);
+            border-left: 4px solid var(--primary-teal);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Contact Box */
+        .contact-card {
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--soft-teal) 100%);
+            color: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            margin-top: 2.5rem;
+        }
+
+        .contact-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-card p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .email-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .email-item {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 14px;
+            border-radius: 6px;
+            width: fit-content;
+            transition: background 0.2s ease;
+        }
+
+        .email-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--primary-teal);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            main {
+                margin: 1.25rem auto;
+                padding: 0 1rem;
+            }
+
+            .terms-card {
+                padding: 1.75rem 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .email-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="https://sikshanidhi45.vercel.app" class="brand-logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                </svg>
+                SikshaNidhi
+            </a>
+            <a href="https://sikshanidhi45.vercel.app" class="back-link">
+                &larr; Back to App
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="terms-card">
+            <div class="terms-header">
+                <h1>Terms of Service</h1>
+                <div class="meta-info">
+                    <span><strong>App Name:</strong> SikshaNidhi</span>
+                    <span><strong>Effective Date:</strong> September 5, 2026</span>
+                    <span><strong>Website:</strong> <a href="https://sikshanidhi45.vercel.app" style="color: var(--primary-teal);">sikshanidhi45.vercel.app</a></span>
+                </div>
+            </div>
+
+            <p>Welcome to <strong>SikshaNidhi</strong>! By accessing or using our application available at <strong>sikshanidhi45.vercel.app</strong> ("Platform", "Application", "We", "Us"), you agree to be bound by these Terms of Service ("Terms"). Please read them carefully before using our platform.</p>
+
+            <h2>1. Acceptance of Terms</h2>
+            <p>By registering, authenticating via Google OAuth, or using any part of SikshaNidhi, you acknowledge that you have read, understood, and agreed to these Terms and our <a href="privacy.html" style="color: var(--primary-teal);">Privacy Policy</a>. If you do not agree with any part of these Terms, you must discontinue using our application immediately.</p>
+
+            <h2>2. User Accounts & Google OAuth Authentication</h2>
+            <p>To access certain features of SikshaNidhi, you are required to authenticate using your Google account via Google OAuth 2.0.</p>
+            <ul>
+                <li>You are responsible for maintaining the security of your Google account and credentials.</li>
+                <li>You agree that all information provided during authentication is accurate and belongs to you.</li>
+                <li>You must notify us immediately if you suspect unauthorized access or any security breach related to your SikshaNidhi account.</li>
+            </ul>
+
+            <h2>3. Description of Service & Permitted Use</h2>
+            <p>SikshaNidhi provides users with scholarship discovery tools, educational guidance, deadline tracking, and interactive assistance ("Services").</p>
+            <p>You are granted a non-exclusive, non-transferable, revocable license to access and use SikshaNidhi strictly for personal, non-commercial educational purposes.</p>
+
+            <h2>4. User Conduct & Prohibited Activities</h2>
+            <p>When using SikshaNidhi, you agree <strong>NOT</strong> to:</p>
+            <ul>
+                <li>Use the platform for any illegal, harmful, or unauthorized purpose.</li>
+                <li>Attempt to scrape, data-mine, automated-extract, or reverse engineer any portion of the platform code, database, or content.</li>
+                <li>Impersonate another individual or misrepresent your eligibility for scholarships.</li>
+                <li>Interfere with or disrupt the security, performance, or availability of our application or infrastructure.</li>
+                <li>Transmit any malware, viruses, harmful code, or unsolicited commercial messages (spam).</li>
+            </ul>
+
+            <h2>5. Intellectual Property Rights</h2>
+            <p>All content, branding, visual design elements, source code, logos, software, and databases associated with SikshaNidhi are the intellectual property of the SikshaNidhi development team and founders, protected under copyright, trademark, and applicable intellectual property laws.</p>
+            <p>You may not reproduce, distribute, modify, or create derivative works from any part of our platform without prior written consent.</p>
+
+            <h2>6. Third-Party Scholarship Portals & Links</h2>
+            <p>SikshaNidhi aggregates and presents information about various educational scholarships offered by governmental, institutional, and private organizations.</p>
+
+            <div class="highlight-box">
+                <p><strong>Third-Party Disclaimer:</strong> Scholarship listings may redirect you to official external websites. SikshaNidhi is not responsible for the availability, eligibility criteria changes, accuracy, privacy practices, or content of third-party portals. Users are strongly encouraged to verify details directly on the official scholarship provider websites before submitting applications.</p>
+            </div>
+
+            <h2>7. Disclaimer of Warranties</h2>
+            <p>SikshaNidhi is provided on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without warranties of any kind, whether express or implied. We do not guarantee that:</p>
+            <ul>
+                <li>The platform will operate uninterrupted, error-free, or entirely bug-free at all times.</li>
+                <li>Scholarship listings or external details will always be 100% complete, current, or error-free.</li>
+                <li>Use of SikshaNidhi will guarantee scholarship award, approval, or funding success.</li>
+            </ul>
+
+            <h2>8. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by applicable law, SikshaNidhi and its developers shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising out of your access to, use of, or inability to use the platform, including loss of data or scholarship opportunities.</p>
+
+            <h2>9. Termination of Service</h2>
+            <p>We reserve the right to suspend or terminate your account or restrict access to SikshaNidhi at our sole discretion, without prior notice, if we believe you have violated these Terms of Service or engaged in unlawful conduct.</p>
+
+            <h2>10. Modifications to Terms</h2>
+            <p>We reserve the right to update or modify these Terms of Service at any time. Changes will take effect immediately upon posting to this page. Continued use of SikshaNidhi following any updates constitutes acceptance of the modified Terms.</p>
+
+            <div class="contact-card">
+                <h3>Questions or Concerns?</h3>
+                <p>If you have any questions regarding these Terms of Service or need further clarification, please contact our support team:</p>
+                <div class="email-list">
+                    <a href="mailto:rudraprasadpadhy6@gmail.com" class="email-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        rudraprasadpadhy6@gmail.com
+                    </a>
+                    <a href="mailto:rlagrawal318@gmail.com" class="email-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        rlagrawal318@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SikshaNidhi. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>
